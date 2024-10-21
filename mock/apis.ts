@@ -29,7 +29,7 @@ export default {
   'POST /api/user/list': mock({
     code: 200,
     data: {
-      'list|10': [
+      'data|10': [
         {
           id: '@guid',
           userId: '@guid',
@@ -40,13 +40,13 @@ export default {
           createDate: '@datetime("yyyy-MM-dd HH:mm:ss")',
         },
       ],
-      totalCount: 50,
+      total: 50,
     },
   }),
   'POST /api/user/feedbacks': mock({
     code: 200,
     data: {
-      'list|10': [
+      'data|10': [
         {
           id: '@guid',
           userId: '@guid',
@@ -57,7 +57,7 @@ export default {
           createDate: '@datetime("yyyy-MM-dd HH:mm:ss")',
         },
       ],
-      totalCount: 50,
+      total: 50,
     },
   }),
   'POST /api/user/logout': { code: 200 },
@@ -65,13 +65,14 @@ export default {
    ** OSS-Configs
    **********************/
   'GET /api/upload/getSignForOSS': { code: 200 },
-  /**********************
-   ** 轮播广告
-   **********************/
+
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // 轮播广告
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   'POST /api/banners/list': mock({
     code: 200,
     data: {
-      [`list|5`]: [
+      [`data|5`]: [
         {
           id: '@guid',
           'state|1': [0, 1],
@@ -83,7 +84,7 @@ export default {
           'locationCode|1': ['10000', '20000', '30000'],
         },
       ],
-      totalCount: 50,
+      total: 50,
     },
   }),
   'GET /api/banners/locations': {
@@ -120,7 +121,7 @@ export default {
   'POST /api/audit/list': mock({
     code: 200,
     data: {
-      [`list|${20}`]: [
+      [`data|${20}`]: [
         {
           id: '@guid',
           works: "@Image('400x300','@color')",
@@ -133,7 +134,7 @@ export default {
           roomName: '锦麟府-北区4栋住宅-1单元-701',
         },
       ],
-      totalCount: 50,
+      total: 50,
     },
   }),
 
@@ -143,7 +144,7 @@ export default {
   'POST /admin/news/list': mock({
     code: 200,
     data: {
-      'list|20': [
+      'data|20': [
         {
           id: '@guid',
           title: '智能投影仪的新战事',
@@ -154,7 +155,7 @@ export default {
           date: '@datetime("yyyy-MM-dd HH:mm:ss")',
         },
       ],
-      totalCount: 50,
+      total: 50,
     },
   }),
 

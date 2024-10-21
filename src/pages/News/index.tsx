@@ -116,9 +116,9 @@ const News: React.FC = () => {
           delete params.current;
           const resp = await apiNews.list(params);
           return Promise.resolve({
-            data: resp.data.list || [],
+            data: resp.data.data || [],
             success: true,
-            totla: resp.data.totalCount,
+            totla: resp.data.total,
           });
         }}
       />

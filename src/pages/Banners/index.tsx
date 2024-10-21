@@ -176,11 +176,11 @@ const Banners: React.FC = () => {
             delete params.showTime;
           }
           const resp = await apiBanners.list(params);
-          setDataSource(resp.data.list || []);
+          setDataSource(resp.data.data || []);
           return Promise.resolve({
-            data: resp.data.list || [],
+            data: resp.data.data || [],
             success: true,
-            total: resp.data.totalCount,
+            total: resp.data.total,
           });
         }}
       />

@@ -64,9 +64,9 @@ const Users: React.FC = () => {
           delete params.current;
           const resp = await apiUser.list(params);
           return Promise.resolve({
-            data: resp.data.list || [],
+            data: resp.data.data || [],
             success: true,
-            total: resp.data.totalCount,
+            total: resp.data.total,
           });
         }}
       />

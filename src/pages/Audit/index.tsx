@@ -11,7 +11,7 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Button, Space, Table } from 'antd';
+import { App, Button, Popconfirm, Space, Table } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const Audit: React.FC = () => {
@@ -33,24 +33,10 @@ const Audit: React.FC = () => {
   }) => {
     const { type, ids, rejectReason } = data;
     console.log(data);
-    const handlerAudit = () => {
-      message.loading('处理中，请稍后', 0);
-      setTimeout(() => {
-        message.destroy();
-      }, 1000);
-    };
-    if (type === 'RESOLVE') {
-      modal.confirm({
-        title: '温馨提示',
-        content: '您确定要通过审核选中项么？',
-        cancelText: '点错了',
-        onOk: () => {
-          handlerAudit();
-        },
-      });
-      return;
-    }
-    handlerAudit();
+    message.loading('处理中，请稍后', 0);
+    setTimeout(() => {
+      message.destroy();
+    }, 1000);
   };
 
   // - columns
@@ -129,18 +115,22 @@ const Audit: React.FC = () => {
           >
             驳回
           </Button>
-          <Button
-            disabled={state !== 1}
-            type="primary"
-            onClick={() =>
+
+          <Popconfirm
+            title={'温馨提示'}
+            description={'您确定要通过审核选中项么？'}
+            cancelText={'点错了'}
+            onConfirm={() => {
               audit({
                 type: 'RESOLVE',
                 ids: [id],
-              })
-            }
+              });
+            }}
           >
-            通过
-          </Button>
+            <Button disabled={state !== 1} type="primary">
+              通过
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -179,9 +169,9 @@ const Audit: React.FC = () => {
           delete params.current;
           const resp = await apiAudit.list(params);
           return Promise.resolve({
-            data: resp.data.list || [],
+            data: resp.data.data || [],
             success: true,
-            total: resp.data.totalCount,
+            total: resp.data.total,
           });
         }}
       />

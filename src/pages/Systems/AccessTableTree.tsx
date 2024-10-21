@@ -1,9 +1,9 @@
 import { apiSystems } from '@/api/apiServer';
 import {
+  ApartmentOutlined,
   DeleteOutlined,
   EditOutlined,
-  FileOutlined,
-  FolderOutlined,
+  FilePptOutlined,
   PlusOutlined,
   PlusSquareOutlined,
 } from '@ant-design/icons';
@@ -16,7 +16,7 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Button, Space } from 'antd';
+import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const Catalogues: React.FC = () => {
@@ -62,25 +62,24 @@ const Catalogues: React.FC = () => {
               setOpenForm(true);
             }}
           />
-          <Button
-            icon={<DeleteOutlined />}
-            danger
-            onClick={() => {
-              modal.confirm({
-                content: '您确定要删除该项及其下所有子类么？',
-                cancelText: '点错了',
-                onOk: async () => {
-                  message.loading('处理中...', 0);
-                  const resp = await apiSystems.accessDelete(record.id);
-                  message.destroy();
-                  if (resp && resp.code === 200) {
-                    setTips('删除成功');
-                    vTable.current?.reloadAndRest!();
-                  }
-                },
-              });
+          <Popconfirm
+            title={'温馨提示'}
+            description={'您确定要删除该项及其下所有子类么？'}
+            cancelText={'点错了'}
+            placement={'bottomLeft'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiSystems.accessDelete(record.id);
+              message.destroy();
+              if (resp && resp.code === 200) {
+                setTips('删除成功');
+                vTable.current?.reloadAndRest!();
+              }
             }}
-          />
+          >
+            <Button icon={<DeleteOutlined />} danger />
+          </Popconfirm>
+
           <Button
             icon={<PlusSquareOutlined />}
             disabled={record.depth === MAX_DEPTH}
@@ -163,20 +162,20 @@ const Catalogues: React.FC = () => {
           indentSize: 30,
           expandIcon: ({ expanded, onExpand, record }) => {
             console.log(record);
-            if (record.children) {
+            if (record.depth === 1) {
               return (
                 <Space
                   onClick={(e) => onExpand(record, e)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <FolderOutlined style={{ color: 'orange' }} />
+                  <FilePptOutlined style={{ color: 'orange' }} />
                   <span>{record.name}</span>
                 </Space>
               );
             }
             return (
               <Space style={{ cursor: 'pointer' }}>
-                <FileOutlined color="blue" style={{ color: '#ccc' }} />
+                <ApartmentOutlined color="blue" style={{ color: '#ccc' }} />
                 <span>{record.name}</span>
               </Space>
             );
