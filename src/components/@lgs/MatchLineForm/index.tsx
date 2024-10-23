@@ -91,7 +91,7 @@ const MatchLineForm: React.FC<IProps> = React.memo(
         try {
           message.loading('图片上传中...', 0);
           // const resp = await apiCommon.uploadFile(file);
-          // if (resp && resp.code === 200) {
+          // if (resp.code === 200) {
           //   const t = { ...dataSource };
           //   t.options[index][key] = resp.data.full_path;
           //   t.answers = undefined;

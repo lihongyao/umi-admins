@@ -1,7 +1,7 @@
 import request from '@/api/apiConfig';
 
 export async function login(data: API.LoginWithAccount) {
-  return request<API.LoginResult>({
+  return request<API.LoginResponse>({
     url: '/api/user/login',
     method: 'POST',
     data,
@@ -9,7 +9,7 @@ export async function login(data: API.LoginWithAccount) {
 }
 
 export async function sendCaptcha(phone: string) {
-  return request<API.LoginResult>({
+  return request<API.LoginResponse>({
     url: '/api/user/sendCaptcha',
     method: 'POST',
     data: { phone },

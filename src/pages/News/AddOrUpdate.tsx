@@ -43,7 +43,6 @@ const AddOrUpdate: React.FC = () => {
           onFinish={async () => {
             message.loading('处理中，请稍后...');
             setTimeout(() => {
-              message.destroy();
               modal.success({
                 title: '温馨提示',
                 content: params.id ? '编辑成功' : '创建成功',

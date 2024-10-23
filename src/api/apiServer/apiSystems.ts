@@ -4,7 +4,7 @@ import request from '@/api/apiConfig';
  ** 登录相关
  **********************/
 export async function login(data: API.LoginWithAccount) {
-  return request<API.LoginResult>({
+  return request<API.LoginResponse>({
     url: '/api/auths/login-admin',
     method: 'POST',
     data,
@@ -32,7 +32,7 @@ export async function accessAddOrUpdate(data: any) {
     data,
   });
 }
-export async function accessDelete(authId: string) {
+export async function accessDelete(authId: number) {
   return request({
     url: `/api/systems/access/remove/${authId}`,
     method: 'DELETE',
@@ -47,7 +47,7 @@ export async function roles() {
     url: '/api/systems/roles/list',
   });
 }
-export async function roleDelete(roleId: string) {
+export async function roleDelete(roleId: number) {
   return request({
     url: `/api/systems/roles/remove/${roleId}`,
     method: 'DELETE',
@@ -59,6 +59,12 @@ export async function roleAddAndUpdate(data: any) {
     url: '/api/systems/roles/addOrUpdate',
     method: 'POST',
     data,
+  });
+}
+export async function roleSwichStatus(id: number) {
+  return request({
+    url: `/api/systems/roles/switch-status/${id}`,
+    method: 'PUT',
   });
 }
 
@@ -80,14 +86,14 @@ export async function userAddAndUpdate(data: any) {
     data,
   });
 }
-export async function userSwichStatus(id: string) {
+export async function userSwichStatus(id: number) {
   return request({
     url: `/api/administrators/switch-status/${id}`,
     method: 'PUT',
   });
 }
 
-export async function userResetPsw(id: string) {
+export async function userResetPsw(id: number) {
   return request({
     url: `/api/administrators/reset-psw/${id}`,
     method: 'PUT',

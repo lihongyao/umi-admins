@@ -29,11 +29,11 @@ const Users: React.FC = () => {
   const [openForm, setOpenForm] = useState(false);
 
   // -- methods
-  const switchStatus = async (id: string, tips: string) => {
+  const switchStatus = async (id: number, tips: string) => {
     message.loading('处理中...', 0);
     const resp = await apiSystems.userSwichStatus(id);
-    message.destroy();
-    if (resp && resp.code === 200) {
+
+    if (resp.code === 200) {
       setTips(tips);
       vTable.current?.reloadAndRest!();
     }
@@ -59,11 +59,11 @@ const Users: React.FC = () => {
     {
       title: '状态',
       tooltip: '该用户是否被拉入黑名单',
-      dataIndex: 'state',
+      dataIndex: 'status',
       valueType: 'select',
       fieldProps: { placeholder: '全部', allowClear: true },
       valueEnum: {
-        0: { text: '已禁用', status: 'Default' },
+        0: { text: '已禁用', status: 'Error' },
         1: { text: '已启用', status: 'Processing' },
       },
     },
@@ -80,7 +80,7 @@ const Users: React.FC = () => {
       },
       request: async () => {
         const resp = await apiSystems.roles();
-        if (resp && resp.code === 200) {
+        if (resp.code === 200) {
           return resp.data;
         }
         return [];
@@ -99,7 +99,7 @@ const Users: React.FC = () => {
       search: false,
       render: (_, record) => (
         <Space>
-          {record.state === 1 && (
+          {record.status === 1 && (
             <Popconfirm
               title={'温馨提示'}
               description={'您确定要禁用该用户么？'}
@@ -115,7 +115,7 @@ const Users: React.FC = () => {
               <Button danger>禁用</Button>
             </Popconfirm>
           )}
-          {record.state === 0 && (
+          {record.status === 0 && (
             <Popconfirm
               title={'温馨提示'}
               description={'您确定要启用该用户么？'}
@@ -148,8 +148,8 @@ const Users: React.FC = () => {
             onConfirm={async () => {
               message.loading('处理中...', 0);
               const resp = await apiSystems.userResetPsw(record.id);
-              message.destroy();
-              if (resp && resp.code === 200) {
+
+              if (resp.code === 200) {
                 message.success('密码已重置为【123456】');
               }
             }}
@@ -179,7 +179,6 @@ const Users: React.FC = () => {
     >
       <ProTable<API.SystemsUserProps>
         actionRef={vTable}
-        headerTitle={' '}
         columns={columns}
         rowKey="id"
         scroll={{ x: 1200 }}
@@ -217,8 +216,8 @@ const Users: React.FC = () => {
             ...value,
             avatar: value.avatar[0].url,
           });
-          message.destroy();
-          if (resp && resp.code === 200) {
+
+          if (resp.code === 200) {
             setTips(value.id ? '编辑成功' : '添加成功');
             setOpenForm(false);
             vTable.current?.reloadAndRest!();
@@ -274,7 +273,7 @@ const Users: React.FC = () => {
           }}
           request={async () => {
             const resp = await apiSystems.roles();
-            if (resp && resp.code === 200) {
+            if (resp.code === 200) {
               return resp.data;
             }
             return [];

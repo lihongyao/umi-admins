@@ -60,13 +60,10 @@ const Types: React.FC = () => {
                   message.loading('处理中...', 0);
                   try {
                     setTimeout(() => {
-                      message.destroy();
                       setTips('删除成功');
                       vTable.current?.reloadAndRest!();
                     }, 500);
-                  } catch {
-                    message.destroy();
-                  }
+                  } catch {}
                 },
               });
             }}
@@ -136,13 +133,10 @@ const Types: React.FC = () => {
         onFinish={async (values) => {
           message.loading('处理中...', 0);
           try {
-            message.destroy();
             setTips(values.id ? '编辑成功' : '添加成功');
             vTable.current?.reloadAndRest!();
             setOpenForm(false);
-          } catch {
-            message.destroy();
-          }
+          } catch {}
         }}
       >
         <ProFormText noStyle hidden name="id" />

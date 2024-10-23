@@ -57,10 +57,10 @@ axiosInstance.interceptors.response.use(
       return response.data;
     } else if (code === 401) {
       history.replace('/login');
-      return Promise.reject();
+      return response.data;
     } else {
       message.warning(msg);
-      return Promise.reject(msg);
+      return response.data;
     }
   },
   (error: AxiosError) => {

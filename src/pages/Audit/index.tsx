@@ -34,9 +34,7 @@ const Audit: React.FC = () => {
     const { type, ids, rejectReason } = data;
     console.log(data);
     message.loading('处理中，请稍后', 0);
-    setTimeout(() => {
-      message.destroy();
-    }, 1000);
+    setTimeout(() => {}, 1000);
   };
 
   // - columns

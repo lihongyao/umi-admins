@@ -13,7 +13,7 @@ declare namespace API {
     total: number;
   }
   // ~~~~~~~~~~~~~~~~~~
-  // 阿里云储存
+  // 公共类型
   // ~~~~~~~~~~~~~~~~~~
   type OSSConfigProps = {
     dir: string;
@@ -35,6 +35,13 @@ declare namespace API {
     securityToken: string;
   };
 
+  type ConfigProps = {
+    id: number;
+    title: string;
+    key: string;
+    value: string;
+  };
+
   // ~~~~~~~~~~~~~~~~~~
   // 登录相关
   // ~~~~~~~~~~~~~~~~~~
@@ -44,17 +51,17 @@ declare namespace API {
     /** 用户密码 */
     password: string;
   };
-
-  type LoginResult = {
+  type LoginResponse = {
     /** token */
     token: string;
     /** 权限列表 */
-    access: Array<string>;
+    access: string[];
     /** 用户昵称 */
     nickname: string;
     /** 用户头像 */
     avatar: string;
   };
+
   // ~~~~~~~~~~~~~~~~~~
   // 轮播广告
   // ~~~~~~~~~~~~~~~~~~
@@ -62,16 +69,17 @@ declare namespace API {
     /** ID */
     id: string;
     /** 启用/禁用状态 */
-    state: number;
+    status: number;
     /** 轮播图片链接 */
     bannerPic: string;
     /** 权重 */
     weight: string;
     /** 跳转链接 */
     jumpUrl: string;
-    start: string;
-    /** 展示开始时间 */
-    end: string /** 展示结束时间 */;
+    /** 开始时间 */
+    startTime: string;
+    /** 结束始时间 */
+    endTime: string;
     /** 展示位置编码 */
     locationCode: string;
   };
@@ -84,7 +92,7 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   type SystemsAccessProps = {
     /** 权限ID */
-    id: number;
+    id: number | string;
     /** 父级权限ID */
     parentId?: string;
     /** 权限代码 */
@@ -94,10 +102,10 @@ declare namespace API {
     /** 深度 */
     depth: number;
     /** 子集权限 */
-    children?: Array<SystemsAccessProps>;
+    children?: SystemsAccessProps[];
   };
   type SystemRoleProps = {
-    id: string;
+    id: number;
     /** 角色名称 */
     roleName: string;
     /** 创建者 */
@@ -109,10 +117,12 @@ declare namespace API {
     /** 更新时间 */
     updateTime: string;
     /** 权限列表 */
-    authIds: Array<string>;
+    authIds: string[];
+    /** 启用状态 */
+    status: number;
   };
   type SystemsUserProps = {
-    id: string;
+    id: number;
     username: string /** 用户名 */;
     nickname: string /** 用户昵称 */;
     avatar: string /** 用户头像 */;
@@ -120,7 +130,7 @@ declare namespace API {
     createBy: string /** 创建者 */;
     createTime: string /** 创建时间 */;
     lastLoginTime: string /** 最后登录时间 */;
-    state: number /** 状态 */;
+    status: number /** 状态 */;
   };
   type LogsProps = {
     /** 日志ID */
@@ -134,33 +144,32 @@ declare namespace API {
   };
 
   // ~~~~~~~~~~~~~~~~~~
-  // 配置管理
-  // ~~~~~~~~~~~~~~~~~~
-  type ConfigProps = {
-    id: string | number;
-    title: string;
-    key: string;
-    value: string;
-  };
-
-  // ~~~~~~~~~~~~~~~~~~
-  // 用户列表
+  // 用户相关
   // ~~~~~~~~~~~~~~~~~~
   type UserProps = {
     id: string;
+    /** 用户昵称 */
     nickname: string;
+    /** 用户头像 */
     avatarUrl: string;
+    /** 手机号 */
     phone: string;
+    /** 创建时间 */
     createTime: string;
-    state: number;
+    /** 用户状态 */
+    status: number;
   };
-
   type FeedbackItemProps = {
     id: string;
+    /** 反馈时间 */
     createTime: string;
+    /** 反馈内容 */
     content: string;
+    /** 反馈用户 */
     nickname: string;
+    /** 联系方式 */
     phone: string;
+    /** 用户头像 */
     avatarUrl: string;
   };
 

@@ -25,14 +25,14 @@ export const rootContainer = (root: JSX.Element) => {
 // 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.LoginResult;
+  currentUser?: API.LoginResponse;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.LoginResult | undefined>;
+  fetchUserInfo?: () => Promise<API.LoginResponse | undefined>;
 }> {
   const fetchUserInfo = async () => {
     const user = localStorage.getItem('XXX_USERINFOs');
     if (user) {
-      return JSON.parse(user) as API.LoginResult;
+      return JSON.parse(user) as API.LoginResponse;
     }
     history.push(loginPath);
     return undefined;

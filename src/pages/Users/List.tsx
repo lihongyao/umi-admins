@@ -10,7 +10,7 @@ import React, { useRef, useState } from 'react';
 
 const Users: React.FC = () => {
   // -- APPs
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
   // -- state
@@ -29,11 +29,11 @@ const Users: React.FC = () => {
     },
     {
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'status',
       valueType: 'select',
       valueEnum: {
         0: { text: '已启用', status: 'Processing' },
-        1: { text: '已禁用', status: 'Default' },
+        1: { text: '已禁用', status: 'Error' },
       },
     },
     { title: '用户昵称', dataIndex: 'nickname' },
@@ -49,13 +49,13 @@ const Users: React.FC = () => {
             title={'温馨提示'}
             description={'您确定要禁启用该用户吗？'}
           >
-            <Button disabled={record.state === 1}>启用</Button>
+            <Button disabled={record.status === 1}>启用</Button>
           </Popconfirm>
           <Popconfirm
             title={'温馨提示'}
             description={'您确定要禁禁用该用户吗？'}
           >
-            <Button danger disabled={record.state === 0}>
+            <Button danger disabled={record.status === 0}>
               禁用
             </Button>
           </Popconfirm>
@@ -69,7 +69,6 @@ const Users: React.FC = () => {
     <PageContainer>
       <ProTable<API.UserProps>
         actionRef={vTable}
-        headerTitle={' '}
         columns={columns}
         rowKey="id"
         options={false}

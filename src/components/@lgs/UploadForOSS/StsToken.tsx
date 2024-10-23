@@ -33,7 +33,7 @@ const AliyunOSSUpload: React.FC<IProps> = ({
   const init = async () => {
     try {
       const resp = await apiCommon.ossConfig<API.OSSSTSConfigProps>();
-      if (resp && resp.code === 200) {
+      if (resp.code === 200) {
         const client = new OSS({
           bucket: resp.data.bucket,
           region: resp.data.region,

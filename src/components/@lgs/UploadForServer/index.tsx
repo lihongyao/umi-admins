@@ -34,7 +34,7 @@ const UploadForServer: React.FC<IProps> = React.memo((props) => {
     try {
       // const resp = await apiCommon.uploadImg(file as unknown as File);
       // setLoading(false);
-      // if (resp && resp.code === 200) {
+      // if (resp.code === 200) {
       //   const { full_path } = resp.data;
       //   onChange?.(full_path);
       // } else {

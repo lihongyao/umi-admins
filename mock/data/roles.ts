@@ -1,4 +1,5 @@
-export default [
+import { mock } from 'mockjs';
+export default mock([
   {
     roleName: '管理员',
     authIds: [
@@ -23,12 +24,12 @@ export default [
       '63fdbb8795339b3d36e729dc',
       '63fdbb6095339b3d36e729d6',
     ],
-    createBy: '李鴻耀同學',
-    createTime: '2023-02-28 16:39:04',
-    updateBy: '李鴻耀同學',
-    updateTime: '2023-02-28 16:39:18',
-    state: 1,
-    id: '63fdbda895339b3d36e72a24',
+    createBy: '@cname',
+    createTime: '@datetime',
+    updateBy: '@cname',
+    updateTime: '@datetime',
+    'status|1': [0, 1],
+    id: 0,
   },
   {
     roleName: '客服部门',
@@ -38,11 +39,11 @@ export default [
       '63fdbc7e95339b3d36e729fe',
       '63fdbc5495339b3d36e729f8',
     ],
-    createBy: '李鴻耀同學',
-    createTime: '2023-02-28 16:40:47',
-    updateBy: '',
-    updateTime: '',
-    state: 1,
-    id: '63fdbe0f95339b3d36e72a2e',
+    createBy: '@cname',
+    createTime: '@datetime',
+    updateBy: '@cname',
+    updateTime: '@datetime',
+    'status|1': [0, 1],
+    id: 1,
   },
-];
+]);

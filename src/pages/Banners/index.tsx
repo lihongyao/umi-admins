@@ -1,7 +1,7 @@
 import { apiBanners } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
 import UploadForOSS from '@/components/@lgs/UploadForOSS';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, SwapRightOutlined } from '@ant-design/icons';
 
 import {
   ActionType,
@@ -27,7 +27,7 @@ const Banners: React.FC = () => {
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
 
-  // -- state
+  // -- status
   const [dataSource, setDataSource] = useState<Array<API.BannerItemProps>>([]);
   const [tips, setTips] = useState('');
   const [openForm, setOpenForm] = useState(false);
@@ -36,6 +36,15 @@ const Banners: React.FC = () => {
   // -- columns
   const columns: Array<ProColumns<API.BannerItemProps>> = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
+
+    {
+      title: '图片预览',
+      dataIndex: 'bannerPic',
+      search: false,
+      render: (_, { bannerPic }) => (
+        <ImageBox src={bannerPic} width={100} height={60} />
+      ),
+    },
     {
       title: '展示位置',
       dataIndex: 'locationCode',
@@ -48,43 +57,35 @@ const Banners: React.FC = () => {
       },
       request: async () => {
         const resp = await apiBanners.getShowLocations();
-        if (resp && resp.code === 200) {
+        if (resp.code === 200) {
           return resp.data;
         }
         return [];
       },
     },
     {
-      title: '图片预览',
-      dataIndex: 'bannerPic',
-      search: false,
-      render: (_, { bannerPic }) => (
-        <ImageBox src={bannerPic} width={100} height={60} />
-      ),
-    },
-    {
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'status',
       valueType: 'select',
       valueEnum: {
         0: { text: '已禁用' },
         1: { text: '已启用' },
       },
-      render: (_, { state, id }) => (
+      render: (_, { status, id }) => (
         <Switch
           checkedChildren={'已上架'}
-          checked={!!state}
+          checked={!!status}
           onChange={async (v) => {
             message.loading('处理中...', 0);
             const resp = await apiBanners.switchStatus({
               id,
-              state: +v,
+              status: +v,
             });
-            message.destroy();
-            if (resp && resp.code === 200) {
+
+            if (resp.code === 200) {
               setDataSource((prev) =>
                 prev.map((item) =>
-                  item.id === id ? { ...item, state: +v } : { ...item },
+                  item.id === id ? { ...item, status: +v } : { ...item },
                 ),
               );
               message.success(v ? '已上架' : '已下架');
@@ -106,11 +107,12 @@ const Banners: React.FC = () => {
       title: '展示时间',
       key: 'showTime',
       valueType: 'dateRange',
-      width: 260,
-      render: (_, { start, end }) => (
-        <Space direction="vertical">
-          <div>开始时间：{start || '-'}</div>
-          <div>结束时间：{end || '-'}</div>
+      width: 300,
+      render: (_, { startTime, endTime }) => (
+        <Space>
+          <span>{startTime}</span>
+          <SwapRightOutlined />
+          <span>{endTime}</span>
         </Space>
       ),
     },
@@ -125,7 +127,7 @@ const Banners: React.FC = () => {
             vForm.current?.setFieldsValue({
               ...record,
               bannerPic: [{ url: record.bannerPic }],
-              showTime: [record.start, record.end],
+              showTime: [record.startTime, record.endTime],
             });
             setOpenForm(true);
           }}
@@ -154,7 +156,6 @@ const Banners: React.FC = () => {
     >
       {/* 表格 */}
       <ProTable<API.BannerItemProps>
-        headerTitle={' '}
         actionRef={vTable}
         dataSource={dataSource}
         columns={columns}
@@ -210,8 +211,8 @@ const Banners: React.FC = () => {
           delete params.showTime;
           message.loading('处理中...', 0);
           const resp = await apiBanners.addOrUpdate(params);
-          message.destroy();
-          if (resp && resp.code === 200) {
+
+          if (resp.code === 200) {
             setTips(value.id ? '编辑成功' : '添加成功');
             vTable.current?.reloadAndRest!();
             setOpenForm(false);
@@ -257,7 +258,7 @@ const Banners: React.FC = () => {
           }}
           request={async () => {
             const resp = await apiBanners.getShowLocations();
-            if (resp && resp.code === 200) {
+            if (resp.code === 200) {
               return resp.data;
             }
             return [];

@@ -74,8 +74,8 @@ const Catalogues: React.FC = () => {
             onConfirm={async () => {
               message.loading('处理中...', 0);
               const resp = await apiSystems.accessDelete(record.id);
-              message.destroy();
-              if (resp && resp.code === 200) {
+
+              if (resp.code === 200) {
                 setTips('删除成功');
                 vTable.current?.reloadAndRest!();
               }
@@ -156,7 +156,6 @@ const Catalogues: React.FC = () => {
         actionRef={vTable}
         columns={columns}
         rowKey="id"
-        headerTitle={' '}
         search={false}
         options={false}
         pagination={{
@@ -218,8 +217,8 @@ const Catalogues: React.FC = () => {
         onFinish={async (value) => {
           message.loading('处理中...', 0);
           const resp = await apiSystems.accessAddOrUpdate(value);
-          message.destroy();
-          if (resp && resp.code === 200) {
+
+          if (resp.code === 200) {
             setTips('添加成功');
             vTable.current?.reloadAndRest!();
             setOpenForm(false);

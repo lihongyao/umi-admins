@@ -31,7 +31,7 @@ const AliyunOSSUpload: React.FC<IProps> = ({
   const init = async () => {
     try {
       const resp = await apiCommon.ossConfig<API.OSSConfigProps>();
-      if (resp && resp.code === 200) {
+      if (resp.code === 200) {
         setOSSData(resp.data);
       }
     } catch (error: any) {

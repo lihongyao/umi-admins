@@ -1,7 +1,7 @@
 import { apiSystems } from '@/api/apiServer';
 import AccessTree from '@/components/@lgs/AccessTree';
-
 import { PlusOutlined } from '@ant-design/icons';
+
 import {
   ActionType,
   ModalForm,
@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const Roles: React.FC = () => {
   // -- APPs
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
@@ -34,6 +34,17 @@ const Roles: React.FC = () => {
       children: item.children ? recursive(item.children) : undefined,
     }));
   };
+
+  // -- methods
+  const switchStatus = async (id: number, tips: string) => {
+    message.loading('处理中...', 0);
+    const resp = await apiSystems.roleSwichStatus(id);
+
+    if (resp.code === 200) {
+      setTips(tips);
+      vTable.current?.reloadAndRest!();
+    }
+  };
   // - effects
   useEffect(() => {
     apiSystems.access().then((resp) => {
@@ -45,12 +56,22 @@ const Roles: React.FC = () => {
 
   // -- columns
   const columns: ProColumns<API.SystemRoleProps>[] = [
-    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 48 },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      search: false,
+      valueType: 'select',
+      valueEnum: {
+        0: { text: '已禁用', status: 'Error' },
+        1: { text: '已启用', status: 'Processing' },
+      },
+    },
     { title: '角色名称', dataIndex: 'roleName', search: false },
     { title: '创建人', dataIndex: 'createBy', search: false },
     { title: '创建时间', dataIndex: 'createTime', search: false },
-    { title: '更新人', dataIndex: 'updateBy', search: false },
-    { title: '更新时间', dataIndex: 'updateTime', search: false },
+    { title: '更新人', dataIndex: 'createBy', search: false },
+    { title: '更新时间', dataIndex: 'createTime', search: false },
     {
       title: '操作',
       key: 'action',
@@ -69,20 +90,13 @@ const Roles: React.FC = () => {
           >
             编辑
           </Button>
-          <Popconfirm
-            title={'温馨提示'}
-            description={'您确定要删除该角色么？'}
-            onConfirm={async () => {
-              message.loading('处理中...', 0);
-              const resp = await apiSystems.roleDelete(record.id);
-              message.destroy();
-              if (resp && resp.code === 200) {
-                setTips('角色删除成功');
-                vTable.current?.reloadAndRest!();
-              }
-            }}
-          >
-            <Button danger>删除</Button>
+          <Popconfirm title="您确定要启用该角色么？">
+            <Button disabled={record.status === 1}>启用</Button>
+          </Popconfirm>
+          <Popconfirm title="您确定要禁用该角色么？">
+            <Button disabled={record.status === 0} danger>
+              禁用
+            </Button>
           </Popconfirm>
         </Space>
       ),
@@ -105,7 +119,6 @@ const Roles: React.FC = () => {
     >
       <ProTable<API.SystemRoleProps>
         actionRef={vTable}
-        headerTitle={'角色管理'}
         columns={columns}
         rowKey="id"
         search={false}

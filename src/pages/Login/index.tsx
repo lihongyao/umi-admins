@@ -65,7 +65,7 @@ const Login: React.FC = () => {
         username: values.username,
         password: values.password,
       });
-      if (resp && resp.code === 200) {
+      if (resp.code === 200) {
         // 1. 存储账号信息
         if (values.memorize) {
           localStorage.setItem('XXX_ACCOUNT_INFOs', JSON.stringify(values));
@@ -191,7 +191,7 @@ const Login: React.FC = () => {
                 rules={[{ required: true, message: '请输入验证码！' }]}
                 onGetCaptcha={async (phone) => {
                   const resp = await apiUser.sendCaptcha(phone);
-                  if (resp && resp.code === 200) {
+                  if (resp.code === 200) {
                     message.success('验证码为：1234!');
                   }
                 }}

@@ -11,12 +11,12 @@ import {
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import { App, Button, Space, Tree } from 'antd';
+import { App, Button, Popconfirm, Space, Tree } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 
 const Access: React.FC = () => {
   // -- APPs
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
   // - refs
   const vForm = useRef<ProFormInstance>();
 
@@ -25,10 +25,11 @@ const Access: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
 
   // - methods
-  const getData = async () => {
+  const getData = async (tips?: string) => {
     const resp = await apiSystems.access();
     vForm.current?.resetFields();
-    if (resp && resp.code === 200) {
+    if (resp.code === 200) {
+      tips && message.success(tips);
       setTreeData(resp.data);
     }
   };
@@ -37,30 +38,6 @@ const Access: React.FC = () => {
   useEffect(() => {
     getData();
   }, []);
-
-  // - events
-  const onDelete = (nodeData: API.SystemsAccessProps) => {
-    console.log(nodeData);
-    modal.confirm({
-      content: '您确定要删除该项及其下所有子类么？',
-      cancelText: '点错了',
-      onOk: async () => {
-        message.loading('处理中...', 0);
-        const resp = await apiSystems.accessDelete(nodeData.id);
-        message.destroy();
-        if (resp && resp.code === 200) {
-          getData();
-        }
-      },
-    });
-  };
-
-  const onInsert = (nodeData: API.SystemsAccessProps) => {
-    vForm.current?.setFieldsValue({
-      parentId: nodeData.id,
-    });
-    setOpenModal(true);
-  };
 
   const onEdit = (nodeData: API.SystemsAccessProps) => {
     vForm.current?.setFieldsValue({
@@ -73,24 +50,18 @@ const Access: React.FC = () => {
   // -- renders
   return (
     <PageContainer
-      subTitle="Tips：您可以在此页面管理权限~"
-      header={{
-        breadcrumb: {},
-        extra: [
-          <Button
-            type="primary"
-            key={'ADD_ACCESS'}
-            shape="round"
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpenModal(true);
-            }}
-          >
-            <PlusOutlined />
-            <span>新增权限</span>
-          </Button>,
-        ],
-      }}
+      extra={[
+        <Button
+          key={'ADD_ACCESS'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpenModal(true);
+          }}
+        >
+          <PlusOutlined />
+          <span>新增权限</span>
+        </Button>,
+      ]}
     >
       {/* 树形解构 */}
       <Tree
@@ -112,12 +83,25 @@ const Access: React.FC = () => {
             />
             <PlusCircleOutlined
               style={{ color: '#4169E1' }}
-              onClick={() => onInsert(nodeData)}
+              onClick={() => {
+                vForm.current?.setFieldsValue({
+                  parentId: nodeData.id,
+                });
+                setOpenModal(true);
+              }}
             />
-            <DeleteOutlined
-              style={{ color: '#DC143C' }}
-              onClick={() => onDelete(nodeData)}
-            />
+            <Popconfirm
+              title={'您确定要删除该项及其下所有子类么？'}
+              onConfirm={async () => {
+                message.loading('处理中...', 0);
+                const resp = await apiSystems.accessDelete(nodeData.id);
+                if (resp.code === 200) {
+                  getData('删除成功');
+                }
+              }}
+            >
+              <DeleteOutlined style={{ color: '#DC143C' }} />
+            </Popconfirm>
           </Space>
         )}
       />
@@ -135,9 +119,11 @@ const Access: React.FC = () => {
         onFinish={async (value) => {
           message.loading('处理中...', 0);
           const resp = await apiSystems.accessAddOrUpdate(value);
-          message.destroy();
-          if (resp && resp.code === 200) {
-            getData();
+
+          if (resp.code === 200) {
+            getData(
+              vForm.current?.getFieldValue('authId') ? '编辑成功' : '添加成功',
+            );
             setOpenModal(false);
           }
         }}

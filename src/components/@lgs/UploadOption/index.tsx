@@ -30,7 +30,7 @@ const UploadOption: React.FC<IProps> = React.memo((props) => {
       try {
         message.loading('文件上传中，请稍后...');
         // const resp = await apiCommon.uploadFile(file);
-        // if (resp && resp.code === 200) {
+        // if (resp.code === 200) {
         //   onChange && onChange(resp.data.full_path);
         // }
       } catch (error) {}

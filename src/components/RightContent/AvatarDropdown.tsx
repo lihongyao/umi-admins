@@ -156,8 +156,8 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
             oldPassword,
             newPassword,
           });
-          message.destroy();
-          if (resp && resp.code === 200) {
+
+          if (resp.code === 200) {
             setOpenForm(false);
             modal.info({
               title: '温馨提示',

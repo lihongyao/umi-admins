@@ -3,114 +3,115 @@ import ListAccess from './data/access';
 import ListAdministrators from './data/administrators';
 import ListRoles from './data/roles';
 
-const sleep = (delay = 500) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(null);
-    }, delay);
-  });
-};
-
 export default {
   // ~~~~~~~~~~~~~~~~~~
   // 用户相关
   // ~~~~~~~~~~~~~~~~~~
   'POST /api/user/login': mock({
     code: 200,
+    message: 'success',
     data: {
       token: '@guid',
       access: [],
-      nickname: '李鸿耀',
+      nickname: '@cname',
       avatar:
         'https://p3-pc.douyinpic.com/img/310b60006e77b33052f35~c5_300x300.jpeg?from=2956013662',
     },
   }),
-  'POST /api/user/sendCaptcha': { code: 200 },
+  'POST /api/user/sendCaptcha': { code: 200, message: 'success' },
   'POST /api/user/list': mock({
     code: 200,
+    message: 'success',
     data: {
       'data|10': [
         {
-          id: '@guid',
-          userId: '@guid',
+          'id|+1': 0,
           nickname: '@cname()',
           avatarUrl: "@Image('80x80','@color')",
-          phone: '17398888669',
-          content: '@paragraph(1)',
-          createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
-          'state|1': [0, 1],
+          phone: /^1[3-9]\d{9}$/,
+          createTime: '@datetime',
+          'status|1': [0, 1],
         },
       ],
-      total: 50,
+      total: 10,
     },
   }),
   'POST /api/user/feedbacks': mock({
     code: 200,
+    message: 'success',
     data: {
       'data|10': [
         {
-          id: '@guid',
-          userId: '@guid',
+          'id|+1': 0,
+          createTime: '@datetime',
+          content: '@csentence',
           nickname: '@cname()',
           avatarUrl: "@Image('80x80','@color')",
-          phone: '17398888669',
-          content: '@paragraph(1)',
-          createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          phone: /^1[3-9]\d{9}$/,
         },
       ],
       total: 50,
     },
   }),
-  'POST /api/user/logout': { code: 200 },
+  'POST /api/user/logout': { code: 200, message: 'success' },
+
   // ~~~~~~~~~~~~~~~~~~
   // OSS-Configs
   // ~~~~~~~~~~~~~~~~~~
 
-  'GET /api/upload/getSignForOSS': { code: 200 },
+  'GET /api/upload/getSignForOSS': { code: 200, message: 'success' },
 
   // ~~~~~~~~~~~~~~~~~~
   // 轮播广告
   // ~~~~~~~~~~~~~~~~~~
   'POST /api/banners/list': mock({
     code: 200,
+    message: 'success',
     data: {
-      [`data|5`]: [
+      [`data|10`]: [
         {
-          id: '@guid',
-          'state|1': [0, 1],
-          'weight|0-20': 0,
-          start: '@datetime("yyyy-MM-dd HH:mm:ss")',
-          end: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          'id|+1': 0,
+          'status|0-1': 0,
           bannerPic: "@Image('100x60','@color')",
+          'weight|0-20': 0,
           'jumpUrl|1': ['/details', '/orders', '/mine'],
+          startTime: '@datetime(yyyy-MM-dd HH:mm)',
+          endTime: '@datetime(yyyy-MM-dd HH:mm)',
           'locationCode|1': ['10000', '20000', '30000'],
         },
       ],
-      total: 50,
+      total: 10,
     },
   }),
   'GET /api/banners/locations': {
     code: 200,
     data: [
       { locationName: '首页', locationCode: '10000' },
-      { locationName: '个人中心', locationCode: '20000' },
-      { locationName: '商品详情', locationCode: '30000' },
+      { locationName: '我的', locationCode: '20000' },
+      { locationName: '商品', locationCode: '30000' },
     ],
   },
-  'POST /api/banners/switchStatus': { code: 200 },
-  'POST /api/banners/addOrUpdate': { code: 200 },
+  'POST /api/banners/switchStatus': { code: 200, message: 'success' },
+  'POST /api/banners/addOrUpdate': { code: 200, message: 'success' },
 
   // ~~~~~~~~~~~~~~~~~~
   // 系统管理
   // ~~~~~~~~~~~~~~~~~~
 
   'GET /api/systems/access/list': { code: 200, data: ListAccess },
-  'POST /api/systems/access/addOrUpdate': { code: 200 },
-  'DELETE /api/systems/access/remove/:authId': { code: 200 },
+  'POST /api/systems/access/addOrUpdate': { code: 200, message: 'success' },
+  'DELETE /api/systems/access/remove/:authId': {
+    code: 200,
+    message: 'success',
+  },
 
-  'GET /api/systems/roles/list': { code: 200, data: ListRoles },
-  'POST /api/systems/roles/addOrUpdate': { code: 200 },
-  'DELETE /api/systems/roles/remove/:authId': { code: 200 },
+  'GET /api/systems/roles/list': {
+    code: 200,
+    message: 'success',
+    data: ListRoles,
+  },
+  'POST /api/systems/roles/addOrUpdate': { code: 200, message: 'success' },
+  'PUT /api/systems/roles/switch-status/:id': { code: 200, message: 'success' },
 
   'POST /api/administrators/list': { code: 200, data: ListAdministrators },
   'POST /api/administrators/addOrUpdate': { code: 200 },
