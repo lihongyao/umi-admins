@@ -1,4 +1,4 @@
-import { apiUser } from '@/api/apiServer';
+import { apiAuth } from '@/api/apiServer';
 import InitParticles from '@/components/@lgs/InitParticles';
 import Footer from '@/components/Footer';
 
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
     values: API.LoginWithAccount & { memorize: boolean },
   ) => {
     try {
-      const resp = await apiUser.login({
+      const resp = await apiAuth.login({
         username: values.username,
         password: values.password,
       });
@@ -190,7 +190,7 @@ const Login: React.FC = () => {
                 phoneName={'mobile'}
                 rules={[{ required: true, message: '请输入验证码！' }]}
                 onGetCaptcha={async (phone) => {
-                  const resp = await apiUser.sendCaptcha(phone);
+                  const resp = await apiAuth.sendCaptcha(phone);
                   if (resp.code === 200) {
                     message.success('验证码为：1234!');
                   }

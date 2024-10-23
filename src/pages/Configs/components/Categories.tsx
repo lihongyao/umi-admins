@@ -60,6 +60,7 @@ const Types: React.FC = () => {
                   message.loading('处理中...', 0);
                   try {
                     setTimeout(() => {
+                      message.destroy();
                       setTips('删除成功');
                       vTable.current?.reloadAndRest!();
                     }, 500);

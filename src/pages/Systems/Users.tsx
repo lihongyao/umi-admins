@@ -14,7 +14,7 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Avatar, Button, Modal, Popconfirm, Space } from 'antd';
+import { App, Avatar, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const Users: React.FC = () => {
@@ -44,11 +44,11 @@ const Users: React.FC = () => {
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '头像',
-      dataIndex: 'avatar',
+      dataIndex: 'avatarUrl',
       search: false,
       render: (_, record) => (
         <Avatar
-          src={record.avatar}
+          src={record.avatarUrl}
           style={{ width: 50, height: 50 }}
           shape={'square'}
         />
@@ -103,14 +103,7 @@ const Users: React.FC = () => {
             <Popconfirm
               title={'温馨提示'}
               description={'您确定要禁用该用户么？'}
-              onConfirm={() => {
-                modal.confirm({
-                  content: '您确定要禁用该用户么？',
-                  okText: '确定',
-                  cancelText: '点错了',
-                  onOk: () => switchStatus(record.id, '已禁用'),
-                });
-              }}
+              onConfirm={() => switchStatus(record.id, '已禁用')}
             >
               <Button danger>禁用</Button>
             </Popconfirm>
@@ -119,14 +112,7 @@ const Users: React.FC = () => {
             <Popconfirm
               title={'温馨提示'}
               description={'您确定要启用该用户么？'}
-              onConfirm={() => {
-                Modal.confirm({
-                  content: '您确定要启用该用户么？',
-                  okText: '确定',
-                  cancelText: '点错了',
-                  onOk: () => switchStatus(record.id, '已启用'),
-                });
-              }}
+              onConfirm={() => switchStatus(record.id, '已启用')}
             >
               <Button>启用</Button>
             </Popconfirm>
@@ -135,7 +121,7 @@ const Users: React.FC = () => {
             onClick={() => {
               vForm.current?.setFieldsValue({
                 ...record,
-                avatar: [{ url: record.avatar }],
+                avatar: [{ url: record.avatarUrl }],
               });
               setOpenForm(true);
             }}
@@ -192,9 +178,9 @@ const Users: React.FC = () => {
         request={async () => {
           const resp = await apiSystems.users();
           return Promise.resolve({
-            data: resp.data || [],
+            data: resp.data.data || [],
             success: true,
-            total: resp.data.length,
+            total: resp.data.total,
           });
         }}
       />

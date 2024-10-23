@@ -164,6 +164,7 @@ const Basic: React.FC = () => {
           message.loading('处理中...', 0);
           try {
             setTimeout(() => {
+              message.destroy();
               vList.current?.reload();
               message.success('设置成功');
               setRecord(null);

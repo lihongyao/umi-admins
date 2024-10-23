@@ -1,24 +1,81 @@
 import { mock } from 'mockjs';
 import ListAccess from './data/access';
-import ListAdministrators from './data/administrators';
 import ListRoles from './data/roles';
-
+const avatarUrl =
+  'https://p3-pc.douyinpic.com/img/310b60006e77b33052f35~c5_300x300.jpeg?from=2956013662';
 export default {
   // ~~~~~~~~~~~~~~~~~~
-  // 用户相关
+  // 登录授权
   // ~~~~~~~~~~~~~~~~~~
-  'POST /api/user/login': mock({
+  'POST /api/auth/login': mock({
     code: 200,
     message: 'success',
     data: {
       token: '@guid',
       access: [],
       nickname: '@cname',
-      avatar:
-        'https://p3-pc.douyinpic.com/img/310b60006e77b33052f35~c5_300x300.jpeg?from=2956013662',
+      avatar: avatarUrl,
     },
   }),
-  'POST /api/user/sendCaptcha': { code: 200, message: 'success' },
+  'POST /api/auth/sendCaptcha': { code: 200, message: 'success' },
+  'POST /api/auth/logout': { code: 200, message: 'success' },
+
+  // ~~~~~~~~~~~~~~~~~~
+  // 系统管理
+  // ~~~~~~~~~~~~~~~~~~
+  // -- 权限管理
+  'GET /api/systems/access/list': {
+    code: 200,
+    message: 'success',
+    data: ListAccess,
+  },
+  'POST /api/systems/access/addOrUpdate': { code: 200, message: 'success' },
+  'DELETE /api/systems/access/remove/:authId': {
+    code: 200,
+    message: 'success',
+  },
+
+  // -- 角色管理
+  'GET /api/systems/roles/list': {
+    code: 200,
+    message: 'success',
+    data: ListRoles,
+  },
+  'POST /api/systems/roles/addOrUpdate': { code: 200, message: 'success' },
+  'PUT /api/systems/roles/switch-status/:id': { code: 200, message: 'success' },
+
+  // -- 系统用户
+  'POST /api/administrators/list': mock({
+    code: 200,
+    message: 'success',
+    data: {
+      'data|10': [
+        {
+          username: 'admin',
+          nickname: '@cname',
+          avatarUrl: "@Image('80x80','@color')",
+          roleId: 0,
+          createBy: '@cname',
+          createTime: '@datetime',
+          lastLoginTime: '@datetime',
+          'status|0-1': 0,
+          'id|+1': 0,
+        },
+      ],
+      total: 10,
+    },
+  }),
+  'POST /api/administrators/addOrUpdate': { code: 200, message: 'success' },
+  'PUT /api/administrators/reset-psw/:id': { code: 200, message: 'success' },
+  'PUT /api/administrators/change-psw': { code: 200, message: 'success' },
+  'PUT /api/administrators/switch-status/:id': {
+    code: 200,
+    message: 'success',
+  },
+
+  // ~~~~~~~~~~~~~~~~~~
+  // 用户相关
+  // ~~~~~~~~~~~~~~~~~~
   'POST /api/user/list': mock({
     code: 200,
     message: 'success',
@@ -95,31 +152,6 @@ export default {
   'POST /api/banners/addOrUpdate': { code: 200, message: 'success' },
 
   // ~~~~~~~~~~~~~~~~~~
-  // 系统管理
-  // ~~~~~~~~~~~~~~~~~~
-
-  'GET /api/systems/access/list': { code: 200, data: ListAccess },
-  'POST /api/systems/access/addOrUpdate': { code: 200, message: 'success' },
-  'DELETE /api/systems/access/remove/:authId': {
-    code: 200,
-    message: 'success',
-  },
-
-  'GET /api/systems/roles/list': {
-    code: 200,
-    message: 'success',
-    data: ListRoles,
-  },
-  'POST /api/systems/roles/addOrUpdate': { code: 200, message: 'success' },
-  'PUT /api/systems/roles/switch-status/:id': { code: 200, message: 'success' },
-
-  'POST /api/administrators/list': { code: 200, data: ListAdministrators },
-  'POST /api/administrators/addOrUpdate': { code: 200 },
-  'PUT /api/administrators/reset-psw/:id': { code: 200 },
-  'PUT /api/administrators/change-psw': { code: 200 },
-  'PUT /api/administrators/switch-status/:id': { code: 200 },
-
-  // ~~~~~~~~~~~~~~~~~~
   // 审核列表
   // ~~~~~~~~~~~~~~~~~~
 
@@ -168,7 +200,6 @@ export default {
   // ~~~~~~~~~~~~~~~~~~
   // 分类管理
   // ~~~~~~~~~~~~~~~~~~
-
   'GET /api/categories/list': {
     code: 200,
     data: [

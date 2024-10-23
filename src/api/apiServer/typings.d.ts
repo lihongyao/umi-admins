@@ -125,7 +125,7 @@ declare namespace API {
     id: number;
     username: string /** 用户名 */;
     nickname: string /** 用户昵称 */;
-    avatar: string /** 用户头像 */;
+    avatarUrl: string /** 用户头像 */;
     roleId: string /** 角色ID */;
     createBy: string /** 创建者 */;
     createTime: string /** 创建时间 */;

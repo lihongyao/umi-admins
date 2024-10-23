@@ -1,26 +1,8 @@
 import request from '@/api/apiConfig';
 
-/**********************
- ** 登录相关
- **********************/
-export async function login(data: API.LoginWithAccount) {
-  return request<API.LoginResponse>({
-    url: '/api/auths/login-admin',
-    method: 'POST',
-    data,
-  });
-}
-
-export async function logout() {
-  return request({
-    url: '/api/auths/logout',
-    method: 'POST',
-  });
-}
-
-/**********************
- ** 权限管理
- **********************/
+// ~~~~~~~~~~~~~~~~~~
+// 权限管理
+// ~~~~~~~~~~~~~~~~~~
 export async function access() {
   return request<API.SystemsAccessProps[]>({ url: '/api/systems/access/list' });
 }
@@ -39,9 +21,9 @@ export async function accessDelete(authId: number) {
   });
 }
 
-/**********************
- ** 角色管理
- **********************/
+// ~~~~~~~~~~~~~~~~~~
+// 角色管理
+// ~~~~~~~~~~~~~~~~~~
 export async function roles() {
   return request<API.SystemRoleProps[]>({
     url: '/api/systems/roles/list',
@@ -68,11 +50,11 @@ export async function roleSwichStatus(id: number) {
   });
 }
 
-/**********************
- ** 系统用户
- **********************/
+// ~~~~~~~~~~~~~~~~~~
+// 系统用户
+// ~~~~~~~~~~~~~~~~~~
 export async function users(data: any = {}) {
-  return request<API.SystemsUserProps[]>({
+  return request<API.List<API.SystemsUserProps>>({
     url: '/api/administrators/list',
     method: 'POST',
     data,

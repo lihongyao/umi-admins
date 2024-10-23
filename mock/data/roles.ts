@@ -28,7 +28,7 @@ export default mock([
     createTime: '@datetime',
     updateBy: '@cname',
     updateTime: '@datetime',
-    'status|1': [0, 1],
+    'status|0-1': 0,
     id: 0,
   },
   {
@@ -43,7 +43,7 @@ export default mock([
     createTime: '@datetime',
     updateBy: '@cname',
     updateTime: '@datetime',
-    'status|1': [0, 1],
+    'status|0-1': 0,
     id: 1,
   },
 ]);

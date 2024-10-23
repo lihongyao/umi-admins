@@ -90,10 +90,16 @@ const Roles: React.FC = () => {
           >
             编辑
           </Button>
-          <Popconfirm title="您确定要启用该角色么？">
+          <Popconfirm
+            title="您确定要启用该角色么？"
+            onConfirm={() => switchStatus(record.id, '已启用')}
+          >
             <Button disabled={record.status === 1}>启用</Button>
           </Popconfirm>
-          <Popconfirm title="您确定要禁用该角色么？">
+          <Popconfirm
+            title="您确定要禁用该角色么？"
+            onConfirm={() => switchStatus(record.id, '已禁用')}
+          >
             <Button disabled={record.status === 0} danger>
               禁用
             </Button>
