@@ -14,7 +14,7 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Avatar, Button, Modal, Space } from 'antd';
+import { App, Avatar, Button, Modal, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const Users: React.FC = () => {
@@ -41,16 +41,21 @@ const Users: React.FC = () => {
 
   // -- columns
   const columns: ProColumns<API.SystemsUserProps>[] = [
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '头像',
       dataIndex: 'avatar',
-      hideInSearch: true,
+      search: false,
       render: (_, record) => (
-        <Avatar src={record.avatar} style={{ width: 50, height: 50 }} />
+        <Avatar
+          src={record.avatar}
+          style={{ width: 50, height: 50 }}
+          shape={'square'}
+        />
       ),
     },
-    { title: '登录账号', dataIndex: 'username', hideInSearch: true },
-    { title: '姓名', dataIndex: 'nickname', hideInSearch: true },
+    { title: '登录账号', dataIndex: 'username', search: false },
+    { title: '姓名', dataIndex: 'nickname' },
     {
       title: '状态',
       tooltip: '该用户是否被拉入黑名单',
@@ -65,7 +70,7 @@ const Users: React.FC = () => {
     {
       title: '系统角色',
       dataIndex: 'roleId',
-      hideInSearch: true,
+      search: false,
       valueType: 'select',
       fieldProps: {
         fieldNames: {
@@ -83,22 +88,22 @@ const Users: React.FC = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'createDate',
+      dataIndex: 'createTime',
       valueType: 'date',
-      hideInSearch: true,
+      search: false,
     },
-    { title: '最后登录时间', dataIndex: 'lastLoginTime', hideInSearch: true },
+    { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
     {
       title: '操作',
       key: 'action',
-      hideInSearch: true,
+      search: false,
       render: (_, record) => (
         <Space>
           {record.state === 1 && (
-            <Button
-              disabled={!record.state}
-              danger
-              onClick={() => {
+            <Popconfirm
+              title={'温馨提示'}
+              description={'您确定要禁用该用户么？'}
+              onConfirm={() => {
                 modal.confirm({
                   content: '您确定要禁用该用户么？',
                   okText: '确定',
@@ -107,13 +112,14 @@ const Users: React.FC = () => {
                 });
               }}
             >
-              禁用
-            </Button>
+              <Button danger>禁用</Button>
+            </Popconfirm>
           )}
           {record.state === 0 && (
-            <Button
-              disabled={!!record.state}
-              onClick={() => {
+            <Popconfirm
+              title={'温馨提示'}
+              description={'您确定要启用该用户么？'}
+              onConfirm={() => {
                 Modal.confirm({
                   content: '您确定要启用该用户么？',
                   okText: '确定',
@@ -122,8 +128,8 @@ const Users: React.FC = () => {
                 });
               }}
             >
-              启用
-            </Button>
+              <Button>启用</Button>
+            </Popconfirm>
           )}
           <Button
             onClick={() => {
@@ -136,24 +142,20 @@ const Users: React.FC = () => {
           >
             编辑
           </Button>
-          <Button
-            onClick={() => {
-              Modal.confirm({
-                content: '您确定要重置该用户的密码么？',
-                cancelText: '点错了',
-                onOk: async () => {
-                  message.loading('处理中...', 0);
-                  const resp = await apiSystems.userResetPsw(record.id);
-                  message.destroy();
-                  if (resp && resp.code === 200) {
-                    message.success('密码已重置为【123456】');
-                  }
-                },
-              });
+          <Popconfirm
+            title={'温馨提示'}
+            description={'您确定要重置该用户的密码么？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiSystems.userResetPsw(record.id);
+              message.destroy();
+              if (resp && resp.code === 200) {
+                message.success('密码已重置为【123456】');
+              }
             }}
           >
-            重置密码
-          </Button>
+            <Button>重置密码</Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -161,30 +163,28 @@ const Users: React.FC = () => {
 
   // -- rnders
   return (
-    <PageContainer pageHeaderRender={false}>
+    <PageContainer
+      extra={[
+        <Button
+          key={'create'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpenForm(true);
+          }}
+        >
+          <PlusOutlined />
+          新建用户
+        </Button>,
+      ]}
+    >
       <ProTable<API.SystemsUserProps>
         actionRef={vTable}
-        headerTitle={'用户管理'}
+        headerTitle={' '}
         columns={columns}
         rowKey="id"
         scroll={{ x: 1200 }}
-        search={false}
         options={false}
         pagination={false}
-        toolBarRender={() => [
-          <Button
-            type={'primary'}
-            shape={'round'}
-            key={'create'}
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpenForm(true);
-            }}
-          >
-            <PlusOutlined />
-            新建用户
-          </Button>,
-        ]}
         postData={(data: Array<API.SystemsUserProps>) => {
           tips && message.success(tips);
           setTips('');

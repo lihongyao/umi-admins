@@ -12,9 +12,9 @@ const sleep = (delay = 500) => {
 };
 
 export default {
-  /**********************
-   ** 用户相关
-   **********************/
+  // ~~~~~~~~~~~~~~~~~~
+  // 用户相关
+  // ~~~~~~~~~~~~~~~~~~
   'POST /api/user/login': mock({
     code: 200,
     data: {
@@ -22,7 +22,7 @@ export default {
       access: [],
       nickname: '李鸿耀',
       avatar:
-        'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+        'https://p3-pc.douyinpic.com/img/310b60006e77b33052f35~c5_300x300.jpeg?from=2956013662',
     },
   }),
   'POST /api/user/sendCaptcha': { code: 200 },
@@ -37,7 +37,8 @@ export default {
           avatarUrl: "@Image('80x80','@color')",
           phone: '17398888669',
           content: '@paragraph(1)',
-          createDate: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          'state|1': [0, 1],
         },
       ],
       total: 50,
@@ -54,21 +55,22 @@ export default {
           avatarUrl: "@Image('80x80','@color')",
           phone: '17398888669',
           content: '@paragraph(1)',
-          createDate: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
         },
       ],
       total: 50,
     },
   }),
   'POST /api/user/logout': { code: 200 },
-  /**********************
-   ** OSS-Configs
-   **********************/
+  // ~~~~~~~~~~~~~~~~~~
+  // OSS-Configs
+  // ~~~~~~~~~~~~~~~~~~
+
   'GET /api/upload/getSignForOSS': { code: 200 },
 
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~
   // 轮播广告
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ~~~~~~~~~~~~~~~~~~
   'POST /api/banners/list': mock({
     code: 200,
     data: {
@@ -98,9 +100,10 @@ export default {
   'POST /api/banners/switchStatus': { code: 200 },
   'POST /api/banners/addOrUpdate': { code: 200 },
 
-  /**********************
-   ** 系统管理
-   **********************/
+  // ~~~~~~~~~~~~~~~~~~
+  // 系统管理
+  // ~~~~~~~~~~~~~~~~~~
+
   'GET /api/systems/access/list': { code: 200, data: ListAccess },
   'POST /api/systems/access/addOrUpdate': { code: 200 },
   'DELETE /api/systems/access/remove/:authId': { code: 200 },
@@ -115,9 +118,10 @@ export default {
   'PUT /api/administrators/change-psw': { code: 200 },
   'PUT /api/administrators/switch-status/:id': { code: 200 },
 
-  /**********************
-   ** 审核列表
-   **********************/
+  // ~~~~~~~~~~~~~~~~~~
+  // 审核列表
+  // ~~~~~~~~~~~~~~~~~~
+
   'POST /api/audit/list': mock({
     code: 200,
     data: {
@@ -128,7 +132,7 @@ export default {
           name: '@cname()',
           desc: '月影摇竹浪，星辉伴夜凉。梅香飘后院，静待故人来。',
           unit: '',
-          createDate: '@datetime("yyyy-MM-dd HH:mm:ss")',
+          createTime: '@datetime("yyyy-MM-dd HH:mm:ss")',
           'state|1': [0, 1, 2],
           mobile: '17398888669',
           roomName: '锦麟府-北区4栋住宅-1单元-701',
@@ -138,9 +142,10 @@ export default {
     },
   }),
 
-  /**********************
-   ** 新闻列表
-   **********************/
+  // ~~~~~~~~~~~~~~~~~~
+  // 新闻列表
+  // ~~~~~~~~~~~~~~~~~~
+
   'POST /admin/news/list': mock({
     code: 200,
     data: {
@@ -159,9 +164,10 @@ export default {
     },
   }),
 
-  /**********************
-   ** 分类管理
-   **********************/
+  // ~~~~~~~~~~~~~~~~~~
+  // 分类管理
+  // ~~~~~~~~~~~~~~~~~~
+
   'GET /api/categories/list': {
     code: 200,
     data: [

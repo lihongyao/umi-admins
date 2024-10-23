@@ -11,7 +11,7 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Button, Space } from 'antd';
+import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 
 const Roles: React.FC = () => {
@@ -45,15 +45,16 @@ const Roles: React.FC = () => {
 
   // -- columns
   const columns: ProColumns<API.SystemRoleProps>[] = [
-    { title: '角色名称', dataIndex: 'roleName', hideInSearch: true },
-    { title: '创建人', dataIndex: 'createBy', hideInSearch: true },
-    { title: '创建时间', dataIndex: 'createDate', hideInSearch: true },
-    { title: '更新人', dataIndex: 'updateBy', hideInSearch: true },
-    { title: '更新时间', dataIndex: 'updateDate', hideInSearch: true },
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
+    { title: '角色名称', dataIndex: 'roleName', search: false },
+    { title: '创建人', dataIndex: 'createBy', search: false },
+    { title: '创建时间', dataIndex: 'createTime', search: false },
+    { title: '更新人', dataIndex: 'updateBy', search: false },
+    { title: '更新时间', dataIndex: 'updateTime', search: false },
     {
       title: '操作',
       key: 'action',
-      hideInSearch: true,
+      search: false,
       render: (_, record) => (
         <Space>
           <Button
@@ -68,32 +69,40 @@ const Roles: React.FC = () => {
           >
             编辑
           </Button>
-          <Button
-            danger
-            onClick={() => {
-              modal.confirm({
-                content: '您确定要删除该角色么？',
-                cancelText: '点错了',
-                onOk: async () => {
-                  message.loading('处理中...', 0);
-                  const resp = await apiSystems.roleDelete(record.id);
-                  message.destroy();
-                  if (resp && resp.code === 200) {
-                    setTips('角色删除成功');
-                    vTable.current?.reloadAndRest!();
-                  }
-                },
-              });
+          <Popconfirm
+            title={'温馨提示'}
+            description={'您确定要删除该角色么？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiSystems.roleDelete(record.id);
+              message.destroy();
+              if (resp && resp.code === 200) {
+                setTips('角色删除成功');
+                vTable.current?.reloadAndRest!();
+              }
             }}
           >
-            删除
-          </Button>
+            <Button danger>删除</Button>
+          </Popconfirm>
         </Space>
       ),
     },
   ];
   return (
-    <PageContainer pageHeaderRender={false}>
+    <PageContainer
+      extra={[
+        <Button
+          key={'create'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpenForm(true);
+          }}
+        >
+          <PlusOutlined />
+          <span>新建角色</span>
+        </Button>,
+      ]}
+    >
       <ProTable<API.SystemRoleProps>
         actionRef={vTable}
         headerTitle={'角色管理'}
@@ -101,20 +110,6 @@ const Roles: React.FC = () => {
         rowKey="id"
         search={false}
         options={false}
-        toolBarRender={() => [
-          <Button
-            type={'primary'}
-            shape={'round'}
-            key={'create'}
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpenForm(true);
-            }}
-          >
-            <PlusOutlined />
-            <span>新建角色</span>
-          </Button>,
-        ]}
         pagination={{
           hideOnSinglePage: true,
           showTotal: (total) => `共 ${total} 条`,

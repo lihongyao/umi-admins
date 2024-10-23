@@ -35,29 +35,33 @@ const Catalogues: React.FC = () => {
 
   // -- columns
   const columns: ProColumns<any>[] = [
-    {
-      title: '权限名称',
-      dataIndex: '',
-      key: 'name',
-    },
-    {
-      title: 'CODE',
-      dataIndex: 'code',
-      key: 'code',
-    },
+    { title: '权限名称', dataIndex: 'name' },
+    { title: 'CODE', dataIndex: 'code' },
     {
       width: 120,
       title: '操作',
       key: 'actions',
       render: (_, record) => (
-        <Space>
+        <>
           <Button
+            type={'link'}
             icon={<EditOutlined />}
             onClick={() => {
               vForm.current?.setFieldsValue({
                 authId: record.id,
                 name: record.name,
                 code: record.code,
+              });
+              setOpenForm(true);
+            }}
+          />
+          <Button
+            type={'link'}
+            icon={<PlusSquareOutlined />}
+            disabled={record.depth === MAX_DEPTH}
+            onClick={() => {
+              vForm.current?.setFieldsValue({
+                parentId: record.id,
               });
               setOpenForm(true);
             }}
@@ -77,20 +81,9 @@ const Catalogues: React.FC = () => {
               }
             }}
           >
-            <Button icon={<DeleteOutlined />} danger />
+            <Button icon={<DeleteOutlined />} type={'link'} danger />
           </Popconfirm>
-
-          <Button
-            icon={<PlusSquareOutlined />}
-            disabled={record.depth === MAX_DEPTH}
-            onClick={() => {
-              vForm.current?.setFieldsValue({
-                parentId: record.id,
-              });
-              setOpenForm(true);
-            }}
-          />
-        </Space>
+        </>
       ),
     },
   ];
@@ -145,11 +138,25 @@ const Catalogues: React.FC = () => {
 
   // -- rnders
   return (
-    <PageContainer>
+    <PageContainer
+      extra={[
+        <Button
+          key={'create_access'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpenForm(true);
+          }}
+        >
+          <PlusOutlined />
+          新建一级权限
+        </Button>,
+      ]}
+    >
       <ProTable<API.SystemsAccessProps>
         actionRef={vTable}
         columns={columns}
         rowKey="id"
+        headerTitle={' '}
         search={false}
         options={false}
         pagination={{
@@ -182,18 +189,6 @@ const Catalogues: React.FC = () => {
           },
           onExpand: handleExpand,
         }}
-        toolBarRender={() => [
-          <Button
-            key={'create_access'}
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpenForm(true);
-            }}
-          >
-            <PlusOutlined />
-            新建一级目录
-          </Button>,
-        ]}
         postData={(data: API.SystemsAccessProps[]) => {
           tips && message.success(tips);
           setTips('');
@@ -238,14 +233,14 @@ const Catalogues: React.FC = () => {
           name="name"
           placeholder={'请输入权限名称'}
           rules={[{ required: true }]}
-          extra={'Tips：权限名称一般为页面名称或者相应的操作描述'}
+          extra={'温馨提示：权限名称一般为页面名称或者相应的操作描述'}
         />
         <ProFormText
           label="权限代码"
           name="code"
           placeholder={'请输入权限代码'}
           rules={[{ required: true }]}
-          extra={'Tips：权限代码尽量使用标准缩写，见名知意'}
+          extra={'温馨提示：权限代码尽量使用标准缩写，见名知意'}
         />
       </ModalForm>
     </PageContainer>

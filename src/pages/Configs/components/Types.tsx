@@ -46,7 +46,7 @@ const Types: React.FC = () => {
       dataIndex: 'index',
       valueType: 'indexBorder',
       width: 60,
-      hideInSearch: true,
+      search: false,
     },
 
     { title: '分类名称', dataIndex: 'typeName' },
@@ -91,7 +91,7 @@ const Types: React.FC = () => {
       title: '排序',
       dataIndex: 'sort',
       width: 20,
-      hideInSearch: true,
+      search: false,
     },
   ];
   return (
@@ -112,6 +112,7 @@ const Types: React.FC = () => {
         pagination={false}
         toolBarRender={() => [
           <Button
+            key={'create'}
             size={'small'}
             onClick={() => {
               vForm.current?.resetFields();

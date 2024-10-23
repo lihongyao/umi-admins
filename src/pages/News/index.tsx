@@ -8,7 +8,7 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
-import { App, Button, Space } from 'antd';
+import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 const News: React.FC = () => {
   // -- APPs
@@ -50,7 +50,7 @@ const News: React.FC = () => {
     {
       title: '新闻详情',
       key: 'content',
-      hideInSearch: true,
+      search: false,
       render: (_, { content, title }) => (
         <a
           onClick={() => {
@@ -63,29 +63,24 @@ const News: React.FC = () => {
         </a>
       ),
     },
-    { title: '发布时间', dataIndex: 'date', hideInSearch: true },
+    { title: '发布时间', dataIndex: 'date', search: false },
     {
       title: '操作',
       key: 'action',
-      hideInSearch: true,
+      search: false,
       width: 120,
       render: (_, record) => (
         <Space>
           <Button onClick={() => navigate(`/news/edit/${record.id}`)}>
             编辑
           </Button>
-          <Button
-            danger
-            onClick={() => {
-              modal.confirm({
-                title: '您确定要删除该条谏言么？',
-                cancelText: '点错了',
-                onOk: () => {},
-              });
-            }}
+          <Popconfirm
+            placement={'leftTop'}
+            title={'温馨提示'}
+            description={'您确定要删除该记录么？'}
           >
-            删除
-          </Button>
+            <Button danger>删除</Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -93,17 +88,18 @@ const News: React.FC = () => {
 
   // -- renders
   return (
-    <PageContainer pageHeaderRender={() => null}>
+    <PageContainer
+      extra={[
+        <Button key={'create'} onClick={() => navigate('/news/create')}>
+          <PlusOutlined />
+          <span>新建</span>
+        </Button>,
+      ]}
+    >
       <ProTable<API.NewsItemProps>
         actionRef={vTable}
-        headerTitle={'新闻管理'}
+        headerTitle={' '}
         options={false}
-        toolBarRender={() => [
-          <Button key={'create'} onClick={() => navigate('/news/create')}>
-            <PlusOutlined />
-            <span>新建</span>
-          </Button>,
-        ]}
         scroll={{ x: 1200 }}
         columns={columns}
         rowKey="id"

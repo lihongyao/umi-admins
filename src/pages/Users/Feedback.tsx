@@ -16,29 +16,29 @@ const Feedback: React.FC = () => {
 
   // -- columns
   const columns: ProColumns<API.FeedbackItemProps>[] = [
-    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 48 },
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '反馈时间',
-      dataIndex: 'createDate',
-      hideInSearch: true,
+      dataIndex: 'createTime',
+      search: false,
       width: 180,
     },
     {
       title: '用户昵称',
       dataIndex: 'nickname',
-      hideInSearch: true,
+      search: false,
       width: 100,
     },
     { title: '联系电话', dataIndex: 'phone', copyable: true, width: 160 },
-    { title: '反馈内容', dataIndex: 'content', hideInSearch: true },
+    { title: '反馈内容', dataIndex: 'content', search: false },
   ];
 
   // -- rnders
   return (
-    <PageContainer pageHeaderRender={false}>
+    <PageContainer>
       <ProTable<API.FeedbackItemProps>
         actionRef={vTable}
-        headerTitle={'意见反馈'}
+        headerTitle={' '}
         columns={columns}
         rowKey="id"
         options={false}

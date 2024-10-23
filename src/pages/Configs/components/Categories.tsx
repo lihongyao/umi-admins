@@ -25,7 +25,7 @@ const Types: React.FC = () => {
       dataIndex: 'index',
       valueType: 'indexBorder',
       width: 60,
-      hideInSearch: true,
+      search: false,
     },
 
     { dataIndex: 'typeName' },

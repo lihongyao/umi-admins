@@ -16,7 +16,7 @@ import React, { useRef, useState } from 'react';
 
 const Audit: React.FC = () => {
   // -- APPs
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
@@ -44,7 +44,7 @@ const Audit: React.FC = () => {
     {
       title: '提交作品',
       dataIndex: 'works',
-      hideInSearch: true,
+      search: false,
       width: 120,
       render: (_, { works }) => (
         <ImageBox src={works} width={100} height={60} />
@@ -67,18 +67,18 @@ const Audit: React.FC = () => {
     },
     {
       title: '提交时间',
-      dataIndex: 'createDate',
-      hideInSearch: true,
+      dataIndex: 'createTime',
+      search: false,
       width: 160,
     },
     {
       title: '家园告白',
       dataIndex: 'desc',
-      hideInSearch: true,
+      search: false,
       ellipsis: true,
       width: 200,
     },
-    { title: '业主姓名', dataIndex: 'name', hideInSearch: true, width: 100 },
+    { title: '业主姓名', dataIndex: 'name', search: false, width: 100 },
     {
       title: '联系方式',
       dataIndex: 'mobile',
@@ -91,7 +91,7 @@ const Audit: React.FC = () => {
     {
       title: '单元信息',
       dataIndex: 'roomName',
-      hideInSearch: true,
+      search: false,
       copyable: true,
       ellipsis: true,
       width: 200,
@@ -99,14 +99,13 @@ const Audit: React.FC = () => {
     {
       title: '操作',
       key: 'action',
-      hideInSearch: true,
+      search: false,
       width: 160,
       fixed: 'right',
       render: (_, { state, id }) => (
         <Space>
           <Button
             disabled={state !== 1}
-            type="primary"
             danger
             onClick={() => {
               vForm.current?.setFieldsValue({ id });
@@ -127,9 +126,7 @@ const Audit: React.FC = () => {
               });
             }}
           >
-            <Button disabled={state !== 1} type="primary">
-              通过
-            </Button>
+            <Button disabled={state !== 1}>通过</Button>
           </Popconfirm>
         </Space>
       ),
@@ -138,10 +135,10 @@ const Audit: React.FC = () => {
 
   // -- renders
   return (
-    <PageContainer pageHeaderRender={false}>
+    <PageContainer>
       <ProTable<API.AuditItemProps>
         actionRef={vTable}
-        headerTitle={'作品审核'}
+        headerTitle={' '}
         columns={columns}
         rowKey={'id'}
         search={{

@@ -1,8 +1,8 @@
 import { apiBanners } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
 import UploadForOSS from '@/components/@lgs/UploadForOSS';
-
 import { PlusOutlined } from '@ant-design/icons';
+
 import {
   ActionType,
   ModalForm,
@@ -35,10 +35,29 @@ const Banners: React.FC = () => {
 
   // -- columns
   const columns: Array<ProColumns<API.BannerItemProps>> = [
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
+    {
+      title: '展示位置',
+      dataIndex: 'locationCode',
+      valueType: 'select',
+      fieldProps: {
+        fieldNames: {
+          label: 'locationName',
+          value: 'locationCode',
+        },
+      },
+      request: async () => {
+        const resp = await apiBanners.getShowLocations();
+        if (resp && resp.code === 200) {
+          return resp.data;
+        }
+        return [];
+      },
+    },
     {
       title: '图片预览',
       dataIndex: 'bannerPic',
-      hideInSearch: true,
+      search: false,
       render: (_, { bannerPic }) => (
         <ImageBox src={bannerPic} width={100} height={60} />
       ),
@@ -74,13 +93,13 @@ const Banners: React.FC = () => {
         />
       ),
     },
-    { title: '权重', dataIndex: 'weight', hideInSearch: true },
+    { title: '权重', dataIndex: 'weight', search: false },
     {
       title: '跳转链接',
       tooltip: '请填写 Scheme 地址',
       dataIndex: 'jumpUrl',
       ellipsis: true,
-      hideInSearch: true,
+      search: false,
       copyable: true,
     },
     {
@@ -95,28 +114,11 @@ const Banners: React.FC = () => {
         </Space>
       ),
     },
-    {
-      title: '展示位置',
-      dataIndex: 'locationCode',
-      valueType: 'select',
-      fieldProps: {
-        fieldNames: {
-          label: 'locationName',
-          value: 'locationCode',
-        },
-      },
-      request: async () => {
-        const resp = await apiBanners.getShowLocations();
-        if (resp && resp.code === 200) {
-          return resp.data;
-        }
-        return [];
-      },
-    },
+
     {
       title: '操作',
       key: 'action',
-      hideInSearch: true,
+      search: false,
       render: (_, record) => (
         <Button
           onClick={() => {
@@ -136,27 +138,28 @@ const Banners: React.FC = () => {
 
   // -- renders
   return (
-    <PageContainer pageHeaderRender={false}>
+    <PageContainer
+      extra={[
+        <Button
+          key={'create'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpenForm(true);
+          }}
+        >
+          <PlusOutlined />
+          新建
+        </Button>,
+      ]}
+    >
       {/* 表格 */}
       <ProTable<API.BannerItemProps>
-        headerTitle={'轮播图管理'}
+        headerTitle={' '}
         actionRef={vTable}
         dataSource={dataSource}
         columns={columns}
         rowKey={'id'}
         scroll={{ x: 1000 }}
-        toolBarRender={() => [
-          <Button
-            key={'create'}
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpenForm(true);
-            }}
-          >
-            <PlusOutlined />
-            新建
-          </Button>,
-        ]}
         options={false}
         pagination={{
           hideOnSinglePage: true,

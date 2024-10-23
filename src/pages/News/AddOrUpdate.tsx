@@ -40,7 +40,6 @@ const AddOrUpdate: React.FC = () => {
       <ProCard>
         <ProForm
           formRef={vForm}
-          layout={'horizontal'}
           onFinish={async () => {
             message.loading('处理中，请稍后...');
             setTimeout(() => {
@@ -58,38 +57,40 @@ const AddOrUpdate: React.FC = () => {
         >
           {params.id && <ProFormText name="id" noStyle hidden />}
           <ProFormTextArea
-            label="标题"
+            label="新闻标题"
             placeholder="请输入新闻标题"
             name="title"
             rules={[{ required: true }]}
           />
-          <ProFormRadio.Group
-            layout="horizontal"
-            name="type"
-            label="类型"
-            rules={[{ required: true }]}
-            options={[
-              {
-                label: '案例新闻',
-                value: 1,
-              },
-              {
-                label: '动态新闻',
-                value: 2,
-              },
-            ]}
-          />
-          <ProFormRadio.Group
-            layout="horizontal"
-            name="category"
-            label="分类"
-            rules={[{ required: true }]}
-            options={[
-              { label: '文明实践', value: 1 },
-              { label: '爱国卫生月', value: 2 },
-              { label: '志愿服务', value: 3 },
-            ]}
-          />
+          <ProForm.Group>
+            <ProFormRadio.Group
+              layout="horizontal"
+              name="type"
+              label="新闻类型"
+              rules={[{ required: true }]}
+              options={[
+                {
+                  label: '案例新闻',
+                  value: 1,
+                },
+                {
+                  label: '动态新闻',
+                  value: 2,
+                },
+              ]}
+            />
+            <ProFormRadio.Group
+              layout="horizontal"
+              name="category"
+              label="新闻分类"
+              rules={[{ required: true }]}
+              options={[
+                { label: '文明实践', value: 1 },
+                { label: '爱国卫生月', value: 2 },
+                { label: '志愿服务', value: 3 },
+              ]}
+            />
+          </ProForm.Group>
 
           <ProFormText label="内容" name="content" rules={[{ required: true }]}>
             <EditorWang
