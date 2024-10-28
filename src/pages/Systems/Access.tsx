@@ -1,4 +1,4 @@
-import { apiSystems } from '@/api/apiServer';
+import { apiSys } from '@/api/apiServer';
 import {
   DeleteOutlined,
   FormOutlined,
@@ -26,7 +26,7 @@ const Access: React.FC = () => {
 
   // - methods
   const getData = async (tips?: string) => {
-    const resp = await apiSystems.access();
+    const resp = await apiSys.access();
     vForm.current?.resetFields();
     if (resp.code === 200) {
       tips && message.success(tips);
@@ -41,7 +41,7 @@ const Access: React.FC = () => {
 
   const onEdit = (nodeData: API.SystemsAccessProps) => {
     vForm.current?.setFieldsValue({
-      authId: nodeData.id,
+      id: nodeData.id,
       name: nodeData.name,
       code: nodeData.code,
     });
@@ -94,7 +94,7 @@ const Access: React.FC = () => {
               title={'您确定要删除该项及其下所有子类么？'}
               onConfirm={async () => {
                 message.loading('处理中...', 0);
-                const resp = await apiSystems.accessDelete(nodeData.id);
+                const resp = await apiSys.accessDelete(nodeData.id as number);
                 if (resp.code === 200) {
                   getData('删除成功');
                 }
@@ -107,29 +107,27 @@ const Access: React.FC = () => {
       />
       <ModalForm
         formRef={vForm}
-        title={
-          !!vForm.current?.getFieldValue('authId') ? '编辑权限' : '新建权限'
-        }
+        title={!!vForm.current?.getFieldValue('id') ? '编辑权限' : '新建权限'}
         open={openModal}
         width={400}
         modalProps={{
           forceRender: true,
           onCancel: () => setOpenModal(false),
         }}
-        onFinish={async (value) => {
+        onFinish={async (values) => {
           message.loading('处理中...', 0);
-          const resp = await apiSystems.accessAddOrUpdate(value);
+          const isEdit = !!values.id;
+          const fetchFn = isEdit ? apiSys.accessEdit : apiSys.accessAdd;
+          const resp = await fetchFn(values);
 
           if (resp.code === 200) {
-            getData(
-              vForm.current?.getFieldValue('authId') ? '编辑成功' : '添加成功',
-            );
+            getData(isEdit ? '编辑成功' : '添加成功');
             setOpenModal(false);
           }
         }}
       >
         <ProFormText name="parentId" noStyle hidden />
-        <ProFormText name="authId" noStyle hidden />
+        <ProFormText name="id" noStyle hidden />
         <ProFormText
           label="权限名称"
           name="name"

@@ -1,9 +1,8 @@
 import request from '@/api/apiConfig';
 
-export async function list(data: { current: number; pageSize: number }) {
+export async function list(params: API.ListParams) {
   return request<API.List<API.AuditItemProps>>({
-    url: '/api/audit/list',
-    method: 'POST',
-    data,
+    url: '/api/audit',
+    params,
   });
 }

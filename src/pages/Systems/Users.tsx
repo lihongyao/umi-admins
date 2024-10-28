@@ -1,4 +1,4 @@
-import { apiSystems } from '@/api/apiServer';
+import { apiSys } from '@/api/apiServer';
 import UploadForOSS from '@/components/@lgs/UploadForOSS';
 
 import { PlusOutlined } from '@ant-design/icons';
@@ -19,7 +19,7 @@ import React, { useRef, useState } from 'react';
 
 const Users: React.FC = () => {
   // -- APPs
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
@@ -29,9 +29,9 @@ const Users: React.FC = () => {
   const [openForm, setOpenForm] = useState(false);
 
   // -- methods
-  const switchStatus = async (id: number, tips: string) => {
+  const switchStatus = async (id: number, status: number, tips: string) => {
     message.loading('处理中...', 0);
-    const resp = await apiSystems.userSwichStatus(id);
+    const resp = await apiSys.userSwichStatus(id, status);
 
     if (resp.code === 200) {
       setTips(tips);
@@ -79,7 +79,7 @@ const Users: React.FC = () => {
         },
       },
       request: async () => {
-        const resp = await apiSystems.roles();
+        const resp = await apiSys.roles();
         if (resp.code === 200) {
           return resp.data;
         }
@@ -103,7 +103,7 @@ const Users: React.FC = () => {
             <Popconfirm
               title={'温馨提示'}
               description={'您确定要禁用该用户么？'}
-              onConfirm={() => switchStatus(record.id, '已禁用')}
+              onConfirm={() => switchStatus(record.id, 0, '已禁用')}
             >
               <Button danger>禁用</Button>
             </Popconfirm>
@@ -112,7 +112,7 @@ const Users: React.FC = () => {
             <Popconfirm
               title={'温馨提示'}
               description={'您确定要启用该用户么？'}
-              onConfirm={() => switchStatus(record.id, '已启用')}
+              onConfirm={() => switchStatus(record.id, 1, '已启用')}
             >
               <Button>启用</Button>
             </Popconfirm>
@@ -121,7 +121,7 @@ const Users: React.FC = () => {
             onClick={() => {
               vForm.current?.setFieldsValue({
                 ...record,
-                avatar: [{ url: record.avatarUrl }],
+                avatarUrl: [{ url: record.avatarUrl }],
               });
               setOpenForm(true);
             }}
@@ -133,7 +133,7 @@ const Users: React.FC = () => {
             description={'您确定要重置该用户的密码么？'}
             onConfirm={async () => {
               message.loading('处理中...', 0);
-              const resp = await apiSystems.userResetPsw(record.id);
+              const resp = await apiSys.userResetPsw(record.id);
 
               if (resp.code === 200) {
                 message.success('密码已重置为【123456】');
@@ -176,8 +176,13 @@ const Users: React.FC = () => {
           setTips('');
           return data;
         }}
-        request={async () => {
-          const resp = await apiSystems.users();
+        request={async (params) => {
+          params.pageNo = params.current || 1;
+          params.pageSize = params.pageSize || 10;
+          delete params.current;
+          const resp = await apiSys.users({
+            ...params,
+          });
           return Promise.resolve({
             data: resp.data.data || [],
             success: true,
@@ -197,15 +202,17 @@ const Users: React.FC = () => {
           forceRender: true,
           onCancel: () => setOpenForm(false),
         }}
-        onFinish={async (value) => {
+        onFinish={async (values) => {
           message.loading('处理中...', 0);
-          const resp = await apiSystems.userAddAndUpdate({
-            ...value,
-            avatar: value.avatar[0].url,
+          const isEdit = !!values.id;
+          const fetchFn = isEdit ? apiSys.userEdit : apiSys.userAdd;
+          const resp = await fetchFn({
+            ...values,
+            avatarUrl: values.avatar[0].url,
           });
 
           if (resp.code === 200) {
-            setTips(value.id ? '编辑成功' : '添加成功');
+            setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
             vTable.current?.reloadAndRest!();
           }
@@ -214,9 +221,9 @@ const Users: React.FC = () => {
         <ProFormText name="id" noStyle hidden />
         <ProForm.Item
           label="头像"
-          name="avatar"
+          name="avatarUrl"
           rules={[{ required: true, message: '请上传轮播图' }]}
-          extra={'Tips：上传尺寸 → 100x100'}
+          extra={'温馨提示：请上传1:1比例的图片'}
         >
           <UploadForOSS dir="fruites_pro" />
         </ProForm.Item>
@@ -259,7 +266,7 @@ const Users: React.FC = () => {
             },
           }}
           request={async () => {
-            const resp = await apiSystems.roles();
+            const resp = await apiSys.roles();
             if (resp.code === 200) {
               return resp.data;
             }

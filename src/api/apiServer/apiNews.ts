@@ -1,8 +1,7 @@
 import request from '@/api/apiConfig';
-export async function list(data: any) {
+export async function list(params: API.ListParams) {
   return request<API.List<API.NewsItemProps>>({
-    url: '/admin/news/list',
-    method: 'POST',
-    data,
+    url: '/admin/news',
+    params,
   });
 }

@@ -1,23 +1,31 @@
 import request from '@/api/apiConfig';
-export async function addOrUpdate(data: any) {
+
+export async function list(params: API.ListParams) {
+  return request<API.List<API.BannerItemProps>>({
+    url: '/api/banners',
+    params,
+  });
+}
+export async function add(data: any) {
   return request({
-    url: '/api/banners/addOrUpdate',
+    url: '/api/banners',
     method: 'POST',
     data,
   });
 }
-export async function switchStatus(data: any) {
+export async function edit(data: any) {
+  return request({
+    url: '/api/banners',
+    method: 'PUT',
+    data,
+  });
+}
+
+export async function switchStatus(id: number, status: number) {
   return request({
     url: '/api/banners/switchStatus',
-    method: 'POST',
-    data,
-  });
-}
-export async function list(data: any) {
-  return request<API.List<API.BannerItemProps>>({
-    url: '/api/banners/list',
-    method: 'POST',
-    data,
+    method: 'PUT',
+    data: { id, status },
   });
 }
 

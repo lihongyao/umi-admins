@@ -36,6 +36,7 @@ const Audit: React.FC = () => {
     message.loading('处理中，请稍后', 0);
     setTimeout(() => {
       message.destroy();
+      message.success(type === 'REJECT' ? '已驳回' : '已通过');
     }, 1000);
   };
 
@@ -160,7 +161,7 @@ const Audit: React.FC = () => {
           showTotal: (total) => `共 ${total} 条`,
         }}
         request={async (params: any) => {
-          params.page = params.current;
+          params.pageNo = params.current;
           delete params.current;
           const resp = await apiAudit.list(params);
           return Promise.resolve({

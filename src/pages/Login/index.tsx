@@ -1,6 +1,7 @@
-import { apiAuth } from '@/api/apiServer';
+import { apiSys } from '@/api/apiServer';
 import InitParticles from '@/components/@lgs/InitParticles';
 import Footer from '@/components/Footer';
+import Utils from '@/utils';
 
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import {
@@ -61,9 +62,9 @@ const Login: React.FC = () => {
     values: API.LoginWithAccount & { memorize: boolean },
   ) => {
     try {
-      const resp = await apiAuth.login({
+      const resp = await apiSys.login({
         username: values.username,
-        password: values.password,
+        password: Utils.md5(values.password),
       });
       if (resp.code === 200) {
         // 1. 存储账号信息
@@ -190,7 +191,7 @@ const Login: React.FC = () => {
                 phoneName={'mobile'}
                 rules={[{ required: true, message: '请输入验证码！' }]}
                 onGetCaptcha={async (phone) => {
-                  const resp = await apiAuth.sendCaptcha(phone);
+                  const resp = await apiSys.sendCaptcha(phone);
                   if (resp.code === 200) {
                     message.success('验证码为：1234!');
                   }

@@ -11,5 +11,6 @@ export default defineConfig({
     'process.env.BASE': '',
     'process.env.NAME': 'production',
     'process.env.HOST': '此处为测试环境服务器地址',
+    'process.env.SECRET_KEY': '盐值',
   },
 });

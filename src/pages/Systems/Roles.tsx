@@ -1,4 +1,4 @@
-import { apiSystems } from '@/api/apiServer';
+import { apiSys } from '@/api/apiServer';
 import AccessTree from '@/components/@lgs/AccessTree';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -36,9 +36,9 @@ const Roles: React.FC = () => {
   };
 
   // -- methods
-  const switchStatus = async (id: number, tips: string) => {
+  const switchStatus = async (id: number, status: number, tips: string) => {
     message.loading('处理中...', 0);
-    const resp = await apiSystems.roleSwichStatus(id);
+    const resp = await apiSys.roleSwichStatus(id, status);
 
     if (resp.code === 200) {
       setTips(tips);
@@ -47,7 +47,7 @@ const Roles: React.FC = () => {
   };
   // - effects
   useEffect(() => {
-    apiSystems.access().then((resp) => {
+    apiSys.access().then((resp) => {
       if (resp && resp.code === 200) {
         setAuths(resp.data);
       }
@@ -81,7 +81,7 @@ const Roles: React.FC = () => {
           <Button
             onClick={() => {
               vForm.current?.setFieldsValue({
-                roleId: record.id,
+                id: record.id,
                 roleName: record.roleName,
                 authIds: record.authIds,
               });
@@ -92,13 +92,13 @@ const Roles: React.FC = () => {
           </Button>
           <Popconfirm
             title="您确定要启用该角色么？"
-            onConfirm={() => switchStatus(record.id, '已启用')}
+            onConfirm={() => switchStatus(record.id, 1, '已启用')}
           >
             <Button disabled={record.status === 1}>启用</Button>
           </Popconfirm>
           <Popconfirm
             title="您确定要禁用该角色么？"
-            onConfirm={() => switchStatus(record.id, '已禁用')}
+            onConfirm={() => switchStatus(record.id, 0, '已禁用')}
           >
             <Button disabled={record.status === 0} danger>
               禁用
@@ -139,7 +139,7 @@ const Roles: React.FC = () => {
           return data;
         }}
         request={async () => {
-          const resp = await apiSystems.roles();
+          const resp = await apiSys.roles();
           return Promise.resolve({
             data: resp.data,
             success: true,
@@ -157,21 +157,24 @@ const Roles: React.FC = () => {
         width={500}
         layout="horizontal"
         modalProps={{
+          destroyOnClose: true,
           forceRender: true,
           onCancel: () => setOpenForm(false),
         }}
-        onFinish={async (value) => {
+        onFinish={async (values) => {
           message.loading('处理中...', 0);
-          const resp = await apiSystems.roleAddAndUpdate(value);
+          const isEdit = !!values.id;
+          const fetchFn = isEdit ? apiSys.roleEdit : apiSys.roleAdd;
+          const resp = await fetchFn(values);
           message.destroy();
           if (resp && resp.code === 200) {
-            setTips('添加成功');
+            setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
             vTable.current?.reloadAndRest!();
           }
         }}
       >
-        <ProFormText name="roleId" noStyle hidden />
+        <ProFormText name="id" noStyle hidden />
         <ProFormText
           label="角色名称"
           name="roleName"

@@ -3,7 +3,7 @@ import Footer from '@/components/Footer';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { Link, RunTimeLayoutConfig, history } from '@umijs/max';
-import { App } from 'antd';
+import { App, ConfigProvider } from 'antd';
 import dayjs from 'dayjs';
 import defaultSettings from '../config/defaultSettings';
 import {
@@ -14,10 +14,12 @@ const loginPath = '/login';
 
 export const rootContainer = (root: JSX.Element) => {
   return (
-    <App>
-      <AntWrapApp />
-      {root}
-    </App>
+    <ConfigProvider>
+      <App>
+        <AntWrapApp />
+        {root}
+      </App>
+    </ConfigProvider>
   );
 };
 

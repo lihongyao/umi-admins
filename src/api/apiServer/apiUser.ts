@@ -1,17 +1,15 @@
 import request from '@/api/apiConfig';
 
-export async function list(data: any) {
+export async function list(params: API.ListParams) {
   return request<API.List<API.UserProps>>({
-    url: '/api/user/list',
-    method: 'POST',
-    data,
+    url: '/api/user',
+    params,
   });
 }
 
-export async function feedbacks(data: any) {
+export async function feedbacks(params: API.ListParams) {
   return request<API.List<API.FeedbackItemProps>>({
     url: '/api/user/feedbacks',
-    method: 'POST',
-    data,
+    params,
   });
 }

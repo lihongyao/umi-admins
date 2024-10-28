@@ -77,11 +77,7 @@ const Banners: React.FC = () => {
           checked={!!status}
           onChange={async (v) => {
             message.loading('处理中...', 0);
-            const resp = await apiBanners.switchStatus({
-              id,
-              status: +v,
-            });
-
+            const resp = await apiBanners.switchStatus(+id, +v);
             if (resp.code === 200) {
               setDataSource((prev) =>
                 prev.map((item) =>
@@ -173,7 +169,7 @@ const Banners: React.FC = () => {
           return data;
         }}
         request={async (params) => {
-          params.page = params.current;
+          params.pageNo = params.current;
           delete params.current;
           if (params.showTime) {
             params.start = `${params.showTime[0]} 00:00:00`;
@@ -201,20 +197,19 @@ const Banners: React.FC = () => {
           forceRender: true,
           onCancel: () => setOpenForm(false),
         }}
-        onFinish={async (value) => {
+        onFinish={async (values) => {
           // -- 处理参数
-          const params: any = {
-            ...value,
-            bannerPic: value.bannerPic[0].url,
-            start: value.showTime.start,
-            end: value.showTime.end,
-          };
-          delete params.showTime;
+          values.bannerPic = values.bannerPic[0].url;
+          values.start = values.showTime[0];
+          values.end = values.showTime[1];
+          delete values.showTime;
           message.loading('处理中...', 0);
-          const resp = await apiBanners.addOrUpdate(params);
+          const isEdit = !!values.id;
+          const fetchFn = isEdit ? apiBanners.edit : apiBanners.add;
+          const resp = await fetchFn(values);
 
           if (resp.code === 200) {
-            setTips(value.id ? '编辑成功' : '添加成功');
+            setTips(isEdit ? '编辑成功' : '添加成功');
             vTable.current?.reloadAndRest!();
             setOpenForm(false);
           }

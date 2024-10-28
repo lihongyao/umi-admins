@@ -6,7 +6,7 @@ declare namespace API {
     /** 列表数据 */
     data: T[];
     /** 当前页 */
-    current: number;
+    pageNo: number;
     /** 每页条数 */
     pageSize: number;
     /** 总条数 */
@@ -14,8 +14,6 @@ declare namespace API {
   }
 
   interface ListParams {
-    current: number;
-    pageSize: number;
     [__prop__: string]: any;
   }
   // ~~~~~~~~~~~~~~~~~~

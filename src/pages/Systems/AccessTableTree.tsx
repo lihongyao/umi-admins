@@ -1,4 +1,4 @@
-import { apiSystems } from '@/api/apiServer';
+import { apiSys } from '@/api/apiServer';
 import {
   ApartmentOutlined,
   DeleteOutlined,
@@ -48,7 +48,7 @@ const Catalogues: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => {
               vForm.current?.setFieldsValue({
-                authId: record.id,
+                id: record.id,
                 name: record.name,
                 code: record.code,
               });
@@ -73,7 +73,7 @@ const Catalogues: React.FC = () => {
             placement={'bottomLeft'}
             onConfirm={async () => {
               message.loading('处理中...', 0);
-              const resp = await apiSystems.accessDelete(record.id);
+              const resp = await apiSys.accessDelete(record.id);
 
               if (resp.code === 200) {
                 setTips('删除成功');
@@ -195,7 +195,7 @@ const Catalogues: React.FC = () => {
           return source.current;
         }}
         request={async () => {
-          const resp = await apiSystems.access();
+          const resp = await apiSys.access();
           return Promise.resolve({
             data: resp.data,
             success: true,
@@ -205,28 +205,28 @@ const Catalogues: React.FC = () => {
       />
       <ModalForm
         formRef={vForm}
-        title={
-          !!vForm.current?.getFieldValue('authId') ? '编辑权限' : '新建权限'
-        }
+        title={!!vForm.current?.getFieldValue('id') ? '编辑权限' : '新建权限'}
         open={openForm}
         width={400}
         modalProps={{
           forceRender: true,
+          destroyOnClose: true,
           onCancel: () => setOpenForm(false),
         }}
-        onFinish={async (value) => {
+        onFinish={async (values) => {
           message.loading('处理中...', 0);
-          const resp = await apiSystems.accessAddOrUpdate(value);
-
+          const isEdit = !!values.id;
+          const fetchFn = isEdit ? apiSys.accessEdit : apiSys.accessAdd;
+          const resp = await fetchFn(values);
           if (resp.code === 200) {
-            setTips('添加成功');
+            setTips(isEdit ? '编辑成功' : '添加成功');
             vTable.current?.reloadAndRest!();
             setOpenForm(false);
           }
         }}
       >
         <ProFormText name="parentId" noStyle hidden />
-        <ProFormText name="authId" noStyle hidden />
+        <ProFormText name="id" noStyle hidden />
         <ProFormText
           label="权限名称"
           name="name"

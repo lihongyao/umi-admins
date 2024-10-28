@@ -1,4 +1,4 @@
-import { apiSystems } from '@/api/apiServer';
+import { apiSys } from '@/api/apiServer';
 import { useFullScreen } from '@/hooks';
 import {
   FullscreenExitOutlined,
@@ -41,20 +41,28 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
 
   // -- methods
   const loginOut = async () => {
-    // await outLogin();
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-
-    /** 此方法会跳转到 redirect 参数所在的位置 */
-    const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/login' && !redirect) {
-      history.replace({
-        pathname: '/login',
-        search: stringify({
-          redirect: pathname + search,
-        }),
+    message.loading('退出中...', 0);
+    const resp = await apiSys.logout();
+    if (resp.code === 200) {
+      message.success('已退出');
+      flushSync(() => {
+        setInitialState((s) => ({ ...s, currentUser: undefined }));
       });
+
+      const { search, pathname } = window.location;
+      const urlParams = new URL(window.location.href).searchParams;
+
+      /** 此方法会跳转到 redirect 参数所在的位置 */
+      const redirect = urlParams.get('redirect');
+      // Note: There may be security issues, please note
+      if (window.location.pathname !== '/login' && !redirect) {
+        history.replace({
+          pathname: '/login',
+          search: stringify({
+            redirect: pathname + search,
+          }),
+        });
+      }
     }
   };
   const jumpToLoginPages = () => {
@@ -84,9 +92,6 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   const onMenuClick = useCallback(
     ({ key }: { key: string }) => {
       if (key === 'logout') {
-        flushSync(() => {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
-        });
         loginOut();
         return;
       }
@@ -152,11 +157,10 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
             return message.error('新密码和确认密码不一致');
           }
           message.loading('处理中...');
-          const resp = await apiSystems.changePsw({
+          const resp = await apiSys.changePsw({
             oldPassword,
             newPassword,
           });
-
           if (resp.code === 200) {
             setOpenForm(false);
             modal.info({

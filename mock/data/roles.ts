@@ -29,7 +29,7 @@ export default mock([
     updateBy: '@cname',
     updateTime: '@datetime',
     'status|0-1': 0,
-    id: 0,
+    id: 1,
   },
   {
     roleName: '客服部门',
@@ -44,6 +44,6 @@ export default mock([
     updateBy: '@cname',
     updateTime: '@datetime',
     'status|0-1': 0,
-    id: 1,
+    id: 2,
   },
 ]);
