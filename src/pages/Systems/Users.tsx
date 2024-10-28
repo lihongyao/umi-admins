@@ -169,6 +169,7 @@ const Users: React.FC = () => {
         rowKey="id"
         scroll={{ x: 1200 }}
         options={false}
+        search={{ span: 6, labelWidth: 'auto' }}
         pagination={false}
         postData={(data: Array<API.SystemsUserProps>) => {
           tips && message.success(tips);

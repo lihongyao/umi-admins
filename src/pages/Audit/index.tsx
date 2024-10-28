@@ -141,9 +141,7 @@ const Audit: React.FC = () => {
         headerTitle={' '}
         columns={columns}
         rowKey={'id'}
-        search={{
-          labelWidth: 'auto',
-        }}
+        search={{ span: 6, labelWidth: 'auto' }}
         scroll={{ x: 1200 }}
         options={false}
         rowSelection={{

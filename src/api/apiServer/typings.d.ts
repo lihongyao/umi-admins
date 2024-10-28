@@ -12,6 +12,12 @@ declare namespace API {
     /** 总条数 */
     total: number;
   }
+
+  interface ListParams {
+    current: number;
+    pageSize: number;
+    [__prop__: string]: any;
+  }
   // ~~~~~~~~~~~~~~~~~~
   // 公共类型
   // ~~~~~~~~~~~~~~~~~~

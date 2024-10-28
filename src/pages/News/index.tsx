@@ -100,6 +100,7 @@ const News: React.FC = () => {
         actionRef={vTable}
         headerTitle={' '}
         options={false}
+        search={{ span: 6, labelWidth: 'auto' }}
         scroll={{ x: 1200 }}
         columns={columns}
         rowKey="id"

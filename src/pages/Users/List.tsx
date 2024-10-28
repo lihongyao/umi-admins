@@ -72,6 +72,7 @@ const Users: React.FC = () => {
         columns={columns}
         rowKey="id"
         options={false}
+        search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
           hideOnSinglePage: true,
           showTotal: (total) => `共 ${total} 条`,

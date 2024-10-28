@@ -162,6 +162,7 @@ const Banners: React.FC = () => {
         rowKey={'id'}
         scroll={{ x: 1000 }}
         options={false}
+        search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
           hideOnSinglePage: true,
           showTotal: (total) => `共 ${total} 条`,

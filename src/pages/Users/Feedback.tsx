@@ -36,6 +36,7 @@ const Feedback: React.FC = () => {
         columns={columns}
         rowKey="id"
         options={false}
+        search={{ span: 6, labelWidth: 'auto' }}
         pagination={false}
         request={async (params) => {
           params.page = params.current;

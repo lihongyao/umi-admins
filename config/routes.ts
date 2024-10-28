@@ -30,6 +30,7 @@ interface RouterConfig {
 
 const routes: RouterConfig[] = [
   { path: '/', redirect: '/login' },
+  { path: '/*', component: '@/pages/404' },
   { path: '/login', component: '@/pages/Login', layout: false },
   {
     path: '/dashboard',
