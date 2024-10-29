@@ -1,5 +1,6 @@
 import { apiAudit } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
+
 import {
   ActionType,
   FooterToolbar,
@@ -33,7 +34,7 @@ const Audit: React.FC = () => {
   }) => {
     const { type, ids, rejectReason } = data;
     console.log(data);
-    message.loading('处理中，请稍后', 0);
+    message.loading('处理中...', 0);
     setTimeout(() => {
       message.destroy();
       message.success(type === 'REJECT' ? '已驳回' : '已通过');

@@ -63,15 +63,15 @@ declare namespace API {
     /** 用户昵称 */
     nickname: string;
     /** 用户头像 */
-    avatar: string;
+    avatarUrl: string;
   };
 
   // ~~~~~~~~~~~~~~~~~~
-  // 轮播广告
+  // 轮播图管理
   // ~~~~~~~~~~~~~~~~~~
   type BannerItemProps = {
     /** ID */
-    id: string;
+    id: number;
     /** 启用/禁用状态 */
     status: number;
     /** 轮播图片链接 */

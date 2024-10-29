@@ -3,19 +3,20 @@ import ListAccess from './data/access';
 import ListRoles from './data/roles';
 const avatarUrl =
   'https://p3-pc.douyinpic.com/img/310b60006e77b33052f35~c5_300x300.jpeg?from=2956013662';
+
 export default {
   // ~~~~~~~~~~~~~~~~~~
   // 系统管理
   // ~~~~~~~~~~~~~~~~~~
   // -- 登录相关
-  'POST /api/ays/login': mock({
+  'POST /api/sys/login': mock({
     code: 200,
     message: 'success',
     data: {
       token: '@guid',
       access: [],
       nickname: '@cname',
-      avatar: avatarUrl,
+      avatarUrl,
     },
   }),
   'POST /api/sys/sendCaptcha': { code: 200, message: 'success' },
@@ -83,6 +84,7 @@ export default {
   }),
   'POST /api/banners': { code: 200, message: 'success' },
   'PUT /api/banners': { code: 200, message: 'success' },
+  'DELETE /api/banners': { code: 200, message: 'success' },
   'PUT /api/banners/switchStatus': { code: 200, message: 'success' },
   'GET /api/banners/locations': {
     code: 200,

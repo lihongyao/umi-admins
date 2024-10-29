@@ -20,6 +20,13 @@ export async function edit(data: any) {
     data,
   });
 }
+export async function del(id: number) {
+  return request({
+    url: '/api/banners',
+    method: 'DELETE',
+    data: { id },
+  });
+}
 
 export async function switchStatus(id: number, status: number) {
   return request({

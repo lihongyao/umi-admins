@@ -37,7 +37,7 @@ const Users: React.FC = () => {
       },
     },
     { title: '用户昵称', dataIndex: 'nickname' },
-    { title: '联系电话', dataIndex: 'phone' },
+    { title: '联系电话', dataIndex: 'phone', copyable: true },
     { title: '注册时间', dataIndex: 'createTime', search: false },
     {
       title: '操作',
@@ -64,7 +64,7 @@ const Users: React.FC = () => {
     },
   ];
 
-  // -- rnders
+  // -- renders
   return (
     <PageContainer>
       <ProTable<API.UserProps>

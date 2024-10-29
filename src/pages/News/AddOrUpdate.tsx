@@ -41,7 +41,7 @@ const AddOrUpdate: React.FC = () => {
         <ProForm
           formRef={vForm}
           onFinish={async () => {
-            message.loading('处理中，请稍后...');
+            message.loading('处理中...');
             setTimeout(() => {
               message.destroy();
               modal.success({

@@ -1,10 +1,3 @@
-/*
- * @Author: Lee
- * @Date: 2022-09-27 16:58:39
- * @LastEditors: Lee
- * @LastEditTime: 2023-03-02 15:17:58
- * @Description:
- */
 import { Modal } from 'antd';
 import React, { useEffect, useRef } from 'react';
 import './index.less';

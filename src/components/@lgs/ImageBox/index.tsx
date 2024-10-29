@@ -8,6 +8,7 @@ interface IProps {
   src: string;
   caption?: string;
   desc?: string;
+  name?: string;
 }
 const ImageBox: React.FC<IProps> = ({
   width = 100,
@@ -16,6 +17,7 @@ const ImageBox: React.FC<IProps> = ({
   spacing = 4,
   caption = '',
   desc = '',
+  name,
 }) => {
   const [url, setUrl] = useState('');
   return (
@@ -35,7 +37,12 @@ const ImageBox: React.FC<IProps> = ({
       {caption ? <div className="lg-image-box__caption">{caption}</div> : null}
       {desc ? <div className="lg-image-box__desc">{desc}</div> : null}
       {src && (
-        <ImagePreview url={url} width={400} onCancel={() => setUrl('')} />
+        <ImagePreview
+          url={url}
+          width={555}
+          onCancel={() => setUrl('')}
+          name={name}
+        />
       )}
     </div>
   );

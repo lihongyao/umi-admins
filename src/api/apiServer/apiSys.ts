@@ -5,7 +5,7 @@ import request from '@/api/apiConfig';
 // ~~~~~~~~~~~~~~~~~~
 export async function login(data: API.LoginWithAccount) {
   return request<API.LoginResponse>({
-    url: '/api/ays/login',
+    url: '/api/sys/login',
     method: 'POST',
     data,
   });

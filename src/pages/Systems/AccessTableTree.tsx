@@ -3,7 +3,6 @@ import {
   ApartmentOutlined,
   DeleteOutlined,
   EditOutlined,
-  FilePptOutlined,
   PlusOutlined,
   PlusSquareOutlined,
 } from '@ant-design/icons';
@@ -167,14 +166,13 @@ const Catalogues: React.FC = () => {
           expandedRowKeys,
           indentSize: 30,
           expandIcon: ({ expanded, onExpand, record }) => {
-            console.log(record);
             if (record.depth === 1) {
               return (
                 <Space
                   onClick={(e) => onExpand(record, e)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <FilePptOutlined style={{ color: 'orange' }} />
+                  <PlusSquareOutlined style={{ color: 'orange' }} />
                   <span>{record.name}</span>
                 </Space>
               );

@@ -1,29 +1,34 @@
 .lg-collapse {
   display: flex;
+
   &__wrapper {
     display: flex;
     flex-direction: column;
     overflow: hidden;
     border: 1px solid #e5e7eb;
     transition: width 0.25s linear;
+
     &.close {
       border: none;
     }
   }
+
   &__top {
-    color: #333333;
+    color: #333;
     font-size: 12px;
     line-height: 36px;
     letter-spacing: 1px;
     text-align: center;
     background: #f3f4f6;
   }
+
   &__contents {
     flex: 1;
     padding: 0 8px;
     overflow-y: scroll;
     background-color: #fff;
   }
+
   &__thumb {
     display: flex;
     flex-direction: column;

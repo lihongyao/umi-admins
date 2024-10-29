@@ -17,7 +17,7 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Button, Space, Switch } from 'antd';
+import { App, Button, Popconfirm, Space, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 
 const Banners: React.FC = () => {
@@ -117,19 +117,35 @@ const Banners: React.FC = () => {
       title: '操作',
       key: 'action',
       search: false,
+      width: 160,
       render: (_, record) => (
-        <Button
-          onClick={() => {
-            vForm.current?.setFieldsValue({
-              ...record,
-              bannerPic: [{ url: record.bannerPic }],
-              showTime: [record.startTime, record.endTime],
-            });
-            setOpenForm(true);
-          }}
-        >
-          编辑
-        </Button>
+        <Space>
+          <Button
+            onClick={() => {
+              vForm.current?.setFieldsValue({
+                ...record,
+                bannerPic: [{ url: record.bannerPic }],
+                showTime: [record.startTime, record.endTime],
+              });
+              setOpenForm(true);
+            }}
+          >
+            编辑
+          </Button>
+          <Popconfirm
+            title={'确定删除？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiBanners.del(record.id);
+              if (resp.code === 200) {
+                setTips('删除成功');
+                vTable.current?.reloadAndRest!();
+              }
+            }}
+          >
+            <Button danger>删除</Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -242,6 +258,9 @@ const Banners: React.FC = () => {
           label="展示时间"
           name="showTime"
           rules={[{ required: true }]}
+          fieldProps={{
+            format: 'YYYY-MM-DD HH:mm',
+          }}
         />
         <ProFormSelect
           name="locationCode"
