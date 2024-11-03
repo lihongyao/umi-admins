@@ -66,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       </div>,
     ],
     avatarProps: {
-      src: initialState?.currentUser?.avatar,
+      src: initialState?.currentUser?.avatarUrl,
       title: <AvatarName />,
       shape: 'square',
       render: (_, avatarChildren) => {

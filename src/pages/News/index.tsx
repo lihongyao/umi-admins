@@ -77,7 +77,7 @@ const News: React.FC = () => {
           <Popconfirm
             placement={'leftTop'}
             title={'温馨提示'}
-            description={'您确定要删除该记录么？'}
+            description={'您确定要删除该条新闻么？'}
           >
             <Button danger>删除</Button>
           </Popconfirm>
@@ -100,22 +100,22 @@ const News: React.FC = () => {
         actionRef={vTable}
         headerTitle={' '}
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
         scroll={{ x: 1200 }}
         columns={columns}
         rowKey="id"
+        search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
           hideOnSinglePage: true,
-          showTotal: (total) => `共 ${total} 条`,
+          style: { paddingBottom: 16 },
         }}
         request={async (params) => {
-          params.page = params.current;
-          delete params.current;
           const resp = await apiNews.list(params);
           return Promise.resolve({
             data: resp.data.data || [],
             success: true,
-            totla: resp.data.total,
+            total: resp.data.total,
           });
         }}
       />

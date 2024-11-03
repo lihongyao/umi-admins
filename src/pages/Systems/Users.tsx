@@ -89,7 +89,6 @@ const Users: React.FC = () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      valueType: 'date',
       search: false,
     },
     { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
@@ -97,6 +96,7 @@ const Users: React.FC = () => {
       title: '操作',
       key: 'action',
       search: false,
+      width: 200,
       render: (_, record) => (
         <Space>
           {record.status === 1 && (
@@ -170,16 +170,18 @@ const Users: React.FC = () => {
         scroll={{ x: 1200 }}
         options={false}
         search={{ span: 6, labelWidth: 'auto' }}
-        pagination={false}
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          hideOnSinglePage: true,
+          style: { paddingBottom: 16 },
+        }}
         postData={(data: Array<API.SystemsUserProps>) => {
           tips && message.success(tips);
           setTips('');
           return data;
         }}
         request={async (params) => {
-          params.pageNo = params.current || 1;
-          params.pageSize = params.pageSize || 10;
-          delete params.current;
           const resp = await apiSys.users({
             ...params,
           });
@@ -197,8 +199,9 @@ const Users: React.FC = () => {
           !!vForm.current?.getFieldValue('id') ? '编辑用户信息' : '新建系统用户'
         }
         open={openForm}
-        width={400}
+        width={450}
         modalProps={{
+          maskClosable: false,
           forceRender: true,
           onCancel: () => setOpenForm(false),
         }}
@@ -248,33 +251,35 @@ const Users: React.FC = () => {
           }}
         </ProFormDependency>
 
-        <ProFormText
-          label="姓名"
-          name="nickname"
-          fieldProps={{ size: 'large' }}
-          placeholder={'请输入姓名'}
-          rules={[{ required: true }]}
-        />
-        <ProFormSelect
-          name="roleId"
-          label="角色"
-          fieldProps={{
-            size: 'large',
-            fieldNames: {
-              label: 'roleName',
-              value: 'id',
-            },
-          }}
-          request={async () => {
-            const resp = await apiSys.roles();
-            if (resp.code === 200) {
-              return resp.data;
-            }
-            return [];
-          }}
-          placeholder="请选择"
-          rules={[{ required: true, message: '请选择用户角色' }]}
-        />
+        <ProForm.Group>
+          <ProFormText
+            label="姓名"
+            name="nickname"
+            fieldProps={{ size: 'large' }}
+            placeholder={'请输入姓名'}
+            rules={[{ required: true }]}
+          />
+          <ProFormSelect
+            name="roleId"
+            label="角色"
+            fieldProps={{
+              size: 'large',
+              fieldNames: {
+                label: 'roleName',
+                value: 'id',
+              },
+            }}
+            request={async () => {
+              const resp = await apiSys.roles();
+              if (resp.code === 200) {
+                return resp.data;
+              }
+              return [];
+            }}
+            placeholder="请选择"
+            rules={[{ required: true, message: '请选择用户角色' }]}
+          />
+        </ProForm.Group>
       </ModalForm>
     </PageContainer>
   );

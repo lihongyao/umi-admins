@@ -119,6 +119,11 @@ const routes: RouterConfig[] = [
         name: '用户管理',
         component: '@/pages/Systems/Users',
       },
+      {
+        path: '/systems/logs',
+        name: '操作日志',
+        component: '@/pages/Systems/Logs',
+      },
     ],
   },
   {

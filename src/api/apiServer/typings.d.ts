@@ -6,7 +6,7 @@ declare namespace API {
     /** 列表数据 */
     data: T[];
     /** 当前页 */
-    pageNo: number;
+    current: number;
     /** 每页条数 */
     pageSize: number;
     /** 总条数 */
@@ -136,6 +136,7 @@ declare namespace API {
     lastLoginTime: string /** 最后登录时间 */;
     status: number /** 状态 */;
   };
+
   type LogsProps = {
     /** 日志ID */
     id: number;

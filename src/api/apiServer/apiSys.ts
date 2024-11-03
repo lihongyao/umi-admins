@@ -94,35 +94,35 @@ export async function roleSwichStatus(id: number, status: number) {
 // ~~~~~~~~~~~~~~~~~~
 export async function users(params: API.ListParams) {
   return request<API.List<API.SystemsUserProps>>({
-    url: '/api/administrators',
+    url: '/api/sys/users',
     params,
   });
 }
 
 export async function userAdd(data: any) {
   return request({
-    url: '/api/administrators',
+    url: '/api/sys/users',
     method: 'POST',
     data,
   });
 }
 export async function userEdit(data: any) {
   return request({
-    url: '/api/administrators',
+    url: '/api/sys/users',
     method: 'PUT',
     data,
   });
 }
 export async function userSwichStatus(id: number, status: number) {
   return request({
-    url: '/api/administrators/switch-status',
+    url: '/api/sys/switch-status',
     method: 'PUT',
     data: { id, status },
   });
 }
 export async function userResetPsw(id: number) {
   return request({
-    url: '/api/administrators/reset-psw',
+    url: '/api/sys/reset-psw',
     method: 'PUT',
     data: { id },
   });
@@ -130,8 +130,18 @@ export async function userResetPsw(id: number) {
 
 export async function changePsw(data: any) {
   return request({
-    url: '/api/administrators/change-psw',
+    url: '/api/sys/change-psw',
     method: 'PUT',
     data,
+  });
+}
+
+// ~~~~~~~~~~~~~~~~~~
+// 操作日志
+// ~~~~~~~~~~~~~~~~~~
+export async function logs(params: API.ListParams) {
+  return request<API.List<API.LogsProps>>({
+    url: '/api/sys/logs',
+    params,
   });
 }

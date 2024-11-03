@@ -7,10 +7,20 @@ interface IProps {
   accept?: string;
   maxSize?: number; // 单位MB
   value?: string;
+  customRequest?: (
+    file: File,
+    next: (data: { success: boolean; url?: string }) => void,
+  ) => void;
   onChange?: (value: string) => void;
 }
 const UploadForServer: React.FC<IProps> = React.memo((props) => {
-  const { value, accept = 'image/*', maxSize = 20, onChange } = props;
+  const {
+    value,
+    accept = 'image/*',
+    maxSize = 20,
+    onChange,
+    customRequest,
+  } = props;
   const { message } = App.useApp();
   const [loading, setLoading] = useState(false);
 
@@ -32,14 +42,23 @@ const UploadForServer: React.FC<IProps> = React.memo((props) => {
   const uploadFile = async ({ file }: any) => {
     setLoading(true);
     try {
-      // const resp = await apiCommon.uploadImg(file as unknown as File);
-      // setLoading(false);
-      // if (resp.code === 200) {
-      //   const { full_path } = resp.data;
-      //   onChange?.(full_path);
-      // } else {
-      //   message.error('上传失败');
-      // }
+      if (customRequest) {
+        customRequest(file, ({ success, url }) => {
+          setLoading(false);
+          if (success && url) {
+            onChange?.(url);
+          }
+        });
+      } else {
+        // const resp = await apiCommon.uploaFile(file as unknown as File);
+        // setLoading(false);
+        // if (resp.code === 200) {
+        //   const { full_path } = resp.data;
+        //   onChange?.(full_path);
+        // } else {
+        //   message.error('上传失败');
+        // }
+      }
     } catch {
       message.error('上传失败');
       setLoading(false);

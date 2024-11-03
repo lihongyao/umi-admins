@@ -133,6 +133,7 @@ const Types: React.FC = () => {
         open={openForm}
         width={300}
         modalProps={{
+          maskClosable: false,
           closable: false,
           forceRender: true,
           onCancel: () => setOpenForm(false),

@@ -176,8 +176,10 @@ const Banners: React.FC = () => {
         options={false}
         search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
           hideOnSinglePage: true,
-          showTotal: (total) => `共 ${total} 条`,
+          style: { paddingBottom: 16 },
         }}
         postData={(data: API.BannerItemProps[]) => {
           tips && message.success(tips);
@@ -185,8 +187,6 @@ const Banners: React.FC = () => {
           return data;
         }}
         request={async (params) => {
-          params.pageNo = params.current;
-          delete params.current;
           if (params.showTime) {
             params.start = `${params.showTime[0]} 00:00:00`;
             params.end = `${params.showTime[1]} 23:59:59`;
@@ -210,6 +210,7 @@ const Banners: React.FC = () => {
         open={openForm}
         width={500}
         modalProps={{
+          maskClosable: false,
           forceRender: true,
           onCancel: () => setOpenForm(false),
         }}
@@ -239,21 +240,36 @@ const Banners: React.FC = () => {
         >
           <UploadForOSS dir="banner" />
         </ProForm.Item>
-
-        <ProFormDigit
-          label="权重"
-          tooltip="数值越大越靠前，权重相同时根据根据创建时间排序。"
-          name="weight"
-          placeholder={'请输入权重'}
-        />
-        <ProFormTextArea
-          allowClear
-          label="跳转链接"
-          tooltip="请填写 Scheme 地址"
-          name="jumpUrl"
-          placeholder={'请输入跳转链接'}
-          rules={[{ required: true }]}
-        />
+        <ProForm.Group>
+          <ProFormDigit
+            label="权重"
+            tooltip="数值越大越靠前，权重相同时根据根据创建时间排序。"
+            name="weight"
+            placeholder={'请输入权重'}
+            fieldProps={{
+              style: { width: 110 },
+            }}
+          />
+          <ProFormSelect
+            name="locationCode"
+            label="展示位置"
+            fieldProps={{
+              fieldNames: {
+                label: 'locationName',
+                value: 'locationCode',
+              },
+              style: { width: 150 },
+            }}
+            request={async () => {
+              const resp = await apiBanners.getShowLocations();
+              if (resp.code === 200) {
+                return resp.data;
+              }
+              return [];
+            }}
+            rules={[{ required: true }]}
+          />
+        </ProForm.Group>
         <ProFormDateTimeRangePicker
           label="展示时间"
           name="showTime"
@@ -262,22 +278,12 @@ const Banners: React.FC = () => {
             format: 'YYYY-MM-DD HH:mm',
           }}
         />
-        <ProFormSelect
-          name="locationCode"
-          label="展示位置"
-          fieldProps={{
-            fieldNames: {
-              label: 'locationName',
-              value: 'locationCode',
-            },
-          }}
-          request={async () => {
-            const resp = await apiBanners.getShowLocations();
-            if (resp.code === 200) {
-              return resp.data;
-            }
-            return [];
-          }}
+        <ProFormTextArea
+          allowClear
+          label="跳转链接"
+          tooltip="请填写 Scheme 地址"
+          name="jumpUrl"
+          placeholder={'请输入跳转链接'}
           rules={[{ required: true }]}
         />
       </ModalForm>

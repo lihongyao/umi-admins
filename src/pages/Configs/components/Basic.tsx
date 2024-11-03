@@ -146,6 +146,7 @@ const Basic: React.FC = () => {
         open={!!record}
         width={300}
         modalProps={{
+          maskClosable: false,
           closable: false,
           forceRender: true,
           onCancel: () => setRecord(null),

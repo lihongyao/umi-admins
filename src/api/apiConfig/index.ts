@@ -64,8 +64,11 @@ axiosInstance.interceptors.response.use(
     }
   },
   (error: AxiosError) => {
+    // -- 清除Loadings
+    message.destroy();
+    // -- 输出错误消息
     console.log('[request error] > ', error);
-
+    // -- 针对性处理
     if (error && error.response) {
       switch (error.response.status) {
         case 400:

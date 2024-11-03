@@ -153,7 +153,11 @@ const Login: React.FC = () => {
               />
               <ProFormText.Password
                 name="password"
-                fieldProps={{ size: 'large', prefix: <LockOutlined /> }}
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                  autoComplete: 'off',
+                }}
                 placeholder={'1234'}
                 allowClear
                 rules={[{ required: true, message: '请输入密码!' }]}

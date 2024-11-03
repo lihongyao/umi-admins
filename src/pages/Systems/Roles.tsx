@@ -127,11 +127,13 @@ const Roles: React.FC = () => {
         actionRef={vTable}
         columns={columns}
         rowKey="id"
-        search={false}
         options={false}
+        search={false}
         pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
           hideOnSinglePage: true,
-          showTotal: (total) => `共 ${total} 条`,
+          style: { paddingBottom: 16 },
         }}
         postData={(data: Array<API.SystemRoleProps>) => {
           tips && message.success(tips);
@@ -157,6 +159,7 @@ const Roles: React.FC = () => {
         width={500}
         layout="horizontal"
         modalProps={{
+          maskClosable: false,
           destroyOnClose: true,
           forceRender: true,
           onCancel: () => setOpenForm(false),

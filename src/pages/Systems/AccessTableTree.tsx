@@ -1,8 +1,9 @@
 import { apiSys } from '@/api/apiServer';
 import {
-  ApartmentOutlined,
   DeleteOutlined,
   EditOutlined,
+  FileOutlined,
+  FolderFilled,
   PlusOutlined,
   PlusSquareOutlined,
 } from '@ant-design/icons';
@@ -166,20 +167,20 @@ const Catalogues: React.FC = () => {
           expandedRowKeys,
           indentSize: 30,
           expandIcon: ({ expanded, onExpand, record }) => {
-            if (record.depth === 1) {
+            if (record.children && record.children.length > 0) {
               return (
                 <Space
                   onClick={(e) => onExpand(record, e)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <PlusSquareOutlined style={{ color: 'orange' }} />
+                  <FolderFilled style={{ color: 'orange' }} />
                   <span>{record.name}</span>
                 </Space>
               );
             }
             return (
               <Space style={{ cursor: 'pointer' }}>
-                <ApartmentOutlined color="blue" style={{ color: '#ccc' }} />
+                <FileOutlined color="blue" style={{ color: '#ccc' }} />
                 <span>{record.name}</span>
               </Space>
             );
@@ -207,6 +208,7 @@ const Catalogues: React.FC = () => {
         open={openForm}
         width={400}
         modalProps={{
+          maskClosable: false,
           forceRender: true,
           destroyOnClose: true,
           onCancel: () => setOpenForm(false),

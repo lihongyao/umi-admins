@@ -143,9 +143,9 @@ const Audit: React.FC = () => {
         headerTitle={' '}
         columns={columns}
         rowKey={'id'}
-        search={{ span: 6, labelWidth: 'auto' }}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 1100 }}
         options={false}
+        search={{ span: 6, labelWidth: 'auto' }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
           getCheckboxProps({ state }) {
@@ -158,12 +158,12 @@ const Audit: React.FC = () => {
           },
         }}
         pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
           hideOnSinglePage: true,
-          showTotal: (total) => `共 ${total} 条`,
+          style: { paddingBottom: 16 },
         }}
         request={async (params: any) => {
-          params.pageNo = params.current;
-          delete params.current;
           const resp = await apiAudit.list(params);
           return Promise.resolve({
             data: resp.data.data || [],
@@ -207,6 +207,7 @@ const Audit: React.FC = () => {
         open={showRejectModal}
         width={500}
         modalProps={{
+          maskClosable: false,
           forceRender: true,
           cancelText: '点错了',
           onCancel: () => setShowRejectModal(false),

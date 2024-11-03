@@ -37,7 +37,12 @@ const Feedback: React.FC = () => {
         rowKey="id"
         options={false}
         search={{ span: 6, labelWidth: 'auto' }}
-        pagination={false}
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          hideOnSinglePage: true,
+          style: { paddingBottom: 16 },
+        }}
         request={async (params) => {
           params.page = params.current;
           delete params.current;

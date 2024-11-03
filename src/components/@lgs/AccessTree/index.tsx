@@ -1,40 +1,45 @@
 import { Tree } from 'antd';
 import React from 'react';
 
+type TreeDataProps = {
+  title: string;
+  key: number | string;
+  children?: Array<TreeDataProps>;
+};
+
 interface IProps {
-  treeData: any[];
-  value?: string[];
-  onChange?: (value: string[]) => void;
+  treeData: TreeDataProps[];
+  value?: Array<string | number>;
+  onChange?: (value: Array<string | number>) => void;
 }
+
 const AccessTree: React.FC<IProps> = React.memo((props) => {
-  // 获取父节点
-  const getParentsKeys = (
-    tree: any[],
-    func: (data: any) => boolean,
+  // -- 获取父节点
+  const getParentKeys = (
+    tree: TreeDataProps[],
+    func: (data: TreeDataProps) => boolean,
     path: string[] = [],
-  ): string[] => {
+  ): Array<string | number> => {
     if (!tree) return [];
     for (const data of tree) {
-      // 记录当前code
+      // -- 记录当前code
       path.push(data.key as string);
-      // 判断当前code是否匹配
+      // -- 判断当前code是否匹配
       if (func(data)) return path;
-      // 判断当前对象是否存在children，如果存在，则递归遍历
+      // -- 判断当前对象是否存在children，如果存在，则递归遍历
       if (data.children) {
-        const chs = getParentsKeys(data.children, func, path);
+        const chs = getParentKeys(data.children, func, path);
         if (chs.length) return chs;
       }
-      // 如果此前都没执行return语句，则将记录的当前code移除
+      // -- 如果此前都没执行 return 语句，则将记录的当前code移除
       path.pop();
     }
     return [];
   };
-  // 获取子节点
-  const getChildrenKeys = (tree: any[], path: string[] = []) => {
-    if (!tree) {
-      return [];
-    }
-    tree.map((item) => {
+  // -- 获取子节点
+  const getChildrenKeys = (tree: TreeDataProps[], path: string[] = []) => {
+    if (!tree) return [];
+    tree.forEach((item) => {
       if (item.children) {
         path.push(item.key as string);
         getChildrenKeys(item.children, path);
@@ -46,29 +51,34 @@ const AccessTree: React.FC<IProps> = React.memo((props) => {
   };
   // render
   return (
-    <Tree
+    <Tree<TreeDataProps>
       checkable
       treeData={props.treeData}
       checkedKeys={props.value}
       checkStrictly={true}
       onCheck={(obj: any, e: any) => {
         const curKey = e.node.key;
-        // 选中
+        // -- 选中
         if (e.checked) {
           const checkedKeys = obj.checked;
-          const res = getParentsKeys(
+          const parentKeys = getParentKeys(
             props.treeData,
-            (data: any) => data.key === curKey,
+            (data) => data.key === curKey,
           );
-          props.onChange &&
-            props.onChange([...new Set([...checkedKeys, ...res])]);
+          const childrenKeys = getChildrenKeys(e.node.children);
+          const value = [
+            ...new Set([...checkedKeys, ...parentKeys, ...childrenKeys]),
+          ];
+          props.onChange?.(value);
         } else {
-          // 取消选中
+          // -- 取消选中
           const chs = [curKey, ...getChildrenKeys(e.node.children)];
           const res = props.value
-            ? props.value.filter((item: string) => chs.indexOf(item) == -1)
+            ? props.value.filter(
+                (item: string | number) => chs.indexOf(item) === -1,
+              )
             : [];
-          props.onChange && props.onChange([...res]);
+          props.onChange?.([...res]);
         }
       }}
     />

@@ -111,6 +111,7 @@ const Access: React.FC = () => {
         open={openModal}
         width={400}
         modalProps={{
+          maskClosable: false,
           forceRender: true,
           onCancel: () => setOpenModal(false),
         }}

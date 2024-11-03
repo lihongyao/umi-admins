@@ -43,6 +43,7 @@ const Users: React.FC = () => {
       title: '操作',
       dataIndex: 'action',
       search: false,
+      width: 100,
       render: (_, record) => (
         <Space>
           <Popconfirm
@@ -74,8 +75,10 @@ const Users: React.FC = () => {
         options={false}
         search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
           hideOnSinglePage: true,
-          showTotal: (total) => `共 ${total} 条`,
+          style: { paddingBottom: 16 },
         }}
         postData={(data: Array<API.UserProps>) => {
           tips && message.success(tips);
@@ -83,8 +86,6 @@ const Users: React.FC = () => {
           return data;
         }}
         request={async (params) => {
-          params.page = params.current;
-          delete params.current;
           const resp = await apiUser.list(params);
           return Promise.resolve({
             data: resp.data.data || [],
