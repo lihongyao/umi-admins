@@ -1,0 +1,6 @@
+/**
+ * 去除警告，在 vscode 设置中，搜索“css.lint.unknownAtRules”，将值设置为“ignore”
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

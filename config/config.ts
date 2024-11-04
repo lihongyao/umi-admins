@@ -71,4 +71,5 @@ export default defineConfig({
     strategy: 'normal',
   },
   jsMinifier: 'terser',
+  tailwindcss: {},
 });
