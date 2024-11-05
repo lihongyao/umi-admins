@@ -46,13 +46,18 @@ const Users: React.FC = () => {
       width: 100,
       render: (_, record) => (
         <Space>
-          <Popconfirm title={'确定启用？'}>
-            <Button disabled={record.status === 1}>启用</Button>
-          </Popconfirm>
-          <Popconfirm title={'确定禁用？'}>
-            <Button danger disabled={record.status === 0}>
-              禁用
-            </Button>
+          {record.status === 0 && (
+            <Popconfirm title={'确定启用？'}>
+              <Button>启用</Button>
+            </Popconfirm>
+          )}
+          {record.status === 1 && (
+            <Popconfirm title={'确定禁用？'}>
+              <Button danger>禁用</Button>
+            </Popconfirm>
+          )}
+          <Popconfirm title={'确定删除？'}>
+            <Button danger>删除</Button>
           </Popconfirm>
         </Space>
       ),

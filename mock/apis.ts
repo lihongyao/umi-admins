@@ -32,9 +32,10 @@ export default {
   'POST /api/sys/roles': { code: 200, message: 'success' },
   'PUT /api/sys/roles': { code: 200, message: 'success' },
   'PUT /api/sys/roles/switch-status': { code: 200, message: 'success' },
+  'DELETE /api/sys/roles/:id': { code: 200, message: 'success' },
 
   // -- 系统用户
-  'GET /api/sys/users': mock({
+  'GET /api/sys/user': mock({
     code: 200,
     message: 'success',
     data: {
@@ -54,11 +55,12 @@ export default {
       total: 20,
     },
   }),
-  'POST /api/sys/users': { code: 200, message: 'success' },
-  'PUT /api/sys/users': { code: 200, message: 'success' },
-  'PUT /api/sys/reset-psw': { code: 200, message: 'success' },
-  'PUT /api/sys/change-psw': { code: 200, message: 'success' },
-  'PUT /api/sys/switch-status': { code: 200, message: 'success' },
+  'POST /api/sys/user': { code: 200, message: 'success' },
+  'PUT /api/sys/user': { code: 200, message: 'success' },
+  'PUT /api/sys/user/reset-psw': { code: 200, message: 'success' },
+  'PUT /api/sys/user/change-psw': { code: 200, message: 'success' },
+  'PUT /api/sys/user/switch-status': { code: 200, message: 'success' },
+  'DELETE /api/sys/user/:id': { code: 200, message: 'success' },
 
   'GET /api/sys/logs': mock({
     code: 200,

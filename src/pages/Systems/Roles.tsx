@@ -7,11 +7,12 @@ import {
   ModalForm,
   PageContainer,
   ProColumns,
+  ProForm,
   ProFormInstance,
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { App, Button, Popconfirm, Space } from 'antd';
+import { App, Button, Form, Popconfirm, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 
 const Roles: React.FC = () => {
@@ -35,16 +36,27 @@ const Roles: React.FC = () => {
     }));
   };
 
+  const traverse = (notes: API.SystemsAccessProps[]) => {
+    let result: Array<string | number> = []; // 内部定义结果数组
+    notes.forEach((note) => {
+      result.push(note.id); // 收集当前节点的 ID
+      if (note.children && note.children.length > 0) {
+        result = result.concat(traverse(note.children)); // 递归子节点，并合并结果
+      }
+    });
+    return result;
+  };
+
   // -- methods
   const switchStatus = async (id: number, status: number, tips: string) => {
     message.loading('处理中...', 0);
     const resp = await apiSys.roleSwichStatus(id, status);
-
     if (resp.code === 200) {
       setTips(tips);
       vTable.current?.reloadAndRest!();
     }
   };
+
   // - effects
   useEffect(() => {
     apiSys.access().then((resp) => {
@@ -57,6 +69,7 @@ const Roles: React.FC = () => {
   // -- columns
   const columns: ProColumns<API.SystemRoleProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 48 },
+    { title: '角色名称', dataIndex: 'roleName', search: false },
     {
       title: '状态',
       dataIndex: 'status',
@@ -67,7 +80,6 @@ const Roles: React.FC = () => {
         1: { text: '已启用', status: 'Processing' },
       },
     },
-    { title: '角色名称', dataIndex: 'roleName', search: false },
     { title: '创建人', dataIndex: 'createBy', search: false },
     { title: '创建时间', dataIndex: 'createTime', search: false },
     { title: '更新人', dataIndex: 'createBy', search: false },
@@ -76,6 +88,7 @@ const Roles: React.FC = () => {
       title: '操作',
       key: 'action',
       search: false,
+      width: 200,
       render: (_, record) => (
         <Space>
           <Button
@@ -91,18 +104,31 @@ const Roles: React.FC = () => {
             编辑
           </Button>
           <Popconfirm
-            title="您确定要启用该角色么？"
-            onConfirm={() => switchStatus(record.id, 1, '已启用')}
+            title={'确定启用？'}
+            onConfirm={() => switchStatus(record.id, 0, '已启用')}
           >
             <Button disabled={record.status === 1}>启用</Button>
           </Popconfirm>
           <Popconfirm
-            title="您确定要禁用该角色么？"
+            title={'确定禁用？'}
             onConfirm={() => switchStatus(record.id, 0, '已禁用')}
           >
-            <Button disabled={record.status === 0} danger>
+            <Button danger disabled={record.status === 0}>
               禁用
             </Button>
+          </Popconfirm>
+          <Popconfirm
+            title={'确定删除？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiSys.roleDelete(record.id);
+              if (resp.code === 200) {
+                setTips('已删除');
+                vTable.current?.reloadAndRest!();
+              }
+            }}
+          >
+            <Button danger>删除</Button>
           </Popconfirm>
         </Space>
       ),
@@ -184,13 +210,35 @@ const Roles: React.FC = () => {
           placeholder={'请输入角色名称'}
           rules={[{ required: true }]}
         />
-        <ProFormText
-          label="角色权限"
-          name="authIds"
-          rules={[{ required: true, message: '请分配角色权限' }]}
-        >
-          <AccessTree treeData={recursive(auths)} />
-        </ProFormText>
+        <ProForm.Item label="角色权限" required>
+          <Form.Item className={'mb-4'}>
+            <Space>
+              <Button
+                size={'small'}
+                onClick={() =>
+                  vForm.current?.setFieldValue('authIds', traverse(auths))
+                }
+              >
+                全选
+              </Button>
+              <Button
+                size={'small'}
+                danger
+                onClick={() => {
+                  vForm.current?.setFieldValue('authIds', undefined);
+                }}
+              >
+                重置
+              </Button>
+            </Space>
+          </Form.Item>
+          <ProFormText
+            name="authIds"
+            rules={[{ required: true, message: '请分配角色权限' }]}
+          >
+            <AccessTree treeData={recursive(auths)} />
+          </ProFormText>
+        </ProForm.Item>
       </ModalForm>
     </PageContainer>
   );

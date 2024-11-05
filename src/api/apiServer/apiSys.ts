@@ -25,6 +25,13 @@ export async function logout() {
   });
 }
 
+export async function changePsw(data: any) {
+  return request({
+    url: '/api/sys/change-psw',
+    method: 'PUT',
+    data,
+  });
+}
 // ~~~~~~~~~~~~~~~~~~
 // 权限管理
 // ~~~~~~~~~~~~~~~~~~
@@ -94,45 +101,43 @@ export async function roleSwichStatus(id: number, status: number) {
 // ~~~~~~~~~~~~~~~~~~
 export async function users(params: API.ListParams) {
   return request<API.List<API.SystemsUserProps>>({
-    url: '/api/sys/users',
+    url: '/api/sys/user',
     params,
   });
 }
 
 export async function userAdd(data: any) {
   return request({
-    url: '/api/sys/users',
+    url: '/api/sys/user',
     method: 'POST',
     data,
   });
 }
 export async function userEdit(data: any) {
   return request({
-    url: '/api/sys/users',
+    url: '/api/sys/user',
     method: 'PUT',
     data,
   });
 }
 export async function userSwichStatus(id: number, status: number) {
   return request({
-    url: '/api/sys/switch-status',
+    url: '/api/sys/user/switch-status',
     method: 'PUT',
     data: { id, status },
   });
 }
 export async function userResetPsw(id: number) {
   return request({
-    url: '/api/sys/reset-psw',
+    url: `/api/sys/user/reset-psw/${id}`,
     method: 'PUT',
-    data: { id },
   });
 }
 
-export async function changePsw(data: any) {
+export async function userDelete(id: number) {
   return request({
-    url: '/api/sys/change-psw',
-    method: 'PUT',
-    data,
+    url: `/api/sys/user/${id}`,
+    method: 'DELETE',
   });
 }
 

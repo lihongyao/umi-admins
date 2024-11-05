@@ -54,7 +54,7 @@ const Users: React.FC = () => {
         />
       ),
     },
-    { title: '登录账号', dataIndex: 'username', search: false },
+    { title: '登录账号', dataIndex: 'username', search: false, copyable: true },
     { title: '姓名', dataIndex: 'nickname' },
     {
       title: '状态',
@@ -99,22 +99,6 @@ const Users: React.FC = () => {
       width: 200,
       render: (_, record) => (
         <Space>
-          {record.status === 1 && (
-            <Popconfirm
-              title={'确定禁用？'}
-              onConfirm={() => switchStatus(record.id, 0, '已禁用')}
-            >
-              <Button danger>禁用</Button>
-            </Popconfirm>
-          )}
-          {record.status === 0 && (
-            <Popconfirm
-              title={'确定启用？'}
-              onConfirm={() => switchStatus(record.id, 1, '已启用')}
-            >
-              <Button>启用</Button>
-            </Popconfirm>
-          )}
           <Button
             onClick={() => {
               vForm.current?.setFieldsValue({
@@ -131,13 +115,29 @@ const Users: React.FC = () => {
             onConfirm={async () => {
               message.loading('处理中...', 0);
               const resp = await apiSys.userResetPsw(record.id);
-
               if (resp.code === 200) {
                 message.success('密码已重置为【123456】');
               }
             }}
           >
             <Button>重置密码</Button>
+          </Popconfirm>
+          <Popconfirm
+            title={'确定启用？'}
+            onConfirm={() => switchStatus(record.id, 1, '已启用')}
+          >
+            <Button disabled={record.status === 1}>启用</Button>
+          </Popconfirm>
+          <Popconfirm
+            title={'确定禁用？'}
+            onConfirm={() => switchStatus(record.id, 0, '已禁用')}
+          >
+            <Button danger disabled={record.status === 0}>
+              禁用
+            </Button>
+          </Popconfirm>
+          <Popconfirm title={'确定删除？'} onConfirm={async () => {}}>
+            <Button danger>删除</Button>
           </Popconfirm>
         </Space>
       ),
@@ -203,14 +203,13 @@ const Users: React.FC = () => {
           onCancel: () => setOpenForm(false),
         }}
         onFinish={async (values) => {
-          message.loading('处理中...', 0);
           const isEdit = !!values.id;
           const fetchFn = isEdit ? apiSys.userEdit : apiSys.userAdd;
+          message.loading('处理中...', 0);
           const resp = await fetchFn({
             ...values,
-            avatarUrl: values.avatar[0].url,
+            // avatarUrl: values.avatar[0].url,
           });
-
           if (resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
@@ -230,7 +229,6 @@ const Users: React.FC = () => {
         <ProFormText
           label="账号"
           name="username"
-          fieldProps={{ size: 'large' }}
           placeholder={'请输入登录账号'}
           rules={[{ required: true }]}
         />
@@ -240,7 +238,6 @@ const Users: React.FC = () => {
               <ProFormText.Password
                 label="密码"
                 name="password"
-                fieldProps={{ size: 'large' }}
                 placeholder={'请输入登录密码'}
                 rules={[{ required: true }]}
               />
@@ -252,7 +249,6 @@ const Users: React.FC = () => {
           <ProFormText
             label="姓名"
             name="nickname"
-            fieldProps={{ size: 'large' }}
             placeholder={'请输入姓名'}
             rules={[{ required: true }]}
           />
@@ -260,7 +256,6 @@ const Users: React.FC = () => {
             name="roleId"
             label="角色"
             fieldProps={{
-              size: 'large',
               fieldNames: {
                 label: 'roleName',
                 value: 'id',
