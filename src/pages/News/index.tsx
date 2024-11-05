@@ -74,11 +74,7 @@ const News: React.FC = () => {
           <Button onClick={() => navigate(`/news/edit/${record.id}`)}>
             编辑
           </Button>
-          <Popconfirm
-            placement={'leftTop'}
-            title={'温馨提示'}
-            description={'您确定要删除该条新闻么？'}
-          >
+          <Popconfirm title={'确定删除？'}>
             <Button danger>删除</Button>
           </Popconfirm>
         </Space>

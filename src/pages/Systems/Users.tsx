@@ -101,8 +101,7 @@ const Users: React.FC = () => {
         <Space>
           {record.status === 1 && (
             <Popconfirm
-              title={'温馨提示'}
-              description={'您确定要禁用该用户么？'}
+              title={'确定禁用？'}
               onConfirm={() => switchStatus(record.id, 0, '已禁用')}
             >
               <Button danger>禁用</Button>
@@ -110,8 +109,7 @@ const Users: React.FC = () => {
           )}
           {record.status === 0 && (
             <Popconfirm
-              title={'温馨提示'}
-              description={'您确定要启用该用户么？'}
+              title={'确定启用？'}
               onConfirm={() => switchStatus(record.id, 1, '已启用')}
             >
               <Button>启用</Button>
@@ -129,8 +127,7 @@ const Users: React.FC = () => {
             编辑
           </Button>
           <Popconfirm
-            title={'温馨提示'}
-            description={'您确定要重置该用户的密码么？'}
+            title={'确定重置密码？'}
             onConfirm={async () => {
               message.loading('处理中...', 0);
               const resp = await apiSys.userResetPsw(record.id);

@@ -118,8 +118,7 @@ const Audit: React.FC = () => {
           </Button>
 
           <Popconfirm
-            title={'温馨提示'}
-            description={'您确定要通过审核选中项么？'}
+            title={'确定通过？'}
             cancelText={'点错了'}
             onConfirm={() => {
               audit({

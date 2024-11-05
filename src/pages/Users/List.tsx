@@ -46,16 +46,10 @@ const Users: React.FC = () => {
       width: 100,
       render: (_, record) => (
         <Space>
-          <Popconfirm
-            title={'温馨提示'}
-            description={'您确定要禁启用该用户吗？'}
-          >
+          <Popconfirm title={'确定启用？'}>
             <Button disabled={record.status === 1}>启用</Button>
           </Popconfirm>
-          <Popconfirm
-            title={'温馨提示'}
-            description={'您确定要禁禁用该用户吗？'}
-          >
+          <Popconfirm title={'确定禁用？'}>
             <Button danger disabled={record.status === 0}>
               禁用
             </Button>
