@@ -6,9 +6,9 @@
 
 **框架环境**：
 
-node：<mark>v20.12.1</mark>
+node：<mark>v22.11.0</mark>
 
-pnpm：<mark>v9.1.4</mark>
+pnpm：<mark>v9.12.3</mark>
 
 **仓库地址**：https://gitee.com/lihongyao/umi-admins
 
@@ -59,6 +59,65 @@ umi-admins
 3. 安装依赖：`pnpm install`
 4. 在 **`configs/config.development.ts`** 文件中修改 **后台A** 的IP 地址为本机地址
 5. 启动项目：`pnpm dev`
+
+# 前后端交互约定
+
+响应数据类型
+
+```ts
+// -- 基础响应结构
+export interface AxiosResult<T = any> {
+  /** 状态码 */
+  code: number;
+  /** 响应数据 */
+  data: T;
+  /** 提示信息 */
+  msg: string;
+}
+
+// -- 列表响应结构
+interface List<T> {
+  /** 列表数据 */
+  data: T[];
+  /** 当前页 */
+  current: number;
+  /** 每页条数 */
+  pageSize: number;
+  /** 总条数 */
+  total: number;
+}
+
+const response: AxiosResult<List<T>>;
+
+// -- 列表请求
+interface ListParams {
+  /** 当前页 */
+  current?: number;
+  /** 每页大小 */
+  pageSize?: number;
+  /** 其他过滤项属性 */
+  [__prop__: string]: any;
+}
+```
+
+推荐使用 RESTful API，这里以商品为例：
+
+```ts
+// 1.新建商品
+POST /api/goods
+// 2.更新商品
+PUT /api/goods
+// 3.获取商品列表
+GET /api/goods
+// 4.获取商品详情
+GET /api/goods/:id
+// 5.删除商品
+DELETE /api/goods/:id
+// 6.切换商品某个状态
+PUT /api/goods/switch-status/:id
+```
+
+> 以上约定，仅供参考
 
 # 提示
 

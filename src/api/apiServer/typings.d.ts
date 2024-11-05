@@ -14,6 +14,11 @@ declare namespace API {
   }
 
   interface ListParams {
+    /** 当前页 */
+    current?: number;
+    /** 每页大小 */
+    pageSize?: number;
+    /** 其他过滤项属性 */
     [__prop__: string]: any;
   }
   // ~~~~~~~~~~~~~~~~~~
