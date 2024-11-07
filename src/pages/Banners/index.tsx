@@ -174,7 +174,7 @@ const Banners: React.FC = () => {
         rowKey={'id'}
         scroll={{ x: 1000 }}
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto' }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
@@ -212,6 +212,7 @@ const Banners: React.FC = () => {
         modalProps={{
           maskClosable: false,
           forceRender: true,
+          destroyOnClose: true,
           onCancel: () => setOpenForm(false),
         }}
         onFinish={async (values) => {
