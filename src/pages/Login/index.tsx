@@ -110,7 +110,7 @@ const Login: React.FC = () => {
       {/* 例子效果 */}
       <InitParticles />
       {/* 表单 */}
-      <div style={{ flex: '1', padding: '32px 0', position: 'relative' }}>
+      <div className={'flex-1 py-8 relative'}>
         <LoginForm
           formRef={vForm}
           contentStyle={{ minWidth: 280, maxWidth: '75vw' }}

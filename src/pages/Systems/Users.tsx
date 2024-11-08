@@ -122,20 +122,22 @@ const Users: React.FC = () => {
           >
             <Button>重置密码</Button>
           </Popconfirm>
-          <Popconfirm
-            title={'确定启用？'}
-            onConfirm={() => switchStatus(record.id, 1, '已启用')}
-          >
-            <Button disabled={record.status === 1}>启用</Button>
-          </Popconfirm>
-          <Popconfirm
-            title={'确定禁用？'}
-            onConfirm={() => switchStatus(record.id, 0, '已禁用')}
-          >
-            <Button danger disabled={record.status === 0}>
-              禁用
-            </Button>
-          </Popconfirm>
+          {record.status === 0 && (
+            <Popconfirm
+              title={'确定启用？'}
+              onConfirm={() => switchStatus(record.id, 1, '已启用')}
+            >
+              <Button>启用</Button>
+            </Popconfirm>
+          )}
+          {record.status === 1 && (
+            <Popconfirm
+              title={'确定禁用？'}
+              onConfirm={() => switchStatus(record.id, 0, '已禁用')}
+            >
+              <Button danger>禁用</Button>
+            </Popconfirm>
+          )}
           <Popconfirm title={'确定删除？'} onConfirm={async () => {}}>
             <Button danger>删除</Button>
           </Popconfirm>
@@ -196,7 +198,7 @@ const Users: React.FC = () => {
           !!vForm.current?.getFieldValue('id') ? '编辑用户信息' : '新建系统用户'
         }
         open={openForm}
-        width={450}
+        width={400}
         modalProps={{
           maskClosable: false,
           forceRender: true,
@@ -229,8 +231,12 @@ const Users: React.FC = () => {
         <ProFormText
           label="账号"
           name="username"
+          fieldProps={{ size: 'large' }}
           placeholder={'请输入登录账号'}
-          rules={[{ required: true }]}
+          rules={[
+            { required: true },
+            { pattern: /^\w{4,16}$/, message: '仅支持 4-16 位字母数字下划线' },
+          ]}
         />
         <ProFormDependency name={['id']}>
           {({ id }) => {
@@ -240,38 +246,39 @@ const Users: React.FC = () => {
                 name="password"
                 placeholder={'请输入登录密码'}
                 rules={[{ required: true }]}
+                fieldProps={{ autoComplete: 'off', size: 'large' }}
               />
             );
           }}
         </ProFormDependency>
 
-        <ProForm.Group>
-          <ProFormText
-            label="姓名"
-            name="nickname"
-            placeholder={'请输入姓名'}
-            rules={[{ required: true }]}
-          />
-          <ProFormSelect
-            name="roleId"
-            label="角色"
-            fieldProps={{
-              fieldNames: {
-                label: 'roleName',
-                value: 'id',
-              },
-            }}
-            request={async () => {
-              const resp = await apiSys.roles();
-              if (resp.code === 200) {
-                return resp.data;
-              }
-              return [];
-            }}
-            placeholder="请选择"
-            rules={[{ required: true, message: '请选择用户角色' }]}
-          />
-        </ProForm.Group>
+        <ProFormText
+          label="姓名"
+          name="nickname"
+          fieldProps={{ size: 'large' }}
+          placeholder={'请输入姓名'}
+          rules={[{ required: true }]}
+        />
+        <ProFormSelect
+          label="角色"
+          name="roleId"
+          fieldProps={{
+            size: 'large',
+            fieldNames: {
+              label: 'roleName',
+              value: 'id',
+            },
+          }}
+          request={async () => {
+            const resp = await apiSys.roles();
+            if (resp.code === 200) {
+              return resp.data;
+            }
+            return [];
+          }}
+          placeholder="请选择"
+          rules={[{ required: true, message: '请选择用户角色' }]}
+        />
       </ModalForm>
     </PageContainer>
   );

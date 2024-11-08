@@ -181,7 +181,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
           label="原始密码"
           name="oldPassword"
           placeholder={'请输入原始密码'}
-          fieldProps={{ size: 'large' }}
+          fieldProps={{ size: 'large', autoComplete: 'off' }}
           rules={[{ required: true }]}
           allowClear
         />
@@ -189,7 +189,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
           label="新的密码"
           name="newPassword"
           placeholder={'请输入新的密码'}
-          fieldProps={{ size: 'large' }}
+          fieldProps={{ size: 'large', autoComplete: 'off' }}
           rules={[{ required: true }]}
           allowClear
         />
@@ -197,7 +197,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
           label="确认密码"
           name="confirmPassword"
           placeholder={'请输入确认密码'}
-          fieldProps={{ size: 'large' }}
+          fieldProps={{ size: 'large', autoComplete: 'off' }}
           rules={[{ required: true }]}
           allowClear
         />
