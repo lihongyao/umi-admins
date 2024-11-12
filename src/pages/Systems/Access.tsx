@@ -12,16 +12,16 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Space, Tree } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const Access: React.FC = () => {
+export default function Page() {
   // -- APPs
   const { message } = App.useApp();
   // - refs
   const vForm = useRef<ProFormInstance>();
 
   // - state
-  const [treeData, setTreeData] = useState<Array<API.SystemsAccessProps>>([]);
+  const [treeData, setTreeData] = useState<Array<API.SysAccessProps>>([]);
   const [openModal, setOpenModal] = useState(false);
 
   // - methods
@@ -39,7 +39,7 @@ const Access: React.FC = () => {
     getData();
   }, []);
 
-  const onEdit = (nodeData: API.SystemsAccessProps) => {
+  const onEdit = (nodeData: API.SysAccessProps) => {
     vForm.current?.setFieldsValue({
       id: nodeData.id,
       name: nodeData.name,
@@ -72,7 +72,7 @@ const Access: React.FC = () => {
         // @ts-ignore
         treeData={treeData}
         // @ts-ignore
-        titleRender={(nodeData: API.SystemsAccessProps) => (
+        titleRender={(nodeData: API.SysAccessProps) => (
           <Space>
             <span>
               {nodeData.name} - {nodeData.code}
@@ -146,6 +146,4 @@ const Access: React.FC = () => {
       </ModalForm>
     </PageContainer>
   );
-};
-
-export default Access;
+}

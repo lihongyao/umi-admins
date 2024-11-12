@@ -5,11 +5,10 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { Avatar } from 'antd';
-import React from 'react';
 
-const Feedback: React.FC = () => {
+export default function Page() {
   // -- columns
-  const columns: ProColumns<API.FeedbackItemProps>[] = [
+  const columns: ProColumns<API.FeedbackProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '用户头像',
@@ -32,7 +31,7 @@ const Feedback: React.FC = () => {
   // -- rnders
   return (
     <PageContainer>
-      <ProTable<API.FeedbackItemProps>
+      <ProTable<API.FeedbackProps>
         columns={columns}
         rowKey="id"
         options={false}
@@ -56,6 +55,4 @@ const Feedback: React.FC = () => {
       />
     </PageContainer>
   );
-};
-
-export default Feedback;
+}

@@ -8,7 +8,7 @@ export async function list(params: API.ListParams) {
 }
 
 export async function feedbacks(params: API.ListParams) {
-  return request<API.List<API.FeedbackItemProps>>({
+  return request<API.List<API.FeedbackProps>>({
     url: '/api/user/feedbacks',
     params,
   });

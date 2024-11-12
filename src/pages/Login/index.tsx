@@ -20,14 +20,7 @@ import { flushSync } from 'react-dom';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => {
-  return (
-    <Alert
-      style={{ marginBottom: 24 }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
+  return <Alert className="mb-6" message={content} type="error" showIcon />;
 };
 
 type LoginType = 'mobile' | 'account';
@@ -110,7 +103,7 @@ const Login: React.FC = () => {
       {/* 例子效果 */}
       <InitParticles />
       {/* 表单 */}
-      <div className={'flex-1 py-8 relative'}>
+      <div className={'flex-1 pt-20  relative '}>
         <LoginForm
           formRef={vForm}
           contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
@@ -203,12 +196,12 @@ const Login: React.FC = () => {
               />
             </>
           )}
-          <div style={{ marginBottom: 24 }}>
+          <div className=" mb-6">
             <ProFormCheckbox noStyle name="memorize">
               记住密码
             </ProFormCheckbox>
             <a
-              style={{ float: 'right' }}
+              className="float-end"
               onClick={() => message.info('请联系客服重置密码')}
             >
               忘记密码

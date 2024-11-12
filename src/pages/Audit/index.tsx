@@ -13,23 +13,24 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Space, Table } from 'antd';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-const Audit: React.FC = () => {
+export default function Page() {
   // -- APPs
   const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
+  const vSearchForm = useRef<ProFormInstance>();
 
   // - state
   const [showRejectModal, setShowRejectModal] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Array<string>>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
 
   // - methods
   const audit = async (data: {
     type: 'RESOLVE' | 'REJECT';
-    ids?: string[];
+    ids?: number[];
     rejectReason?: string;
   }) => {
     const { type, ids, rejectReason } = data;
@@ -42,12 +43,11 @@ const Audit: React.FC = () => {
   };
 
   // - columns
-  const columns: Array<ProColumns<API.AuditItemProps>> = [
+  const columns: Array<ProColumns<API.AuditProps>> = [
     {
       title: '提交作品',
       dataIndex: 'works',
       search: false,
-      width: 120,
       render: (_, { works }) => (
         <ImageBox src={works} width={100} height={60} />
       ),
@@ -55,10 +55,10 @@ const Audit: React.FC = () => {
     {
       title: '审核状态',
       dataIndex: 'state',
-      width: 100,
       fieldProps: {
         placeholder: '全部',
         allowClear: true,
+        onChange: () => vSearchForm.current?.submit(),
       },
       valueType: 'select',
       valueEnum: {
@@ -71,21 +71,18 @@ const Audit: React.FC = () => {
       title: '提交时间',
       dataIndex: 'createTime',
       search: false,
-      width: 160,
     },
     {
       title: '家园告白',
       dataIndex: 'desc',
       search: false,
       ellipsis: true,
-      width: 200,
     },
     { title: '业主姓名', dataIndex: 'name', search: false, width: 100 },
     {
       title: '联系方式',
       dataIndex: 'mobile',
       copyable: true,
-      width: 140,
       fieldProps: {
         maxLength: 11,
       },
@@ -96,13 +93,12 @@ const Audit: React.FC = () => {
       search: false,
       copyable: true,
       ellipsis: true,
-      width: 200,
     },
     {
       title: '操作',
       key: 'action',
       search: false,
-      width: 160,
+      width: 150,
       fixed: 'right',
       render: (_, { state, id }) => (
         <Space>
@@ -137,8 +133,9 @@ const Audit: React.FC = () => {
   // -- renders
   return (
     <PageContainer>
-      <ProTable<API.AuditItemProps>
+      <ProTable<API.AuditProps>
         actionRef={vTable}
+        formRef={vSearchForm}
         headerTitle={' '}
         columns={columns}
         rowKey={'id'}
@@ -153,7 +150,7 @@ const Audit: React.FC = () => {
             };
           },
           onChange: (selectedRowKeys, selectedRows) => {
-            setSelectedRowKeys(selectedRowKeys as string[]);
+            setSelectedRowKeys(selectedRowKeys as number[]);
           },
         }}
         pagination={{
@@ -213,7 +210,7 @@ const Audit: React.FC = () => {
         }}
         onFinish={async ({ rejectReason, id }) => {
           const ids =
-            selectedRowKeys.length > 0 ? selectedRowKeys : [id as string];
+            selectedRowKeys.length > 0 ? selectedRowKeys : [id as number];
           setShowRejectModal(false);
           audit({
             type: 'REJECT',
@@ -232,6 +229,4 @@ const Audit: React.FC = () => {
       </ModalForm>
     </PageContainer>
   );
-};
-
-export default Audit;
+}

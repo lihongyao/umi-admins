@@ -3,18 +3,23 @@ import {
   ActionType,
   PageContainer,
   ProColumns,
+  ProFormInstance,
   ProTable,
 } from '@ant-design/pro-components';
 import { App, Avatar, Button, Popconfirm, Space } from 'antd';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-const Users: React.FC = () => {
+export default function Page() {
   // -- APPs
   const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
+  const vSearchForm = useRef<ProFormInstance>();
   // -- state
   const [tips, setTips] = useState('');
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
 
   // -- columns
   const columns: ProColumns<API.UserProps>[] = [
@@ -34,6 +39,9 @@ const Users: React.FC = () => {
       valueEnum: {
         0: { text: '已启用', status: 'Processing' },
         1: { text: '已禁用', status: 'Error' },
+      },
+      fieldProps: {
+        onChange: () => vSearchForm.current?.submit(),
       },
     },
     { title: '用户昵称', dataIndex: 'nickname' },
@@ -56,7 +64,7 @@ const Users: React.FC = () => {
               <Button danger>禁用</Button>
             </Popconfirm>
           )}
-          <Popconfirm title={'确定删除？'}>
+          <Popconfirm title={'确定删除？'} onConfirm={async () => {}}>
             <Button danger>删除</Button>
           </Popconfirm>
         </Space>
@@ -69,15 +77,20 @@ const Users: React.FC = () => {
     <PageContainer>
       <ProTable<API.UserProps>
         actionRef={vTable}
+        formRef={vSearchForm}
         columns={columns}
         rowKey="id"
         options={false}
         search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 10,
+          current,
+          pageSize,
           hideOnSinglePage: true,
           style: { paddingBottom: 16 },
+          onChange: (page, pageSize) => {
+            setCurrent(page);
+            setPageSize(pageSize);
+          },
         }}
         postData={(data: Array<API.UserProps>) => {
           tips && message.success(tips);
@@ -86,6 +99,7 @@ const Users: React.FC = () => {
         }}
         request={async (params) => {
           const resp = await apiUser.list(params);
+          setTotal(resp.data.total);
           return Promise.resolve({
             data: resp.data.data || [],
             success: true,
@@ -95,6 +109,4 @@ const Users: React.FC = () => {
       />
     </PageContainer>
   );
-};
-
-export default Users;
+}

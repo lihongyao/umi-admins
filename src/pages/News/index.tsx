@@ -5,24 +5,30 @@ import {
   ActionType,
   PageContainer,
   ProColumns,
+  ProFormInstance,
   ProTable,
 } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
-import React, { useRef, useState } from 'react';
-const News: React.FC = () => {
+import { useRef, useState } from 'react';
+
+export default function Page() {
   // -- APPs
-  const { modal } = App.useApp();
   const navigate = useNavigate();
+  const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
-
+  const vSearchForm = useRef<ProFormInstance>();
   // -- state
   const [title, setTitle] = useState('');
   const [htmlString, setHtmlString] = useState('');
+  const [tips, setTips] = useState('');
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
 
   // -- columns
-  const columns: Array<ProColumns<API.NewsItemProps>> = [
+  const columns: Array<ProColumns<API.NewsProps>> = [
     {
       title: '序号',
       dataIndex: 'index',
@@ -37,6 +43,9 @@ const News: React.FC = () => {
         1: { text: '案例新闻' },
         2: { text: '动态新闻' },
       },
+      fieldProps: {
+        onChange: () => vSearchForm.current?.submit(),
+      },
     },
     {
       title: '新闻分类',
@@ -46,6 +55,9 @@ const News: React.FC = () => {
         2: { text: '爱国卫生月' },
         3: { text: '志愿服务' },
       },
+      fieldProps: {
+        onChange: () => vSearchForm.current?.submit(),
+      },
     },
     {
       title: '新闻详情',
@@ -53,6 +65,7 @@ const News: React.FC = () => {
       search: false,
       render: (_, { content, title }) => (
         <a
+          className="text-blue-500"
           onClick={() => {
             setTitle(title);
             setHtmlString(content);
@@ -74,7 +87,20 @@ const News: React.FC = () => {
           <Button onClick={() => navigate(`/news/edit/${record.id}`)}>
             编辑
           </Button>
-          <Popconfirm title={'确定删除？'}>
+          <Popconfirm
+            title={'确定删除？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiNews.del(record.id);
+              if (resp.code === 200) {
+                if (current > Math.ceil((total - 1) / pageSize)) {
+                  setCurrent((prev) => prev - 1);
+                }
+                setTips('删除成功');
+                vTable.current?.reload!();
+              }
+            }}
+          >
             <Button danger>删除</Button>
           </Popconfirm>
         </Space>
@@ -92,8 +118,9 @@ const News: React.FC = () => {
         </Button>,
       ]}
     >
-      <ProTable<API.NewsItemProps>
+      <ProTable<API.NewsProps>
         actionRef={vTable}
+        formRef={vSearchForm}
         headerTitle={' '}
         options={false}
         scroll={{ x: 1200 }}
@@ -101,13 +128,23 @@ const News: React.FC = () => {
         rowKey="id"
         search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 10,
+          current,
+          pageSize,
           hideOnSinglePage: true,
           style: { paddingBottom: 16 },
+          onChange: (page, pageSize) => {
+            setCurrent(page);
+            setPageSize(pageSize);
+          },
+        }}
+        postData={(data: API.NewsProps[]) => {
+          tips && message.success(tips);
+          setTips('');
+          return data;
         }}
         request={async (params) => {
           const resp = await apiNews.list(params);
+          setTotal(resp.data.total);
           return Promise.resolve({
             data: resp.data.data || [],
             success: true,
@@ -124,6 +161,4 @@ const News: React.FC = () => {
       />
     </PageContainer>
   );
-};
-
-export default News;
+}

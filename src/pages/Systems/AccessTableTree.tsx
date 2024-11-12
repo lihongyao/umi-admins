@@ -19,15 +19,15 @@ import {
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
-const Catalogues: React.FC = () => {
+export default function Page() {
   // -- APPs
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
   // -- constants
   const MAX_DEPTH = 3;
   // -- refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
-  const source = useRef<API.SystemsAccessProps[]>([]);
+  const source = useRef<API.SysAccessProps[]>([]);
   // -- state
   const [tips, setTips] = useState('');
   const [openForm, setOpenForm] = useState(false);
@@ -77,7 +77,7 @@ const Catalogues: React.FC = () => {
 
               if (resp.code === 200) {
                 setTips('删除成功');
-                vTable.current?.reloadAndRest!();
+                vTable.current?.reload!();
               }
             }}
           >
@@ -152,7 +152,7 @@ const Catalogues: React.FC = () => {
         </Button>,
       ]}
     >
-      <ProTable<API.SystemsAccessProps>
+      <ProTable<API.SysAccessProps>
         actionRef={vTable}
         columns={columns}
         rowKey="id"
@@ -187,7 +187,7 @@ const Catalogues: React.FC = () => {
           },
           onExpand: handleExpand,
         }}
-        postData={(data: API.SystemsAccessProps[]) => {
+        postData={(data: API.SysAccessProps[]) => {
           tips && message.success(tips);
           setTips('');
           source.current = addDepthToData(data);
@@ -220,7 +220,7 @@ const Catalogues: React.FC = () => {
           const resp = await fetchFn(values);
           if (resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
-            vTable.current?.reloadAndRest!();
+            vTable.current?.reload!();
             setOpenForm(false);
           }
         }}
@@ -244,6 +244,4 @@ const Catalogues: React.FC = () => {
       </ModalForm>
     </PageContainer>
   );
-};
-
-export default Catalogues;
+}

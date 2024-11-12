@@ -1,8 +1,7 @@
 import { history } from '@umijs/max';
 import { Button, Result } from 'antd';
-import React from 'react';
 
-const NoFoundPage: React.FC = () => {
+export default function Page() {
   return (
     <Result
       status="404"
@@ -15,5 +14,4 @@ const NoFoundPage: React.FC = () => {
       }
     />
   );
-};
-export default NoFoundPage;
+}

@@ -21,6 +21,7 @@ declare namespace API {
     /** 其他过滤项属性 */
     [__prop__: string]: any;
   }
+
   // ~~~~~~~~~~~~~~~~~~
   // 公共类型
   // ~~~~~~~~~~~~~~~~~~
@@ -28,12 +29,12 @@ declare namespace API {
     dir: string;
     expire: string;
     host: string;
-    accessKeyId: string;
+    accessKeyid: number;
     policy: string;
     signature: string;
   };
   type OSSSTSConfigProps = {
-    accessKeyId: string;
+    accessKeyid: number;
     accessKeySecret: string;
     bucket: string;
     endpoint: string;
@@ -74,7 +75,7 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   // 轮播图管理
   // ~~~~~~~~~~~~~~~~~~
-  type BannerItemProps = {
+  type BannerProps = {
     /** ID */
     id: number;
     /** 启用/禁用状态 */
@@ -99,7 +100,7 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   // 系统管理
   // ~~~~~~~~~~~~~~~~~~
-  type SystemsAccessProps = {
+  type SysAccessProps = {
     /** 权限ID */
     id: number | string;
     /** 父级权限ID */
@@ -111,9 +112,9 @@ declare namespace API {
     /** 深度 */
     depth: number;
     /** 子集权限 */
-    children?: SystemsAccessProps[];
+    children?: SysAccessProps[];
   };
-  type SystemRoleProps = {
+  type SysRoleProps = {
     id: number;
     /** 角色名称 */
     roleName: string;
@@ -130,7 +131,7 @@ declare namespace API {
     /** 启用状态 */
     status: number;
   };
-  type SystemsUserProps = {
+  type SysUserProps = {
     id: number;
     username: string /** 用户名 */;
     nickname: string /** 用户昵称 */;
@@ -157,7 +158,7 @@ declare namespace API {
   // 用户相关
   // ~~~~~~~~~~~~~~~~~~
   type UserProps = {
-    id: string;
+    id: number;
     /** 用户昵称 */
     nickname: string;
     /** 用户头像 */
@@ -169,8 +170,8 @@ declare namespace API {
     /** 用户状态 */
     status: number;
   };
-  type FeedbackItemProps = {
-    id: string;
+  type FeedbackProps = {
+    id: number;
     /** 反馈时间 */
     createTime: string;
     /** 反馈内容 */
@@ -186,8 +187,8 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   // 审核列表
   // ~~~~~~~~~~~~~~~~~~
-  type AuditItemProps = {
-    id: string;
+  type AuditProps = {
+    id: number;
     works: string;
     name: string;
     desc: string;
@@ -201,9 +202,12 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   // 新闻管理
   // ~~~~~~~~~~~~~~~~~~
-  type NewsItemProps = {
-    id: string;
+  type NewsProps = {
+    id: number;
     title: string;
     content: string;
+    type: number;
+    category: number;
+    date: string;
   };
 }

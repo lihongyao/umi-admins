@@ -4,9 +4,8 @@ import {
   ProColumns,
   ProTable,
 } from '@ant-design/pro-components';
-import React from 'react';
 
-const Logs: React.FC = () => {
+export default function Page() {
   // -- columns
   const columns: ProColumns<API.LogsProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
@@ -38,6 +37,4 @@ const Logs: React.FC = () => {
       />
     </PageContainer>
   );
-};
-
-export default Logs;
+}

@@ -13,9 +13,9 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { App, Button, Form, Popconfirm, Space } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const Roles: React.FC = () => {
+export default function Page() {
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -24,11 +24,11 @@ const Roles: React.FC = () => {
 
   // -- state
   const [openForm, setOpenForm] = useState(false);
-  const [auths, setAuths] = useState<API.SystemsAccessProps[]>([]);
+  const [auths, setAuths] = useState<API.SysAccessProps[]>([]);
   const [tips, setTips] = useState('');
 
   // - methods
-  const recursive = (arr: API.SystemsAccessProps[]): any => {
+  const recursive = (arr: API.SysAccessProps[]): any => {
     return arr.map((item) => ({
       title: item.name,
       key: item.id,
@@ -36,7 +36,7 @@ const Roles: React.FC = () => {
     }));
   };
 
-  const traverse = (notes: API.SystemsAccessProps[]) => {
+  const traverse = (notes: API.SysAccessProps[]) => {
     let result: Array<string | number> = []; // 内部定义结果数组
     notes.forEach((note) => {
       result.push(note.id); // 收集当前节点的 ID
@@ -53,7 +53,7 @@ const Roles: React.FC = () => {
     const resp = await apiSys.roleSwichStatus(id, status);
     if (resp.code === 200) {
       setTips(tips);
-      vTable.current?.reloadAndRest!();
+      vTable.current?.reload!();
     }
   };
 
@@ -67,7 +67,7 @@ const Roles: React.FC = () => {
   }, []);
 
   // -- columns
-  const columns: ProColumns<API.SystemRoleProps>[] = [
+  const columns: ProColumns<API.SysRoleProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 48 },
     { title: '角色名称', dataIndex: 'roleName', search: false },
     {
@@ -124,7 +124,7 @@ const Roles: React.FC = () => {
               const resp = await apiSys.roleDelete(record.id);
               if (resp.code === 200) {
                 setTips('已删除');
-                vTable.current?.reloadAndRest!();
+                vTable.current?.reload!();
               }
             }}
           >
@@ -149,7 +149,7 @@ const Roles: React.FC = () => {
         </Button>,
       ]}
     >
-      <ProTable<API.SystemRoleProps>
+      <ProTable<API.SysRoleProps>
         actionRef={vTable}
         columns={columns}
         rowKey="id"
@@ -161,7 +161,7 @@ const Roles: React.FC = () => {
           hideOnSinglePage: true,
           style: { paddingBottom: 16 },
         }}
-        postData={(data: Array<API.SystemRoleProps>) => {
+        postData={(data: Array<API.SysRoleProps>) => {
           tips && message.success(tips);
           setTips('');
           return data;
@@ -199,7 +199,7 @@ const Roles: React.FC = () => {
           if (resp && resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
-            vTable.current?.reloadAndRest!();
+            vTable.current?.reload!();
           }
         }}
       >
@@ -242,6 +242,4 @@ const Roles: React.FC = () => {
       </ModalForm>
     </PageContainer>
   );
-};
-
-export default Roles;
+}

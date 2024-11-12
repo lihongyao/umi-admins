@@ -15,18 +15,22 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { App, Avatar, Button, Popconfirm, Space } from 'antd';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-const Users: React.FC = () => {
+export default function Page() {
   // -- APPs
   const { message } = App.useApp();
   // - refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
+  const vSearchForm = useRef<ProFormInstance>();
 
   // -- state
   const [tips, setTips] = useState('');
   const [openForm, setOpenForm] = useState(false);
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
 
   // -- methods
   const switchStatus = async (id: number, status: number, tips: string) => {
@@ -35,12 +39,12 @@ const Users: React.FC = () => {
 
     if (resp.code === 200) {
       setTips(tips);
-      vTable.current?.reloadAndRest!();
+      vTable.current?.reload!();
     }
   };
 
   // -- columns
-  const columns: ProColumns<API.SystemsUserProps>[] = [
+  const columns: ProColumns<API.SysUserProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '头像',
@@ -61,7 +65,11 @@ const Users: React.FC = () => {
       tooltip: '该用户是否被拉入黑名单',
       dataIndex: 'status',
       valueType: 'select',
-      fieldProps: { placeholder: '全部', allowClear: true },
+      fieldProps: {
+        placeholder: '全部',
+        allowClear: true,
+        onChange: () => vSearchForm.current?.submit(),
+      },
       valueEnum: {
         0: { text: '已禁用', status: 'Error' },
         1: { text: '已启用', status: 'Processing' },
@@ -138,7 +146,20 @@ const Users: React.FC = () => {
               <Button danger>禁用</Button>
             </Popconfirm>
           )}
-          <Popconfirm title={'确定删除？'} onConfirm={async () => {}}>
+          <Popconfirm
+            title={'确定删除？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiSys.userDelete(record.id);
+              if (resp.code === 200) {
+                if (current > Math.ceil((total - 1) / pageSize)) {
+                  setCurrent((prev) => prev - 1);
+                }
+                setTips('已删除');
+                vTable.current?.reload();
+              }
+            }}
+          >
             <Button danger>删除</Button>
           </Popconfirm>
         </Space>
@@ -162,28 +183,32 @@ const Users: React.FC = () => {
         </Button>,
       ]}
     >
-      <ProTable<API.SystemsUserProps>
+      <ProTable<API.SysUserProps>
         actionRef={vTable}
+        formRef={vSearchForm}
         columns={columns}
         rowKey="id"
         scroll={{ x: 1200 }}
         options={false}
         search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 10,
+          current,
+          pageSize,
           hideOnSinglePage: true,
           style: { paddingBottom: 16 },
+          onChange: (page, pageSize) => {
+            setCurrent(page);
+            setPageSize(pageSize);
+          },
         }}
-        postData={(data: Array<API.SystemsUserProps>) => {
+        postData={(data: Array<API.SysUserProps>) => {
           tips && message.success(tips);
           setTips('');
           return data;
         }}
         request={async (params) => {
-          const resp = await apiSys.users({
-            ...params,
-          });
+          const resp = await apiSys.users(params);
+          setTotal(resp.data.total);
           return Promise.resolve({
             data: resp.data.data || [],
             success: true,
@@ -215,7 +240,7 @@ const Users: React.FC = () => {
           if (resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
-            vTable.current?.reloadAndRest!();
+            vTable.current?.reload!();
           }
         }}
       >
@@ -282,6 +307,4 @@ const Users: React.FC = () => {
       </ModalForm>
     </PageContainer>
   );
-};
-
-export default Users;
+}

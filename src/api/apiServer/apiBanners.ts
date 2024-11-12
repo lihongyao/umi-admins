@@ -1,7 +1,7 @@
 import request from '@/api/apiConfig';
 
 export async function list(params: API.ListParams) {
-  return request<API.List<API.BannerItemProps>>({
+  return request<API.List<API.BannerProps>>({
     url: '/api/banners',
     params,
   });
