@@ -22,14 +22,15 @@ const Types: React.FC = () => {
   // -- columns
   const columns: ProColumns[] = [
     {
+      title: '序号',
       dataIndex: 'index',
       valueType: 'indexBorder',
       width: 60,
       search: false,
     },
-
-    { dataIndex: 'typeName' },
+    { title: '类型名称', dataIndex: 'typeName' },
     {
+      title: '操作',
       key: 'action',
       width: 120,
       render: (_, record) => (
@@ -78,18 +79,14 @@ const Types: React.FC = () => {
   return (
     <>
       <DragSortTable
-        style={{ width: 400 }}
-        headerTitle={'装备类型'}
+        style={{ width: 500 }}
         ghost={true}
         dragSortKey="sort"
         actionRef={vTable}
         columns={columns}
         rowKey={'id'}
-        size={'small'}
         search={false}
         options={false}
-        showHeader={false}
-        pagination={false}
         toolBarRender={() => [
           <Button
             size={'small'}

@@ -1,110 +1,39 @@
 import { GridContent } from '@ant-design/pro-components';
 import { Menu } from 'antd';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Basic from './components/Basic';
 import Categories from './components/Categories';
 import Types from './components/Types';
-import './index.less';
-
-const menuMap = {
-  base: '基础配置',
-  categories: '装备类型',
-  types: '车辆类型',
-};
-
-type SettingsStateKeys = keyof typeof menuMap;
-type SettingsState = {
-  mode: 'inline' | 'horizontal';
-  selectKey: SettingsStateKeys;
-};
-
-const Settings: React.FC = () => {
-  // -- state
-  const [initConfig, setInitConfig] = useState<SettingsState>({
-    mode: 'inline',
-    selectKey: 'base',
-  });
-  // -- refs
-  const dom = useRef<HTMLDivElement>();
-
-  // -- methods
-  const resize = () => {
-    requestAnimationFrame(() => {
-      if (!dom.current) {
-        return;
-      }
-      let mode: 'inline' | 'horizontal' = 'inline';
-      const { offsetWidth } = dom.current;
-      if (dom.current.offsetWidth < 641 && offsetWidth > 400) {
-        mode = 'horizontal';
-      }
-      if (window.innerWidth < 768 && offsetWidth > 400) {
-        mode = 'horizontal';
-      }
-      setInitConfig({ ...initConfig, mode: mode as SettingsState['mode'] });
-    });
+export default function Page() {
+  const menus: Record<string, string> = {
+    base: '基础配置',
+    categories: '装备类型',
+    types: '车辆类型',
   };
-
-  // -- effects
-  useLayoutEffect(() => {
-    if (dom.current) {
-      window.addEventListener('resize', resize);
-      resize();
-    }
-    return () => {
-      window.removeEventListener('resize', resize);
-    };
-  }, [dom.current]);
-
-  const getMenu = () =>
-    Object.keys(menuMap).map((item) => ({
-      key: item,
-      label: menuMap[item as SettingsStateKeys],
-    }));
-
-  const renderChildren = () => {
-    const { selectKey } = initConfig;
-    switch (selectKey) {
-      case 'base':
-        return <Basic />;
-      case 'categories':
-        return <Categories />;
-      case 'types':
-        return <Types />;
-      default:
-        return null;
-    }
-  };
-
+  const [selectedKeys, setSelectedKeys] = useState<string[]>(['base']);
   return (
     <GridContent>
-      <div
-        className={'main'}
-        ref={(ref) => {
-          if (ref) {
-            dom.current = ref;
-          }
-        }}
-      >
-        <div className={'leftMenu'}>
+      <div className="w-full h-full py-4 bg-white flex">
+        <div className="w-52 border-r border-solid border-orange-600">
           <Menu
-            mode={initConfig.mode}
-            selectedKeys={[initConfig.selectKey]}
-            items={getMenu()}
-            onClick={({ key }) => {
-              setInitConfig({
-                ...initConfig,
-                selectKey: key as SettingsStateKeys,
-              });
-            }}
+            className="w-52 h-full"
+            mode={'inline'}
+            selectedKeys={selectedKeys}
+            items={Object.keys(menus).map((key) => ({
+              key,
+              label: menus[key],
+            }))}
+            onClick={({ key }) => setSelectedKeys([key])}
           />
         </div>
-        <div className={'right'}>
-          {/* <div className={styles.title}>{menuMap[initConfig.selectKey]}</div> */}
-          {renderChildren()}
+        <div className="h-full flex-1 py-2 px-5 ">
+          {/* 标题 */}
+          <div className="text-2xl mb-4">{menus[selectedKeys[0]]}</div>
+          {selectedKeys.includes('base') && <Basic />}
+          {selectedKeys.includes('categories') && <Categories />}
+          {selectedKeys.includes('types') && <Types />}
         </div>
       </div>
     </GridContent>
   );
-};
-export default Settings;
+}

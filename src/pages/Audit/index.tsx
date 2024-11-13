@@ -71,6 +71,7 @@ export default function Page() {
       title: '提交时间',
       dataIndex: 'createTime',
       search: false,
+      ellipsis: true,
     },
     {
       title: '家园告白',
@@ -141,7 +142,7 @@ export default function Page() {
         rowKey={'id'}
         scroll={{ x: 1100 }}
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto' }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
           getCheckboxProps({ state }) {

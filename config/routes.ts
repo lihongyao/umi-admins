@@ -92,7 +92,6 @@ const routes: RouterConfig[] = [
     name: '配置管理',
     icon: 'icon-peizhi',
   },
-
   {
     path: '/systems',
     name: '系统管理',

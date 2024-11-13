@@ -1,4 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
   DragSortTable,
@@ -87,29 +87,20 @@ const Types: React.FC = () => {
         </Space>
       ),
     },
-    {
-      title: '排序',
-      dataIndex: 'sort',
-      width: 20,
-      search: false,
-    },
+    { dataIndex: 'sort', sortIcon: () => <MenuOutlined /> },
   ];
   return (
     <>
       <DragSortTable
-        style={{ width: 400 }}
-        headerTitle={'车辆类型'}
+        style={{ width: 500 }}
         ghost={true}
         dragSortKey="sort"
         actionRef={vTable}
         columns={columns}
         dataSource={dataSource}
         rowKey={'id'}
-        size={'small'}
         search={false}
         options={false}
-        showHeader={false}
-        pagination={false}
         toolBarRender={() => [
           <Button
             key={'create'}

@@ -1,8 +1,13 @@
 import request from '@/api/apiConfig';
 
-export async function ossConfig<T>() {
-  return request<T>({
-    url: '/api/upload/getSignForOSS',
+export async function getOssConfigs() {
+  return request<API.OssConfigProps>({
+    url: '/api/upload/ossConfigs',
+  });
+}
+export async function getOssStsConfigs() {
+  return request<API.OssStsConfigProps>({
+    url: '/api/upload/stsConfigs',
   });
 }
 

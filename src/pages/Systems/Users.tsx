@@ -1,5 +1,5 @@
 import { apiSys } from '@/api/apiServer';
-import UploadForOSS from '@/components/@lgs/UploadForOSS';
+import UploadImage from '@/components/@lgs/UploadImage';
 
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -251,7 +251,7 @@ export default function Page() {
           rules={[{ required: true, message: '请上传轮播图' }]}
           extra={'温馨提示：请上传1:1比例的图片'}
         >
-          <UploadForOSS dir="fruites_pro" />
+          <UploadImage />
         </ProForm.Item>
         <ProFormText
           label="账号"

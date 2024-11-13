@@ -44,6 +44,7 @@ export default function Page() {
       title: '图片预览',
       dataIndex: 'bannerPic',
       search: false,
+      width: 120,
       render: (_, { bannerPic }) => (
         <ImageBox src={bannerPic} width={100} height={60} />
       ),

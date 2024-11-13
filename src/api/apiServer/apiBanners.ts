@@ -27,7 +27,6 @@ export async function del(id: number) {
     data: { id },
   });
 }
-
 export async function switchStatus(id: number, status: number) {
   return request({
     url: '/api/banners/switchStatus',

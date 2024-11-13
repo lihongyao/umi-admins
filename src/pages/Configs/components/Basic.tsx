@@ -1,17 +1,11 @@
 import EditorWang, { EditorWangRefs } from '@/components/@lgs/EditorWang';
 import ImagePreview from '@/components/@lgs/ImagePreview';
 import PhoneModel from '@/components/@lgs/PhoneModel';
-import UploadForOSS from '@/components/@lgs/UploadForOSS';
 import {
   ActionType,
-  ModalForm,
-  ProForm,
-  ProFormDigit,
   ProFormInstance,
-  ProFormText,
   ProList,
 } from '@ant-design/pro-components';
-import Validator from '@likg/validator';
 import { App, Button, Modal, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
@@ -23,7 +17,6 @@ const Basic: React.FC = () => {
   const vForm = useRef<ProFormInstance>();
   const vEditor = useRef<EditorWangRefs>();
   // -- state
-  const [record, setRecord] = useState<API.ConfigProps | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [htmlString, setHtmlString] = useState('');
   const [previewImgTitle, setPreviewImgTitle] = useState('');
@@ -37,56 +30,63 @@ const Basic: React.FC = () => {
       `);
     } else {
       setPreviewImgTitle(record.title);
-      setPreviewImgUrl(record.value);
+      setPreviewImgUrl(record.value!);
     }
   };
   // -- render
   return (
     <>
       <ProList<API.ConfigProps>
-        headerTitle={'基础配置'}
+        rowKey={'key'}
+        editable={{
+          actionRender: (row, config, defaultDoms) => {
+            return [defaultDoms.save, defaultDoms.cancel];
+          },
+          onSave: async (key, record, originRow) => {
+            console.log(key, record, originRow);
+            return true;
+          },
+        }}
         request={async () => {
-          console.log('加载数据');
           return Promise.resolve({
             success: true,
             data: [
               {
-                id: 0,
+                id: 1,
                 title: '租车指南',
                 key: 'zczn',
                 value: '2',
               },
               {
-                id: 1,
+                id: 2,
                 title: '客服微信二维码链接',
                 key: 'customerServiceQrCode',
                 value:
                   'https://zylcjc.oss-cn-chengdu.aliyuncs.com/configs/20230527/IZB1685197807006.jpg',
               },
               {
-                id: 2,
+                id: 3,
                 title: '客服电话',
                 key: 'customerServicePhone',
                 value: '17398888669',
               },
               {
-                id: 3,
+                id: 4,
                 title: '对接人分润比例',
                 key: 'contactPersonProfitRatio',
                 value: '2',
               },
               {
-                id: 4,
+                id: 5,
                 title: '平台负责人分润比例',
                 key: 'principalProfitRatio',
-                value: '2',
               },
             ],
           });
         }}
         metas={{
-          title: { dataIndex: 'title' },
-          subTitle: {
+          title: { dataIndex: 'title', editable: false },
+          description: {
             dataIndex: 'value',
             render: (_, record) => {
               const { value, key } = record;
@@ -111,91 +111,30 @@ const Basic: React.FC = () => {
             },
           },
           actions: {
-            render: (_, record) => [
-              <Button
-                size={'small'}
-                key={'k'}
-                onClick={() => {
-                  const { key, value } = record;
-                  if (key === 'zczn') {
-                    vEditor.current?.setContent('<span>租车指南...</span>');
-                    setOpenModal(true);
-                  } else {
-                    vForm.current?.setFieldsValue({
-                      key,
-                      value: ['customerServiceQrCode'].includes(key)
-                        ? value
-                          ? [{ url: value }]
-                          : []
-                        : value,
-                    });
-                    setRecord({ ...record });
-                  }
-                }}
-              >
-                编辑
-              </Button>,
-            ],
+            render: (text, row, index, action) => {
+              return [
+                <Button
+                  size={'small'}
+                  key={'set_and_edit'}
+                  type={'link'}
+                  onClick={() => {
+                    console.log(row);
+                    if (row.key === 'zczn') {
+                      vEditor.current?.setContent('<span>租车指南...</span>');
+                      setOpenModal(true);
+                    } else {
+                      action?.startEditable(row.key);
+                    }
+                  }}
+                >
+                  {row.value ? '编辑' : '配置'}
+                </Button>,
+              ];
+            },
           },
         }}
       />
-      {/* 表单 */}
-      <ModalForm
-        title={record?.title || ''}
-        formRef={vForm}
-        open={!!record}
-        width={300}
-        modalProps={{
-          maskClosable: false,
-          closable: false,
-          forceRender: true,
-          onCancel: () => setRecord(null),
-        }}
-        onFinish={async ({ key, value }) => {
-          // 救援热线
-          if (key === 'hotline' && !Validator.isTel(value)) {
-            return message.error('手机号码格式不正确');
-          }
-          // 客服微信二维码链接
-          let newValue = '';
-          if (key === 'customerServiceQrCode') {
-            newValue = value[0].url;
-          }
-          console.log(`${key} - ${newValue}`);
-          message.loading('处理中...', 0);
-          try {
-            setTimeout(() => {
-              message.destroy();
-              vList.current?.reload();
-              message.success('设置成功');
-              setRecord(null);
-            }, 1000);
-          } catch {}
-        }}
-      >
-        <ProFormText name={'key'} noStyle hidden />
-        {['customerServicePhone'].includes(record?.key || '') && (
-          <ProFormText name={'value'} fieldProps={{ maxLength: 11 }} />
-        )}
-        {['customerServiceQrCode'].includes(record?.key || '') && (
-          <ProForm.Item name={'value'}>
-            <UploadForOSS max={1} dir="configs" />
-          </ProForm.Item>
-        )}
-        {['contactPersonProfitRatio', 'principalProfitRatio'].includes(
-          record?.key || '',
-        ) && (
-          <ProFormDigit
-            name={'value'}
-            min={0}
-            max={100}
-            fieldProps={{
-              precision: 2,
-            }}
-            addonAfter={<span>%</span>}
-          />
-        )}
-      </ModalForm>
+
       {/* 手机预览 */}
       <PhoneModel
         title={'租车指南'}
@@ -208,7 +147,7 @@ const Basic: React.FC = () => {
         title="租车指南"
         open={openModal}
         onCancel={() => setOpenModal(false)}
-        width={520}
+        width={1200}
         footer={false}
       >
         <EditorWang
@@ -238,6 +177,7 @@ const Basic: React.FC = () => {
           </Space>
         </div>
       </Modal>
+      {/* 图片预览 */}
       <ImagePreview
         name={previewImgTitle}
         width={300}
