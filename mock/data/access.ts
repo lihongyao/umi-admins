@@ -16,14 +16,6 @@ export default mock([
         code: 'BANNER_ADD',
         name: '添加轮播图',
         id: '63fdbb8795339b3d36e729dc',
-        children: [
-          {
-            parentId: '63fdbb8795339b3d36e729dc',
-            code: 'BANNER_ADD_sub',
-            name: '添加轮播图_sub',
-            id: '63fdbb8795339b3d36e729de',
-          },
-        ],
       },
       {
         parentId: '63fdbb7695339b3d36e729d9',

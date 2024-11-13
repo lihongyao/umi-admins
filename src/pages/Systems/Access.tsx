@@ -1,5 +1,6 @@
 import { apiSys } from '@/api/apiServer';
 import {
+  CopyOutlined,
   DeleteOutlined,
   FormOutlined,
   PlusCircleOutlined,
@@ -11,7 +12,8 @@ import {
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import { App, Button, Popconfirm, Space, Tree } from 'antd';
+import Tools from '@likg/tools';
+import { App, Button, Popconfirm, Tree } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Page() {
@@ -73,21 +75,28 @@ export default function Page() {
         treeData={treeData}
         // @ts-ignore
         titleRender={(nodeData: API.SysAccessProps) => (
-          <Space>
-            <span>
-              {nodeData.name} - {nodeData.code}
-            </span>
+          <div className="flex space-x-3">
+            <div>
+              {nodeData.name} - {nodeData.code}{' '}
+            </div>
             <FormOutlined
-              style={{ color: '#4169E1' }}
+              className={'text-blue-500 opacity-50 hover:opacity-100'}
               onClick={() => onEdit(nodeData)}
             />
             <PlusCircleOutlined
-              style={{ color: '#4169E1' }}
+              className={'text-blue-500 opacity-50 hover:opacity-100'}
               onClick={() => {
                 vForm.current?.setFieldsValue({
                   parentId: nodeData.id,
                 });
                 setOpenModal(true);
+              }}
+            />
+            <CopyOutlined
+              className={'text-blue-500 opacity-50 hover:opacity-100'}
+              onClick={() => {
+                Tools.clipboard(nodeData.code);
+                message.success('已复制');
               }}
             />
             <Popconfirm
@@ -100,9 +109,9 @@ export default function Page() {
                 }
               }}
             >
-              <DeleteOutlined style={{ color: '#DC143C' }} />
+              <DeleteOutlined className="text-red-500 opacity-50 hover:opacity-100" />
             </Popconfirm>
-          </Space>
+          </div>
         )}
       />
       <ModalForm
