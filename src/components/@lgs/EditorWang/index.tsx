@@ -11,7 +11,6 @@ import { App } from 'antd';
 import React, { memo, useEffect, useImperativeHandle, useState } from 'react';
 import hoverbarKeys from './configs/hoverbarKeys';
 import { fontSize } from './configs/menuConfs';
-import toolbarKeys from './configs/toolbarKeys';
 import { EventType } from './constants';
 import './elements';
 import './index.less';
@@ -41,6 +40,8 @@ interface IProps {
   audioLimit?: LimitType;
   /** 图片格式 */
   imageLimit?: LimitType;
+  /** 工具栏Keys */
+  toolbarKeys?: string[];
   /** 排除工具栏keys */
   excludeKeys?: string[];
   onChange?: (value: string) => void;
@@ -73,6 +74,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
         size: 20,
         ...(props.imageLimit || {}),
       },
+      toolbarKeys,
       excludeKeys = [],
       onChange,
       onPreview,
@@ -120,7 +122,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
         title: '是否确定清空内容?',
         content: '清空后内容将无法恢复，请自行保存内容!',
         cancelText: '取消',
-        okText: '取消',
+        okText: '确定',
         onOk: () => editor.clear(),
       });
     };
@@ -183,7 +185,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
 
     // -- 工具栏配置
     const toolbarConfig: Partial<IToolbarConfig> = {
-      toolbarKeys,
+      toolbarKeys: props.toolbarKeys || toolbarKeys,
       excludeKeys,
     };
 

@@ -26,7 +26,7 @@ declare namespace API {
   // 公共类型
   // ~~~~~~~~~~~~~~~~~~
   type OssConfigProps = {
-    /** OSS 上传目录名 */
+    /** OSS 上传目录名，如 “images”，❗️注意：目录前后不加斜杠，多级目录之间需加斜杠，如 “images/avatar” */
     dir: string;
     /** OSS 上传服务器的地址，通常是一个包含 bucket 和 region 的完整 URL */
     host: string;
@@ -36,11 +36,11 @@ declare namespace API {
     signature: string;
     /** OSS 的 Access Key ID，用于身份验证和授权 */
     accessKeyId: string;
-    /** OSS 上传签名的过期时间 (Unix 时间戳 - 毫秒) */
-    expiration: number;
+    /** OSS 上传签名的过期时间 */
+    expiration: string;
   };
   type OssStsConfigProps = {
-    /** OSS 上传目录名 */
+    /** OSS 上传目录名，如 “images”，❗️注意：目录前后不加斜杠，多级目录之间需加斜杠，如 “images/avatar” */
     dir: string;
     /** OSS bucket 名称 */
     bucket: string;
@@ -54,8 +54,8 @@ declare namespace API {
     accessKeySecret: string;
     /** STS token 的安全令牌 */
     stsToken: string;
-    /** STS token 的过期时间 (Unix 时间戳 - 毫秒) */
-    expiration: number;
+    /** STS token 的过期时间 */
+    expiration: string;
   };
 
   type ConfigProps = {

@@ -48,7 +48,7 @@ interface UploadImageProps {
   extra?: string;
   /** 上传模式 */
   uploadMode?: UploadMode;
-  /** 上传目录，如：/images */
+  /** 上传目录，如：/images，注意：后面不要加斜杠 */
   dir?: string;
   /** 图片地址 */
   value?: string | string[];
@@ -129,6 +129,9 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
     );
   };
 
+  /**
+   * 初始化OSS配置
+   */
   const initOssConfig = async () => {
     const resp = await apiCommon.getOssConfigs();
     if (resp.code === 200) {
@@ -136,6 +139,9 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
     }
   };
 
+  /**
+   * 初始化OSS配置
+   */
   const initStsConfig = async () => {
     const resp = await apiCommon.getOssStsConfigs();
     if (resp.code === 200) {
@@ -148,7 +154,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
         stsToken: resp.data.stsToken,
       });
       setClient(client);
-      setOssStsData(ossStsData);
+      setOssStsData(resp.data);
     }
   };
 
@@ -192,7 +198,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
             formData.append('file', file);
             fetch(ossData.host, { method: 'POST', body: formData }).then(
               (uploadResp) => {
-                if ([200, 204].indexOf(uploadResp.status) !== -1) {
+                if ([200, 204].includes(uploadResp.status)) {
                   const url = uploadResp.url + key;
                   triggerChange(url);
                 } else {
@@ -204,15 +210,15 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
           break;
         case UploadMode.OssDirectWithSts:
           if (ossStsData) {
-            // -- 判断是否过期
             const expire = new Date(ossStsData.expiration).getTime();
-            if (expire < Date.now()) {
-              await initStsConfig();
-            }
+            if (expire < Date.now()) await initStsConfig();
             const key = Tools.getFilePath(file, `${ossStsData.dir}${dir}`);
-            const resp = await client?.put(key, file);
-            const url = resp?.url;
-            url ? triggerChange(url) : updateStatus(index, 'fail');
+            const data = await client?.put(key.slice(1), file);
+            data?.res.status === 200
+              ? triggerChange(data.url)
+              : updateStatus(index, 'fail');
+          } else {
+            updateStatus(index, 'fail');
           }
           break;
       }
@@ -232,7 +238,6 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
     const files = e.target.files;
     if (!(files && files.length > 0)) return;
     const file = files[0];
-
     // -- 校验文件类型
     if (!Validator.checkFile({ type: 'extension', file, accept })) {
       message.error(`仅支持格式为 ${accept} 的文件`);
