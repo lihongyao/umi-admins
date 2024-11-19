@@ -11,6 +11,7 @@ import { App } from 'antd';
 import React, { memo, useEffect, useImperativeHandle, useState } from 'react';
 import hoverbarKeys from './configs/hoverbarKeys';
 import { fontSize } from './configs/menuConfs';
+import toolbarKeys from './configs/toolbarKeys';
 import { EventType } from './constants';
 import './elements';
 import './index.less';
@@ -74,7 +75,6 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
         size: 20,
         ...(props.imageLimit || {}),
       },
-      toolbarKeys,
       excludeKeys = [],
       onChange,
       onPreview,
@@ -259,7 +259,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
           style={{ overflowY: 'hidden', height: 300 }}
           onCreated={(editor: IDomEditor) => {
             setEditor(editor);
-            // console.log(editor.getAllMenuKeys());
+            console.log(editor.getAllMenuKeys());
             // -- 自定义事件
             editor.on(EventType.PREVIEW, () => __onPreview(editor));
             editor.on(EventType.CLEAR_CONTENT, () => __onClearContent(editor));

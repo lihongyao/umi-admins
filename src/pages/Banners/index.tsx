@@ -1,7 +1,7 @@
 import { apiBanners } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
 import UploadImage from '@/components/@lgs/UploadImage';
-import { PlusOutlined, SwapRightOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 
 import {
   ActionType,
@@ -73,8 +73,8 @@ export default function Page() {
       dataIndex: 'status',
       valueType: 'select',
       valueEnum: {
-        0: { text: '已禁用' },
-        1: { text: '已启用' },
+        0: { text: '已下架' },
+        1: { text: '已上架' },
       },
       fieldProps: {
         onChange: () => vSearchForm.current?.submit(),
@@ -111,14 +111,17 @@ export default function Page() {
       title: '展示时间',
       key: 'showTime',
       valueType: 'dateRange',
-      width: 300,
-      render: (_, { startTime, endTime }) => (
-        <Space>
-          <span>{startTime}</span>
-          <SwapRightOutlined />
-          <span>{endTime}</span>
-        </Space>
-      ),
+      hideInTable: true,
+    },
+    {
+      title: '展示开始时间',
+      dataIndex: 'startTime',
+      search: false,
+    },
+    {
+      title: '展示结束时间',
+      dataIndex: 'endTime',
+      search: false,
     },
 
     {

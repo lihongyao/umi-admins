@@ -217,10 +217,21 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   type NewsProps = {
     id: number;
+    /** 新闻标题 */
     title: string;
-    content: string;
+    /** 新闻类型：1 行业动态，2 公司动态 */
     type: number;
-    category: number;
-    date: string;
+    /** 新闻来源 */
+    source: string;
+    /** 新闻详情 */
+    content: string;
+    /** 发布人员 */
+    published_by: string;
+    /** 发布时间 */
+    publish_time: string;
+    /** 发布状态：0 未发布，1 已发布 */
+    status: number;
+    /** 新闻封面 */
+    cover_url: string;
   };
 }

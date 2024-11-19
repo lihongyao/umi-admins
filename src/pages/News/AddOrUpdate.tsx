@@ -1,102 +1,111 @@
 import { apiNews } from '@/api/apiServer';
 import EditorWang from '@/components/@lgs/EditorWang';
+import UploadImage from '@/components/@lgs/UploadImage';
+import Utils from '@/utils';
 import {
   PageContainer,
   ProCard,
   ProForm,
   ProFormInstance,
-  ProFormRadio,
+  ProFormSelect,
   ProFormText,
-  ProFormTextArea,
 } from '@ant-design/pro-components';
 import { useNavigate, useParams } from '@umijs/max';
 import { App } from 'antd';
-import { useEffect, useRef } from 'react';
-
-export default function Page() {
+import React, { useEffect, useRef } from 'react';
+const AddOrUpdate: React.FC = () => {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
-
   const vForm = useRef<ProFormInstance>();
 
   const { message, modal } = App.useApp();
 
   const getDetails = async () => {
-    message.loading('数据查询中...', 0);
-    const resp = await apiNews.details(params.id!);
-    if (resp.code === 200) {
-      vForm.current?.setFieldsValue(resp.data);
+    if (params.id) {
+      const resp = await apiNews.details(+params.id);
+      if (resp.code === 200) {
+        vForm.current?.setFieldsValue(resp.data);
+      }
     }
   };
   useEffect(() => {
-    if (params.id) {
-      getDetails();
-    }
+    getDetails();
   }, []);
+
   return (
     <PageContainer>
       <ProCard>
         <ProForm
           formRef={vForm}
-          onFinish={async () => {
-            message.loading('处理中...');
-            setTimeout(() => {
-              message.destroy();
+          submitter={{
+            render: (_, dom) => (
+              <div className="text-right space-x-4">{dom}</div>
+            ),
+          }}
+          onFinish={async (values) => {
+            message.loading('处理中...', 0);
+            const resp = await apiNews.add(values);
+            if (resp.code === 200) {
               modal.success({
                 title: '温馨提示',
-                content: params.id ? '编辑成功' : '创建成功',
+                content: values ? '编辑成功' : '创建成功',
                 okText: '返回',
                 onOk() {
                   navigate(-1);
                 },
               });
-            }, 1000);
+            }
           }}
         >
-          {params.id && <ProFormText name="id" noStyle hidden />}
-          <ProFormTextArea
+          <ProFormText name="id" noStyle hidden />
+          <ProFormText
             label="新闻标题"
             placeholder="请输入新闻标题"
             name="title"
             rules={[{ required: true }]}
+            fieldProps={{
+              style: {
+                width: 425,
+              },
+            }}
           />
           <ProForm.Group>
-            <ProFormRadio.Group
-              layout="horizontal"
+            <ProFormSelect
+              style={{ width: 200 }}
               name="type"
               label="新闻类型"
               rules={[{ required: true }]}
               options={[
-                {
-                  label: '案例新闻',
-                  value: 1,
-                },
-                {
-                  label: '动态新闻',
-                  value: 2,
-                },
+                { label: '行业动态', value: 1 },
+                { label: '公司动态', value: 2 },
               ]}
             />
-            <ProFormRadio.Group
-              layout="horizontal"
-              name="category"
-              label="新闻分类"
-              rules={[{ required: true }]}
-              options={[
-                { label: '文明实践', value: 1 },
-                { label: '爱国卫生月', value: 2 },
-                { label: '志愿服务', value: 3 },
-              ]}
+            <ProFormText
+              style={{ width: 200 }}
+              name="source"
+              label="来源"
+              placeholder={'请输入来源'}
             />
           </ProForm.Group>
-
-          <ProFormText label="内容" name="content" rules={[{ required: true }]}>
+          <ProForm.Item label={'新闻封面'} name={'cover_url'} required>
+            <UploadImage width={200} dir="/news" />
+          </ProForm.Item>
+          <ProFormText
+            label="新闻详情"
+            name="content"
+            rules={[{ required: true }]}
+          >
             <EditorWang
-              onUploadFile={({ file, type, next }) => {
-                if (type === 'AUDIO') {
-                  next(
-                    'https://xingzhe-web-test.s3.cn-northwest-1.amazonaws.com.cn/temp/test/%E5%A4%A7%E6%B0%94%E5%AE%A3%E4%BC%A0%20%E5%A3%AE%E5%BF%97%E5%87%8C%E4%BA%91.mp3',
-                  );
+              onUploadFile={async ({ file, next }) => {
+                const url = await Utils.upload({
+                  file,
+                  dir: '/news',
+                  mode: 'oss_sts',
+                });
+                if (url) {
+                  next(url);
+                } else {
+                  message.error('上传失败');
                 }
               }}
             />
@@ -105,4 +114,6 @@ export default function Page() {
       </ProCard>
     </PageContainer>
   );
-}
+};
+
+export default AddOrUpdate;

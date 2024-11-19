@@ -69,6 +69,12 @@ const routes: RouterConfig[] = [
     hideInMenu: true,
   },
   {
+    path: '/news/details/:id',
+    component: '@/pages/News/Details',
+    name: '新闻详情',
+    hideInMenu: true,
+  },
+  {
     path: '/users',
     name: '用户管理',
     icon: 'icon-yonghuguanli',

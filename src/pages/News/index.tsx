@@ -1,6 +1,6 @@
 import { apiNews } from '@/api/apiServer';
 import PhoneModel from '@/components/@lgs/PhoneModel';
-import { PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { MobileOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
   PageContainer,
@@ -27,6 +27,15 @@ export default function Page() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
+  const onSwitchStatus = async (data: { id: number; status: number }) => {
+    message.loading('处理中...', 0);
+    const resp = await apiNews.switchStatus(data);
+    if (resp.code === 200) {
+      setTips(data.status ? '已发布' : '已下架');
+      vTable.current?.reload();
+    }
+  };
+
   // -- columns
   const columns: Array<ProColumns<API.NewsProps>> = [
     {
@@ -47,36 +56,19 @@ export default function Page() {
         onChange: () => vSearchForm.current?.submit(),
       },
     },
+    { title: '发布人员', dataIndex: 'published_by' },
+    { title: '发布时间', dataIndex: 'publish_time' },
     {
-      title: '新闻分类',
-      dataIndex: 'category',
+      title: '新闻状态',
+      dataIndex: 'status',
       valueEnum: {
-        1: { text: '文明实践' },
-        2: { text: '爱国卫生月' },
-        3: { text: '志愿服务' },
+        0: { text: '未发布', status: 'Default' },
+        1: { text: '已发布', status: 'Processing' },
       },
       fieldProps: {
         onChange: () => vSearchForm.current?.submit(),
       },
     },
-    {
-      title: '新闻详情',
-      key: 'content',
-      search: false,
-      render: (_, { content, title }) => (
-        <a
-          className="text-blue-500"
-          onClick={() => {
-            setTitle(title);
-            setHtmlString(content);
-          }}
-        >
-          <span>查看详情</span>
-          <RightOutlined />
-        </a>
-      ),
-    },
-    { title: '发布时间', dataIndex: 'date', search: false },
     {
       title: '操作',
       key: 'action',
@@ -84,9 +76,36 @@ export default function Page() {
       width: 120,
       render: (_, record) => (
         <Space>
+          <Button onClick={() => navigate(`/news/details/${record.id}`)}>
+            详情
+          </Button>
+          <Button
+            onClick={() => {
+              setHtmlString(record.content);
+            }}
+          >
+            详情
+            <MobileOutlined />
+          </Button>
           <Button onClick={() => navigate(`/news/edit/${record.id}`)}>
             编辑
           </Button>
+          {record.status === 0 && (
+            <Popconfirm
+              title={'确定发布？'}
+              onConfirm={() => onSwitchStatus({ id: record.id, status: 1 })}
+            >
+              <Button>发布</Button>
+            </Popconfirm>
+          )}
+          {record.status === 1 && (
+            <Popconfirm
+              title={'确定下架？'}
+              onConfirm={() => onSwitchStatus({ id: record.id, status: 0 })}
+            >
+              <Button danger>下架</Button>
+            </Popconfirm>
+          )}
           <Popconfirm
             title={'确定删除？'}
             onConfirm={async () => {

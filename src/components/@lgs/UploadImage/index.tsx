@@ -48,12 +48,12 @@ interface UploadImageProps {
   extra?: string;
   /** 上传模式 */
   uploadMode?: UploadMode;
-  /** 上传目录，如：/images，注意：后面不要加斜杠 */
+  /** 上传目录，如：/images */
   dir?: string;
   /** 图片地址 */
   value?: string | string[];
   /** 值变化 */
-  onChange?: (value: string | string[]) => void;
+  onChange?: (value?: string | string[]) => void;
   /** 自定义上传 */
   customRequest?: (
     file: File,
@@ -80,8 +80,6 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
   const gridStyle: CSSProperties = {
     gridTemplateColumns: `repeat(auto-fill, ${width}px)`,
   };
-  const defaultUrl =
-    'https://img2.baidu.com/it/u=2631564363,2063588676&fm=253&fmt=auto&app=138&f=PNG?w=499&h=247';
 
   // -- refs
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -105,10 +103,36 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
   };
 
   /**
-   * 更新数据
+   * 获取OSS配置
+   */
+  const initOssConfig = async () => {
+    const resp = await apiCommon.getOssConfigs();
+    if (resp.code === 200) {
+      setOssData(resp.data);
+    }
+  };
+
+  const initStsConfig = async () => {
+    const resp = await apiCommon.getOssStsConfigs();
+    if (resp.code === 200) {
+      const client = new OSS({
+        bucket: resp.data.bucket,
+        region: resp.data.region,
+        endpoint: resp.data.endpoint,
+        accessKeyId: resp.data.accessKeyId,
+        accessKeySecret: resp.data.accessKeySecret,
+        stsToken: resp.data.stsToken,
+      });
+      setClient(client);
+      setOssStsData(resp.data);
+    }
+  };
+
+  /**
+   * 上传成功，更新数据
    * @param path
    */
-  const triggerChange = (path: string) => {
+  const uploadSuccess = (path: string) => {
     if (max === 1) {
       onChange?.(path);
     } else {
@@ -130,35 +154,6 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
   };
 
   /**
-   * 初始化OSS配置
-   */
-  const initOssConfig = async () => {
-    const resp = await apiCommon.getOssConfigs();
-    if (resp.code === 200) {
-      setOssData(resp.data);
-    }
-  };
-
-  /**
-   * 初始化OSS配置
-   */
-  const initStsConfig = async () => {
-    const resp = await apiCommon.getOssStsConfigs();
-    if (resp.code === 200) {
-      const client = new OSS({
-        bucket: resp.data.bucket,
-        region: resp.data.region,
-        endpoint: resp.data.endpoint,
-        accessKeyId: resp.data.accessKeyId,
-        accessKeySecret: resp.data.accessKeySecret,
-        stsToken: resp.data.stsToken,
-      });
-      setClient(client);
-      setOssStsData(resp.data);
-    }
-  };
-
-  /**
    * 执行上传
    * @param file
    * @param index
@@ -166,18 +161,19 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
   const upload = async (file: File, index: number) => {
     updateStatus(index, 'loading');
     resetInput();
-    const path = defaultUrl;
+    const path =
+      'https://img2.baidu.com/it/u=2631564363,2063588676&fm=253&fmt=auto&app=138&f=PNG?w=499&h=247';
     try {
       switch (uploadMode) {
         case UploadMode.BackendUpload:
           setTimeout(() => {
-            index % 2 === 0 ? triggerChange(path) : updateStatus(index, 'fail');
+            index % 2 === 0 ? uploadSuccess(path) : updateStatus(index, 'fail');
           }, 1000);
           break;
         case UploadMode.CustomUpload:
           customRequest?.(file, ({ success, url }) => {
             if (success && url) {
-              triggerChange(url);
+              uploadSuccess(url);
             } else {
               updateStatus(index, 'fail');
             }
@@ -198,9 +194,9 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
             formData.append('file', file);
             fetch(ossData.host, { method: 'POST', body: formData }).then(
               (uploadResp) => {
-                if ([200, 204].includes(uploadResp.status)) {
+                if ([200, 204].indexOf(uploadResp.status) !== -1) {
                   const url = uploadResp.url + key;
-                  triggerChange(url);
+                  uploadSuccess(url);
                 } else {
                   updateStatus(index, 'fail');
                 }
@@ -215,7 +211,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
             const key = Tools.getFilePath(file, `${ossStsData.dir}${dir}`);
             const data = await client?.put(key.slice(1), file);
             data?.res.status === 200
-              ? triggerChange(data.url)
+              ? uploadSuccess(data.url)
               : updateStatus(index, 'fail');
           } else {
             updateStatus(index, 'fail');
@@ -261,30 +257,33 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
    * @param index
    */
   const onDelete = (index: number) => {
-    setData((prev) => {
-      const t = [...prev];
-      t.splice(index, 1);
-      if (t.length < max) {
-        t.push({ url: '', status: 'default' });
-      }
-      return t;
-    });
+    const t = [...data];
+    t.splice(index, 1);
+    if (max === 1) {
+      onChange?.();
+    } else {
+      onChange?.(t.map((item) => item.url).filter((url) => !!url));
+    }
   };
 
   useEffect(() => {
     if (value) {
-      if (max === 1) {
-        setData([{ url: value as string, status: 'success' }]);
-      } else {
-        const t: ItemProps[] = (value as string[]).map((url) => ({
-          url,
-          status: 'success',
-        }));
-        if (t.length < max) {
-          t.push({ url: '', status: 'default' });
-        }
-        setData(t);
+      // -- 确保 value 统一为数组
+      const urls = Array.isArray(value) ? value : [value];
+      // -- 构造数据列表
+      const items = urls.map((url) => ({
+        url,
+        status: 'success',
+      })) as ItemProps[];
+      // -- 补充空白项
+      if (items.length < max) {
+        items.push({ url: '', status: 'default' });
       }
+      // -- 确保不超过 max 的限制
+      setData(items.slice(0, max));
+    } else {
+      // -- 无值时设置默认项
+      setData([{ url: '', status: 'default' }]);
     }
   }, [value]);
 
