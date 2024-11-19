@@ -61,7 +61,7 @@ export default function Page() {
         onChange: () => vSearchForm.current?.submit(),
       },
       request: async () => {
-        const resp = await apiBanners.getShowLocations();
+        const resp = await apiBanners.getLocations();
         if (resp.code === 200) {
           return resp.data;
         }
@@ -152,7 +152,7 @@ export default function Page() {
                   setCurrent((prev) => prev - 1);
                 }
                 setTips('删除成功');
-                vTable.current?.reload!();
+                vTable.current?.reload();
               }
             }}
           >
@@ -246,7 +246,7 @@ export default function Page() {
 
           if (resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
-            vTable.current?.reload!();
+            vTable.current?.reload();
             setOpenForm(false);
           }
         }}
@@ -280,7 +280,7 @@ export default function Page() {
               style: { width: 150 },
             }}
             request={async () => {
-              const resp = await apiBanners.getShowLocations();
+              const resp = await apiBanners.getLocations();
               if (resp.code === 200) {
                 return resp.data;
               }
@@ -300,10 +300,16 @@ export default function Page() {
         <ProFormTextArea
           allowClear
           label="跳转链接"
-          tooltip="请填写 Scheme 地址"
           name="jumpUrl"
           placeholder={'请输入跳转链接'}
           rules={[{ required: true }]}
+          extra={
+            <div>
+              <p>1. 未填写链接则无跳转。</p>
+              <p>2. 外部链接：输入地址，格式带http等开头。</p>
+              <p>3. 内部链接：输入内部地址。</p>
+            </div>
+          }
         />
       </ModalForm>
     </PageContainer>

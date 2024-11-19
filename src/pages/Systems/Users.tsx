@@ -39,7 +39,7 @@ export default function Page() {
 
     if (resp.code === 200) {
       setTips(tips);
-      vTable.current?.reload!();
+      vTable.current?.reload();
     }
   };
 
@@ -240,7 +240,7 @@ export default function Page() {
           if (resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
-            vTable.current?.reload!();
+            vTable.current?.reload();
           }
         }}
       >

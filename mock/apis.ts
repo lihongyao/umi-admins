@@ -138,7 +138,7 @@ export default {
       total: 50,
     },
   }),
-
+  'PUT /api/audit': { code: 200, message: 'success' },
   // ~~~~~~~~~~~~~~~~~~
   // 新闻列表
   // ~~~~~~~~~~~~~~~~~~
@@ -196,12 +196,14 @@ export default {
           avatarUrl: "@Image('80x80','@color')",
           phone: /^1[3-9]\d{9}$/,
           createTime: '@datetime',
+          lastLoginTime: '@datetime',
           status: '@pick([0, 1])',
         },
       ],
       total: 20,
     },
   }),
+  'DELETE /api/user/:id': { code: 200, message: 'success' },
   'GET /api/user/feedbacks': mock({
     code: 200,
     message: 'success',

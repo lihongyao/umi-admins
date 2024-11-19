@@ -35,6 +35,6 @@ export async function switchStatus(id: number, status: number) {
   });
 }
 
-export async function getShowLocations() {
+export async function getLocations() {
   return request<API.BannerLocationProps[]>({ url: '/api/banners/locations' });
 }

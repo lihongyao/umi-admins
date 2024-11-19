@@ -26,20 +26,20 @@ export default function Page() {
   // - state
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
+  const [tips, setTips] = useState('');
 
   // - methods
   const audit = async (data: {
-    type: 'RESOLVE' | 'REJECT';
+    status: 0 | 1;
     ids?: number[];
     rejectReason?: string;
   }) => {
-    const { type, ids, rejectReason } = data;
-    console.log(data);
     message.loading('处理中...', 0);
-    setTimeout(() => {
-      message.destroy();
-      message.success(type === 'REJECT' ? '已驳回' : '已通过');
-    }, 1000);
+    const resp = await apiAudit.audit(data);
+    if (resp.code === 200) {
+      setTips(data.status ? '已通过' : '已驳回');
+      vTable.current?.reload();
+    }
   };
 
   // - columns
@@ -117,12 +117,7 @@ export default function Page() {
           <Popconfirm
             title={'确定通过？'}
             cancelText={'点错了'}
-            onConfirm={() => {
-              audit({
-                type: 'RESOLVE',
-                ids: [id],
-              });
-            }}
+            onConfirm={() => audit({ status: 1, ids: [id] })}
           >
             <Button disabled={state !== 1}>通过</Button>
           </Popconfirm>
@@ -160,6 +155,11 @@ export default function Page() {
           hideOnSinglePage: true,
           style: { paddingBottom: 16 },
         }}
+        postData={(data: API.AuditProps[]) => {
+          tips && message.success(tips);
+          setTips('');
+          return data;
+        }}
         request={async (params: any) => {
           const resp = await apiAudit.list(params);
           return Promise.resolve({
@@ -186,12 +186,7 @@ export default function Page() {
           <Button onClick={() => setShowRejectModal(true)}>批量驳回</Button>
           <Button
             type="primary"
-            onClick={() =>
-              audit({
-                type: 'RESOLVE',
-                ids: selectedRowKeys,
-              })
-            }
+            onClick={() => audit({ status: 0, ids: selectedRowKeys })}
           >
             批量通过
           </Button>
@@ -207,24 +202,21 @@ export default function Page() {
           maskClosable: false,
           forceRender: true,
           cancelText: '点错了',
+          destroyOnClose: true,
           onCancel: () => setShowRejectModal(false),
         }}
         onFinish={async ({ rejectReason, id }) => {
           const ids =
             selectedRowKeys.length > 0 ? selectedRowKeys : [id as number];
           setShowRejectModal(false);
-          audit({
-            type: 'REJECT',
-            ids,
-            rejectReason,
-          });
+          audit({ status: 0, ids, rejectReason });
         }}
       >
         <ProFormText name="id" noStyle hidden />
         <ProFormTextArea
           name="rejectReason"
           placeholder="请填写驳回原因，最多100个字符"
-          fieldProps={{ maxLength: 100 }}
+          fieldProps={{ maxLength: 100, showCount: true }}
           rules={[{ required: true, message: '请填写驳回原因' }]}
         />
       </ModalForm>

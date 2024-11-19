@@ -116,7 +116,7 @@ export default function Page() {
                   setCurrent((prev) => prev - 1);
                 }
                 setTips('删除成功');
-                vTable.current?.reload!();
+                vTable.current?.reload();
               }
             }}
           >

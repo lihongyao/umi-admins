@@ -63,7 +63,7 @@ const Types: React.FC = () => {
                     setTimeout(() => {
                       message.destroy();
                       setTips('删除成功');
-                      vTable.current?.reload!();
+                      vTable.current?.reload();
                     }, 500);
                   } catch {}
                 },
@@ -133,7 +133,7 @@ const Types: React.FC = () => {
           message.loading('处理中...', 0);
           try {
             setTips(values.id ? '编辑成功' : '添加成功');
-            vTable.current?.reload!();
+            vTable.current?.reload();
             setOpenForm(false);
           } catch {}
         }}

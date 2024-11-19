@@ -53,7 +53,7 @@ export default function Page() {
     const resp = await apiSys.roleSwichStatus(id, status);
     if (resp.code === 200) {
       setTips(tips);
-      vTable.current?.reload!();
+      vTable.current?.reload();
     }
   };
 
@@ -124,7 +124,7 @@ export default function Page() {
               const resp = await apiSys.roleDelete(record.id);
               if (resp.code === 200) {
                 setTips('已删除');
-                vTable.current?.reload!();
+                vTable.current?.reload();
               }
             }}
           >
@@ -199,7 +199,7 @@ export default function Page() {
           if (resp && resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
             setOpenForm(false);
-            vTable.current?.reload!();
+            vTable.current?.reload();
           }
         }}
       >

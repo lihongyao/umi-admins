@@ -180,6 +180,8 @@ declare namespace API {
     phone: string;
     /** 创建时间 */
     createTime: string;
+    /** 最后登录时间 */
+    lastLoginTime: string;
     /** 用户状态 */
     status: number;
   };

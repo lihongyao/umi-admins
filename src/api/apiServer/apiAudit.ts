@@ -6,3 +6,11 @@ export async function list(params: API.ListParams) {
     params,
   });
 }
+
+export async function audit(data: any) {
+  return request({
+    url: '/api/audit',
+    method: 'PUT',
+    data,
+  });
+}

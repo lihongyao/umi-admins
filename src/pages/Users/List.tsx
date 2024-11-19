@@ -47,6 +47,7 @@ export default function Page() {
     { title: '用户昵称', dataIndex: 'nickname' },
     { title: '联系电话', dataIndex: 'phone', copyable: true },
     { title: '注册时间', dataIndex: 'createTime', search: false },
+    { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
     {
       title: '操作',
       dataIndex: 'action',
@@ -64,7 +65,20 @@ export default function Page() {
               <Button danger>禁用</Button>
             </Popconfirm>
           )}
-          <Popconfirm title={'确定删除？'} onConfirm={async () => {}}>
+          <Popconfirm
+            title={'确定删除？'}
+            onConfirm={async () => {
+              message.loading('处理中...', 0);
+              const resp = await apiUser.del(record.id);
+              if (resp.code === 200) {
+                if (current > Math.ceil((total - 1) / pageSize)) {
+                  setCurrent((prev) => prev - 1);
+                }
+                setTips('删除成功');
+                vTable.current?.reload();
+              }
+            }}
+          >
             <Button danger>删除</Button>
           </Popconfirm>
         </Space>

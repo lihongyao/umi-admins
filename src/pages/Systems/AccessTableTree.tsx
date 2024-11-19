@@ -77,7 +77,7 @@ export default function Page() {
 
               if (resp.code === 200) {
                 setTips('删除成功');
-                vTable.current?.reload!();
+                vTable.current?.reload();
               }
             }}
           >
@@ -220,7 +220,7 @@ export default function Page() {
           const resp = await fetchFn(values);
           if (resp.code === 200) {
             setTips(isEdit ? '编辑成功' : '添加成功');
-            vTable.current?.reload!();
+            vTable.current?.reload();
             setOpenForm(false);
           }
         }}
