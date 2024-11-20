@@ -62,14 +62,14 @@ const Login: React.FC = () => {
       if (resp.code === 200) {
         // 1. 存储账号信息
         if (values.memorize) {
-          localStorage.setItem('XXX_ACCOUNT_INFOs', JSON.stringify(values));
+          localStorage.setItem('MEMORIZED_ACCOUNTS', JSON.stringify(values));
         } else {
-          localStorage.removeItem('XXX_ACCOUNT_INFOs');
+          localStorage.removeItem('MEMORIZED_ACCOUNTS');
         }
         // 2. 存储Token
-        localStorage.setItem('XXX_TOKEN', resp.data.token);
+        localStorage.setItem('ACCESS_TOKEN', resp.data.token);
         // 3. 存储用户信息
-        localStorage.setItem('XXX_USERINFOs', JSON.stringify(resp.data));
+        localStorage.setItem('USERINFOS', JSON.stringify(resp.data));
         // 4. 更新initialState
         flushSync(async () => {
           await setInitialState((prev) => ({
@@ -85,7 +85,7 @@ const Login: React.FC = () => {
 
   // -- effects
   useEffect(() => {
-    const info = localStorage.getItem('XXX_ACCOUNT_INFOs');
+    const info = localStorage.getItem('MEMORIZED_ACCOUNTS');
     if (info) {
       const _ = JSON.parse(info) as API.LoginWithAccount & {
         memorize: boolean;

@@ -28,7 +28,7 @@ axiosInstance.interceptors.request.use(
       config.params = { ...config.params, t };
     }
     // -- 拼接token
-    const token = localStorage.getItem('APP_TOKEN');
+    const token = localStorage.getItem('ACCESS_TOKEN');
     config.headers = {
       Authorization: token ? `Bearer ${token}` : '',
       ...config.headers,

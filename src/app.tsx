@@ -32,7 +32,7 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.LoginResponse | undefined>;
 }> {
   const fetchUserInfo = async () => {
-    const user = localStorage.getItem('XXX_USERINFOs');
+    const user = localStorage.getItem('USERINFOS');
     if (user) {
       return JSON.parse(user) as API.LoginResponse;
     }

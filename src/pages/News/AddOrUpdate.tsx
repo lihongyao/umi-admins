@@ -9,6 +9,7 @@ import {
   ProFormInstance,
   ProFormSelect,
   ProFormText,
+  ProFormTextArea,
 } from '@ant-design/pro-components';
 import { useNavigate, useParams } from '@umijs/max';
 import { App } from 'antd';
@@ -44,11 +45,13 @@ const AddOrUpdate: React.FC = () => {
           }}
           onFinish={async (values) => {
             message.loading('处理中...', 0);
-            const resp = await apiNews.add(values);
+            const isEdit = !!values.id;
+            const fetchFn = isEdit ? apiNews.edit : apiNews.add;
+            const resp = await fetchFn(values);
             if (resp.code === 200) {
               modal.success({
                 title: '温馨提示',
-                content: values ? '编辑成功' : '创建成功',
+                content: isEdit ? '编辑成功' : '创建成功',
                 okText: '返回',
                 onOk() {
                   navigate(-1);
@@ -58,16 +61,12 @@ const AddOrUpdate: React.FC = () => {
           }}
         >
           <ProFormText name="id" noStyle hidden />
-          <ProFormText
+          <ProFormTextArea
             label="新闻标题"
             placeholder="请输入新闻标题"
             name="title"
             rules={[{ required: true }]}
-            fieldProps={{
-              style: {
-                width: 425,
-              },
-            }}
+            fieldProps={{ maxLength: 50, showCount: true }}
           />
           <ProForm.Group>
             <ProFormSelect
