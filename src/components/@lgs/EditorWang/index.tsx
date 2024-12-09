@@ -5,6 +5,7 @@ import {
   IToolbarConfig,
   SlateTransforms,
 } from '@wangeditor/editor';
+
 import { Editor, Toolbar } from '@wangeditor/editor-for-react';
 import '@wangeditor/editor/dist/css/style.css';
 import { App } from 'antd';
@@ -193,7 +194,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
     const editorConfig: Partial<IEditorConfig> = {
       placeholder,
       autoFocus: false,
-      maxLength: 1000,
+      // maxLength: 1000,
       scroll: true,
       hoverbarKeys,
       MENU_CONF: {

@@ -90,6 +90,7 @@ export default class Utils {
       // -- 构建 key
       const key = Tools.getFilePath(file, `${resp.data.dir}${dir}`);
       const data = await client?.put(key, file);
+
       if (data.res.status !== 200) return '';
       return data.url;
     }
