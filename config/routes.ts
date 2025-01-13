@@ -42,7 +42,7 @@ const routes: RouterConfig[] = [
     path: '/banners',
     component: '@/pages/Banners',
     name: '轮播广告',
-    icon: 'icon-lunbotuguanli',
+    icon: 'icon-shouyelunbotu',
   },
   {
     path: '/audit',
@@ -54,7 +54,7 @@ const routes: RouterConfig[] = [
     path: '/news',
     component: '@/pages/News',
     name: '新闻管理',
-    icon: 'icon-xinwen',
+    icon: 'icon-24gl-newspaper4',
   },
   {
     path: '/news/create',

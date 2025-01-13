@@ -1,4 +1,5 @@
-import { MenuOutlined, PlusOutlined } from '@ant-design/icons';
+import IconFont from '@/components/@lgs/IconFont';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
   DragSortTable,
@@ -7,7 +8,7 @@ import {
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import { App, Button, Space } from 'antd';
+import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
 interface TypeItemProps {
@@ -53,41 +54,25 @@ const Types: React.FC = () => {
     {
       title: '操作',
       key: 'action',
-      width: 120,
+      width: 90,
       render: (_, record) => (
         <Space size={'small'}>
           <Button
-            type={'link'}
-            size={'small'}
+            icon={<EditOutlined />}
             onClick={() => {
               vForm.current?.setFieldsValue({
                 ...record,
               });
               setOpenForm(true);
             }}
-          >
-            编辑
-          </Button>
-          <span style={{ color: '#EEEEEE' }}>|</span>
-          <Button
-            type={'link'}
-            size={'small'}
-            danger
-            onClick={() => {
-              modal.confirm({
-                title: '温馨提示',
-                content: '您确定要删除该项么？',
-                cancelText: '点错了',
-                onOk: () => {},
-              });
-            }}
-          >
-            删除
-          </Button>
+          />
+          <Popconfirm title="确定删除？" onConfirm={() => {}}>
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
         </Space>
       ),
     },
-    { dataIndex: 'sort', sortIcon: () => <MenuOutlined /> },
+    { title: '排序', key: 'sort', width: 50 },
   ];
   return (
     <>
@@ -95,6 +80,14 @@ const Types: React.FC = () => {
         style={{ width: 500 }}
         ghost={true}
         dragSortKey="sort"
+        dragSortHandlerRender={(rowData) => {
+          return (
+            <Button
+              className="drag-handle"
+              icon={<IconFont type="icon-paixu" />}
+            />
+          );
+        }}
         actionRef={vTable}
         columns={columns}
         dataSource={dataSource}
