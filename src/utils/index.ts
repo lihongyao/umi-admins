@@ -96,4 +96,30 @@ export default class Utils {
     }
     return '';
   }
+
+  /**
+   * 获取新页码
+   * 表格删除数据后，重新计算页码
+   * @param pageInfo
+   * @returns
+   */
+  public static getNewPage = (pageInfo?: {
+    pageSize: number;
+    total: number;
+    current: number;
+  }) => {
+    // -- 获取当前页码和分页信息
+    const current = pageInfo?.current || 1;
+    const pageSize = pageInfo?.pageSize || 10;
+    const total = pageInfo?.total || 0;
+    // -- 删除后总数据量
+    const newTotal = total - 1;
+    // -- 如果当前页没有数据了，将页码-1
+    const newPage = Math.max(
+      1,
+      Math.ceil(newTotal / pageSize) < current ? current - 1 : current,
+    );
+    // -- 返回新数据
+    return newPage;
+  };
 }

@@ -38,13 +38,12 @@ export default function Page() {
     { title: '权限名称', dataIndex: 'name' },
     { title: 'CODE', dataIndex: 'code' },
     {
-      width: 120,
       title: '操作',
       key: 'actions',
+      width: 300,
       render: (_, record) => (
-        <>
+        <Space>
           <Button
-            type={'link'}
             icon={<EditOutlined />}
             onClick={() => {
               vForm.current?.setFieldsValue({
@@ -54,9 +53,10 @@ export default function Page() {
               });
               setOpenForm(true);
             }}
-          />
+          >
+            编辑
+          </Button>
           <Button
-            type={'link'}
             icon={<PlusSquareOutlined />}
             disabled={record.depth === MAX_DEPTH}
             onClick={() => {
@@ -65,7 +65,9 @@ export default function Page() {
               });
               setOpenForm(true);
             }}
-          />
+          >
+            添加子权限
+          </Button>
           <Popconfirm
             title={'温馨提示'}
             description={'您确定要删除该项及其下所有子类么？'}
@@ -81,9 +83,11 @@ export default function Page() {
               }
             }}
           >
-            <Button icon={<DeleteOutlined />} type={'link'} danger />
+            <Button icon={<DeleteOutlined />} danger>
+              删除
+            </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];

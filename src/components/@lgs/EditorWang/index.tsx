@@ -43,7 +43,15 @@ interface IProps {
   /** 图片格式 */
   imageLimit?: LimitType;
   /** 工具栏Keys */
-  toolbarKeys?: string[];
+  toolbarKeys?: Array<
+    | string
+    | {
+        key: string;
+        title: string;
+        iconSvg: any;
+        menuKeys: string[];
+      }
+  >;
   /** 排除工具栏keys */
   excludeKeys?: string[];
   onChange?: (value: string) => void;

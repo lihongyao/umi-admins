@@ -65,7 +65,7 @@ export default function Page() {
         </Button>,
       ]}
     >
-      {/* 树形解构 */}
+      {/* 树形结构 */}
       <Tree
         style={{ padding: 16 }}
         showLine={{ showLeafIcon: false }}
