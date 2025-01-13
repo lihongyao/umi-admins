@@ -40,7 +40,7 @@ export default function Page() {
     {
       title: '操作',
       key: 'actions',
-      width: 300,
+      width: 310,
       render: (_, record) => (
         <Space>
           <Button
