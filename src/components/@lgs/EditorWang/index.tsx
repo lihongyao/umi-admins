@@ -34,6 +34,8 @@ type LimitType = {
 interface IProps {
   /** 默认值 */
   value?: string;
+  /** 最大长度 */
+  maxLength?: number;
   /** 提示信息 */
   placeholder?: string;
   /** 视频格式 */
@@ -77,6 +79,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
     const {
       value,
       placeholder = '请输入内容...',
+      maxLength = 10000,
       videoLimit = { accept: '.mp4', size: 60, ...(props.videoLimit || {}) },
       audioLimit = { accept: '.mp3', size: 60, ...(props.audioLimit || {}) },
       imageLimit = {
@@ -202,7 +205,7 @@ const EditorWang = React.forwardRef<EditorWangRefs | undefined, IProps>(
     const editorConfig: Partial<IEditorConfig> = {
       placeholder,
       autoFocus: false,
-      // maxLength: 1000,
+      maxLength,
       scroll: true,
       hoverbarKeys,
       MENU_CONF: {
