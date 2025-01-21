@@ -1,6 +1,6 @@
 import { apiNews } from '@/api/apiServer';
 import EditorWang from '@/components/@lgs/EditorWang';
-import UploadImage from '@/components/@lgs/UploadImage';
+import UploadFile from '@/components/@lgs/UploadFile';
 import Utils from '@/utils';
 import {
   PageContainer,
@@ -87,7 +87,7 @@ const AddOrUpdate: React.FC = () => {
             />
           </ProForm.Group>
           <ProForm.Item label={'新闻封面'} name={'cover_url'} required>
-            <UploadImage width={200} dir="/news" />
+            <UploadFile width={200} dir="/news" />
           </ProForm.Item>
           <ProFormText
             label="新闻详情"

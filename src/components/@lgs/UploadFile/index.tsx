@@ -33,7 +33,7 @@ type ItemProps = {
   url: string;
   status: UploadStatus;
 };
-interface UploadImageProps {
+interface UploadFileProps {
   /** 图片宽度 */
   width?: number;
   /** 图片高度 */
@@ -42,13 +42,13 @@ interface UploadImageProps {
   accept?: string;
   /** 最大尺寸,单位MB */
   maxSize?: number;
-  /** 最大上传数，默认为 1，=== 时，值为字符串，> 1 时，值为字符串数组 */
+  /** 最大上传数，默认为 1，=== 1 时，值为字符串，> 1 时，值为字符串数组 */
   max?: number;
   /** 提示信息 */
   extra?: string;
-  /** 上传模式 */
+  /** 上传模式，默认为后端上传 */
   uploadMode?: UploadMode;
-  /** 上传目录，如：/images */
+  /** 上传目录，默认值 /images */
   dir?: string;
   /** 图片地址 */
   value?: string | string[];
@@ -60,7 +60,7 @@ interface UploadImageProps {
     next: (data: { success: boolean; url?: string }) => void,
   ) => void;
 }
-const UploadImage: React.FC<UploadImageProps> = (props) => {
+const UploadFile: React.FC<UploadFileProps> = (props) => {
   // -- 解构
   const {
     value,
@@ -165,11 +165,19 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
       'https://img2.baidu.com/it/u=2631564363,2063588676&fm=253&fmt=auto&app=138&f=PNG?w=499&h=247';
     try {
       switch (uploadMode) {
+        // -- 后端上传
         case UploadMode.BackendUpload:
           setTimeout(() => {
             index % 2 === 0 ? uploadSuccess(path) : updateStatus(index, 'fail');
           }, 1000);
+          // const resp = await apiCommon.uploadFile(file);
+          // if (resp.code === 200) {
+          //   uploadSuccess(resp.data.path);
+          // } else {
+          //   updateStatus(index, 'fail');
+          // }
           break;
+        // -- 自定义上传
         case UploadMode.CustomUpload:
           customRequest?.(file, ({ success, url }) => {
             if (success && url) {
@@ -179,6 +187,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
             }
           });
           break;
+        // -- OSS
         case UploadMode.OssDirectWithSignature:
           if (ossData) {
             const expire = new Date(ossData.expiration).getTime();
@@ -367,4 +376,4 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
   );
 };
 
-export default memo(UploadImage);
+export default memo(UploadFile);

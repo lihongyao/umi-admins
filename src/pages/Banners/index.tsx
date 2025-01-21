@@ -1,6 +1,6 @@
 import { apiBanners } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
-import UploadImage from '@/components/@lgs/UploadImage';
+import UploadFile from '@/components/@lgs/UploadFile';
 import { PlusOutlined } from '@ant-design/icons';
 
 import {
@@ -257,7 +257,7 @@ export default function Page() {
           name="bannerPic"
           rules={[{ required: true, message: '请上传轮播图' }]}
         >
-          <UploadImage width={200} />
+          <UploadFile width={200} />
         </ProForm.Item>
         <ProForm.Group>
           <ProFormDigit
