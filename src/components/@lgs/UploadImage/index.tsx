@@ -169,6 +169,12 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
           setTimeout(() => {
             index % 2 === 0 ? uploadSuccess(path) : updateStatus(index, 'fail');
           }, 1000);
+          // const resp = await apiCommon.uploadFile(file);
+          // if (resp.code === 200) {
+          //   uploadSuccess(resp.data.path);
+          // } else {
+          //   updateStatus(index, 'fail');
+          // }
           break;
         case UploadMode.CustomUpload:
           customRequest?.(file, ({ success, url }) => {
