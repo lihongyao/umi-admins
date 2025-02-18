@@ -54,6 +54,8 @@ interface UploadImageProps {
   dir?: string;
   /** 图片地址 */
   value?: string | string[];
+  /** 上传失败提示信息 */
+  errorMsg?: string;
   /** 值变化 */
   onChange?: (value?: string | string[]) => void;
   /** 自定义上传 */
@@ -74,6 +76,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
     accept = 'image/*',
     extra = '',
     dir = '/images',
+    errorMsg = '上传失败，请重新上传',
     uploadMode = UploadMode.BackendUpload,
     onChange,
     customRequest,
@@ -355,9 +358,10 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
               {/* 上传成功 */}
               {item.status === 'success' && (
                 <>
-                  <div className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all">
+                  <div className="w-full h-full absolute top-0 left-0 bg-black/50  flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all">
                     <DeleteOutlined
-                      className="text-xl cursor-pointer text-white "
+                      className="text-xl cursor-pointer"
+                      style={{ color: 'white' }}
                       onClick={() => onDelete(index)}
                     />
                   </div>
@@ -371,7 +375,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
               {item.status === 'fail' && (
                 <div className="w-full h-full text-red-500 flex flex-col justify-center items-center ">
                   <PictureOutlined className="text-xl" />
-                  <div className="mt-2">上传失败，请重新上传</div>
+                  <div className="mt-2">{errorMsg}</div>
                 </div>
               )}
             </div>
