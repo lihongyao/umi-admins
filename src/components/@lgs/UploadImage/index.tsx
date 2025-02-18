@@ -38,6 +38,8 @@ interface UploadImageProps {
   width?: number;
   /** 图片高度 */
   height?: number;
+  /** 形状 */
+  shape?: 'square' | 'circle';
   /** 文件类型，默认 “image/*” */
   accept?: string;
   /** 最大尺寸,单位MB */
@@ -67,6 +69,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
     maxSize = 20,
     width = 100,
     height = 100,
+    shape = 'square',
     max = 1,
     accept = 'image/*',
     extra = '',
@@ -167,7 +170,11 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
       switch (uploadMode) {
         case UploadMode.BackendUpload:
           setTimeout(() => {
-            index % 2 === 0 ? uploadSuccess(path) : updateStatus(index, 'fail');
+            if (index % 2 === 0) {
+              uploadSuccess(path);
+            } else {
+              updateStatus(index, 'fail');
+            }
           }, 1000);
           // const resp = await apiCommon.uploadFile(file);
           // if (resp.code === 200) {
@@ -216,9 +223,11 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
             if (expire < Date.now()) await initStsConfig();
             const key = Tools.getFilePath(file, `${ossStsData.dir}${dir}`);
             const data = await client?.put(key.slice(1), file);
-            data?.res.status === 200
-              ? uploadSuccess(data.url)
-              : updateStatus(index, 'fail');
+            if (data?.res.status === 200) {
+              uploadSuccess(data.url);
+            } else {
+              updateStatus(index, 'fail');
+            }
           } else {
             updateStatus(index, 'fail');
           }
@@ -309,7 +318,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
       <div className="grid gap-5" style={gridStyle}>
         {data.map((item, index) => (
           <div
-            className={`p-2 border border-dashed relative bg-[#FAFAFA]  rounded-sm ${item.status === 'fail' ? 'border-red-500' : 'border-gray-300 hover:border-blue-500'}`}
+            className={`p-2 border border-dashed relative bg-[#FAFAFA] ${shape === 'circle' ? 'rounded-full' : 'rounded-md'} ${item.status === 'fail' ? 'border-red-500' : 'border-gray-300 hover:border-blue-500'}`}
             style={{ height }}
             key={index}
           >
@@ -324,7 +333,9 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
               />
             )}
 
-            <div className="w-full h-full relative rounded-sm overflow-hidden group">
+            <div
+              className={`w-full h-full relative  overflow-hidden group  ${shape === 'circle' ? 'rounded-full' : 'rounded-md'}`}
+            >
               {/* 默认样式 */}
               {item.status === 'default' && (
                 <div className="h-full flex flex-col justify-center items-center">
