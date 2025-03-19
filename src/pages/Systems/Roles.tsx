@@ -1,5 +1,6 @@
 import { apiSys } from '@/api/apiServer';
 import AccessTree from '@/components/@lgs/AccessTree';
+import Utils from '@/utils';
 import { PlusOutlined } from '@ant-design/icons';
 
 import {
@@ -120,10 +121,13 @@ export default function Page() {
           <Popconfirm
             title={'确定删除？'}
             onConfirm={async () => {
-              message.loading('处理中...', 0);
+              message.loading('处理中，请稍后...', 0);
               const resp = await apiSys.roleDelete(record.id);
               if (resp.code === 200) {
-                setTips('已删除');
+                setTips('删除成功');
+                vTable.current?.setPageInfo!({
+                  current: Utils.getNewPage(vTable.current.pageInfo),
+                });
                 vTable.current?.reload();
               }
             }}
@@ -150,6 +154,7 @@ export default function Page() {
       ]}
     >
       <ProTable<API.SysRoleProps>
+        headerTitle={' '}
         actionRef={vTable}
         columns={columns}
         rowKey="id"
@@ -158,20 +163,24 @@ export default function Page() {
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
+          showSizeChanger: true,
         }}
-        postData={(data: Array<API.SysRoleProps>) => {
+        postData={(data: API.SysRoleProps[]) => {
           tips && message.success(tips);
           setTips('');
           return data;
         }}
         request={async () => {
           const resp = await apiSys.roles();
+          if (resp.code === 200) {
+            return Promise.resolve({
+              data: resp.data,
+              total: resp.data.length,
+            });
+          }
           return Promise.resolve({
-            data: resp.data,
-            success: true,
-            total: resp.data.length,
+            data: [],
+            total: 0,
           });
         }}
       />

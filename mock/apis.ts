@@ -60,7 +60,7 @@ export default {
   }),
   'POST /api/sys/user': { code: 200, message: 'success' },
   'PUT /api/sys/user': { code: 200, message: 'success' },
-  'PUT /api/sys/user/reset-psw': { code: 200, message: 'success' },
+  'PUT /api/sys/user/reset-psw/:id': { code: 200, message: 'success' },
   'PUT /api/sys/user/switch-status': { code: 200, message: 'success' },
   'DELETE /api/sys/user/:id': { code: 200, message: 'success' },
 

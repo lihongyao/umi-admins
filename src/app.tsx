@@ -6,10 +6,7 @@ import { Link, RunTimeLayoutConfig, history } from '@umijs/max';
 import { App, ConfigProvider } from 'antd';
 import dayjs from 'dayjs';
 import defaultSettings from '../config/defaultSettings';
-import {
-  AvatarDropdown,
-  AvatarName,
-} from './components/RightContent/AvatarDropdown';
+import { AvatarDropdown, AvatarName } from './components/AvatarDropdown';
 const loginPath = '/login';
 
 export const rootContainer = (root: JSX.Element) => {

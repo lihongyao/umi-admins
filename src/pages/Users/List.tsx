@@ -1,4 +1,5 @@
 import { apiUser } from '@/api/apiServer';
+import Utils from '@/utils';
 import {
   ActionType,
   PageContainer,
@@ -17,9 +18,6 @@ export default function Page() {
   const vSearchForm = useRef<ProFormInstance>();
   // -- state
   const [tips, setTips] = useState('');
-  const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
 
   // -- columns
   const columns: ProColumns<API.UserProps>[] = [
@@ -68,13 +66,13 @@ export default function Page() {
           <Popconfirm
             title={'确定删除？'}
             onConfirm={async () => {
-              message.loading('处理中...', 0);
+              message.loading('处理中，请稍后...', 0);
               const resp = await apiUser.del(record.id);
               if (resp.code === 200) {
-                if (current > Math.ceil((total - 1) / pageSize)) {
-                  setCurrent((prev) => prev - 1);
-                }
                 setTips('删除成功');
+                vTable.current?.setPageInfo!({
+                  current: Utils.getNewPage(vTable.current.pageInfo),
+                });
                 vTable.current?.reload();
               }
             }}
@@ -90,34 +88,34 @@ export default function Page() {
   return (
     <PageContainer>
       <ProTable<API.UserProps>
+        headerTitle={' '}
         actionRef={vTable}
         formRef={vSearchForm}
         columns={columns}
         rowKey="id"
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto' }}
         pagination={{
-          current,
-          pageSize,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
-          onChange: (page, pageSize) => {
-            setCurrent(page);
-            setPageSize(pageSize);
-          },
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          showSizeChanger: true,
         }}
-        postData={(data: Array<API.UserProps>) => {
+        postData={(data: API.UserProps[]) => {
           tips && message.success(tips);
           setTips('');
           return data;
         }}
         request={async (params) => {
           const resp = await apiUser.list(params);
-          setTotal(resp.data.total);
+          if (resp.code === 200) {
+            return Promise.resolve({
+              data: resp.data.data,
+              total: resp.data.total,
+            });
+          }
           return Promise.resolve({
-            data: resp.data.data || [],
-            success: true,
-            total: resp.data.total,
+            data: [],
+            total: 0,
           });
         }}
       />

@@ -157,6 +157,7 @@ export default function Page() {
       ]}
     >
       <ProTable<API.SysAccessProps>
+        headerTitle={'权限列表'}
         actionRef={vTable}
         columns={columns}
         rowKey="id"

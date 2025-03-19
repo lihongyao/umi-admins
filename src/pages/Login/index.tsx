@@ -25,16 +25,14 @@ const LoginMessage: React.FC<{
 
 type LoginType = 'mobile' | 'account';
 
-const Login: React.FC = () => {
-  // -- APPs
+export default function Login() {
   const { message } = App.useApp();
-  // -- refs
+
   const vForm = useRef<ProFormInstance>();
-  // -- state
+
   const [type, setType] = useState<LoginType>('account');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // -- model
   const { setInitialState } = useModel('@@initialState');
 
   const containerClassName = useEmotionCss(() => {
@@ -48,8 +46,6 @@ const Login: React.FC = () => {
       backgroundSize: '100% 100%',
     };
   });
-
-  // -- events
 
   const onSubmit = async (
     values: API.LoginWithAccount & { memorize: boolean },
@@ -212,6 +208,4 @@ const Login: React.FC = () => {
       <Footer />
     </div>
   );
-};
-
-export default Login;
+}

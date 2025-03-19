@@ -1,6 +1,7 @@
 import { apiBanners } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
 import UploadImage from '@/components/@lgs/UploadImage';
+import Utils from '@/utils';
 import { PlusOutlined } from '@ant-design/icons';
 
 import {
@@ -29,13 +30,8 @@ export default function Page() {
   const vSearchForm = useRef<ProFormInstance>();
 
   // -- status
-  const [dataSource, setDataSource] = useState<Array<API.BannerProps>>([]);
   const [tips, setTips] = useState('');
   const [openForm, setOpenForm] = useState(false);
-
-  const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
 
   // -- columns
   const columns: Array<ProColumns<API.BannerProps>> = [
@@ -87,12 +83,8 @@ export default function Page() {
             message.loading('处理中...', 0);
             const resp = await apiBanners.switchStatus(+id, +v);
             if (resp.code === 200) {
-              setDataSource((prev) =>
-                prev.map((item) =>
-                  item.id === id ? { ...item, status: +v } : { ...item },
-                ),
-              );
-              message.success(v ? '已上架' : '已下架');
+              vTable.current?.reload();
+              setTips(v ? '已上架' : '已下架');
             }
           }}
         />
@@ -117,17 +109,18 @@ export default function Page() {
       title: '展示开始时间',
       dataIndex: 'startTime',
       search: false,
+      ellipsis: true,
     },
     {
       title: '展示结束时间',
       dataIndex: 'endTime',
       search: false,
+      ellipsis: true,
     },
 
     {
       title: '操作',
-      key: 'action',
-      search: false,
+      valueType: 'option',
       width: 160,
       render: (_, record) => (
         <Space>
@@ -145,13 +138,13 @@ export default function Page() {
           <Popconfirm
             title={'确定删除？'}
             onConfirm={async () => {
-              message.loading('处理中...', 0);
+              message.loading('处理中，请稍后...', 0);
               const resp = await apiBanners.del(record.id);
               if (resp.code === 200) {
-                if (current > Math.ceil((total - 1) / pageSize)) {
-                  setCurrent((prev) => prev - 1);
-                }
                 setTips('删除成功');
+                vTable.current?.setPageInfo!({
+                  current: Utils.getNewPage(vTable.current.pageInfo),
+                });
                 vTable.current?.reload();
               }
             }}
@@ -175,29 +168,24 @@ export default function Page() {
           }}
         >
           <PlusOutlined />
-          新建
+          <span>新建</span>
         </Button>,
       ]}
     >
       {/* 表格 */}
       <ProTable<API.BannerProps>
+        headerTitle={' '}
         actionRef={vTable}
         formRef={vSearchForm}
-        dataSource={dataSource}
         columns={columns}
         rowKey={'id'}
         scroll={{ x: 1000 }}
         options={false}
         search={{ labelWidth: 'auto' }}
         pagination={{
-          current,
-          pageSize,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
-          onChange: (page, pageSize) => {
-            setCurrent(page);
-            setPageSize(pageSize);
-          },
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          showSizeChanger: true,
         }}
         postData={(data: API.BannerProps[]) => {
           tips && message.success(tips);
@@ -211,12 +199,16 @@ export default function Page() {
             delete params.showTime;
           }
           const resp = await apiBanners.list(params);
-          setDataSource(resp.data.data || []);
-          setTotal(resp.data.total);
+
+          if (resp.code === 200) {
+            return Promise.resolve({
+              data: resp.data.data,
+              total: resp.data.total,
+            });
+          }
           return Promise.resolve({
-            data: resp.data.data || [],
-            success: true,
-            total: resp.data.total,
+            data: [],
+            total: 0,
           });
         }}
       />
@@ -231,7 +223,6 @@ export default function Page() {
         modalProps={{
           maskClosable: false,
           forceRender: true,
-          destroyOnClose: true,
           onCancel: () => setOpenForm(false),
         }}
         onFinish={async (values) => {

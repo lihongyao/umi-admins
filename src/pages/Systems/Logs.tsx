@@ -5,8 +5,7 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 
-export default function Page() {
-  // -- columns
+export default function Logs() {
   const columns: ProColumns<API.LogsProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     { title: '操作人', dataIndex: 'nickname' },
@@ -16,22 +15,27 @@ export default function Page() {
   return (
     <PageContainer>
       <ProTable<API.LogsProps>
+        headerTitle={' '}
         columns={columns}
         rowKey="id"
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto' }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
+          showSizeChanger: true,
         }}
         request={async (params) => {
           const resp = await apiSys.logs(params);
+          if (resp.code === 200) {
+            return Promise.resolve({
+              data: resp.data.data,
+              total: resp.data.total,
+            });
+          }
           return Promise.resolve({
-            success: true,
-            data: resp.data.data || [],
-            total: resp.data.total,
+            data: [],
+            total: 0,
           });
         }}
       />

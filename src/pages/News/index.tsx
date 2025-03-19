@@ -1,5 +1,6 @@
 import { apiNews } from '@/api/apiServer';
 import PhoneModel from '@/components/@lgs/PhoneModel';
+import Utils from '@/utils';
 import { MobileOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -23,9 +24,6 @@ export default function Page() {
   const [title, setTitle] = useState('');
   const [htmlString, setHtmlString] = useState('');
   const [tips, setTips] = useState('');
-  const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
 
   const onSwitchStatus = async (data: { id: number; status: number }) => {
     message.loading('处理中...', 0);
@@ -109,13 +107,13 @@ export default function Page() {
           <Popconfirm
             title={'确定删除？'}
             onConfirm={async () => {
-              message.loading('处理中...', 0);
+              message.loading('处理中，请稍后...', 0);
               const resp = await apiNews.del(record.id);
               if (resp.code === 200) {
-                if (current > Math.ceil((total - 1) / pageSize)) {
-                  setCurrent((prev) => prev - 1);
-                }
                 setTips('删除成功');
+                vTable.current?.setPageInfo!({
+                  current: Utils.getNewPage(vTable.current.pageInfo),
+                });
                 vTable.current?.reload();
               }
             }}
@@ -147,14 +145,9 @@ export default function Page() {
         rowKey="id"
         search={{ span: 6, labelWidth: 'auto' }}
         pagination={{
-          current,
-          pageSize,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
-          onChange: (page, pageSize) => {
-            setCurrent(page);
-            setPageSize(pageSize);
-          },
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          showSizeChanger: true,
         }}
         postData={(data: API.NewsProps[]) => {
           tips && message.success(tips);
@@ -163,11 +156,15 @@ export default function Page() {
         }}
         request={async (params) => {
           const resp = await apiNews.list(params);
-          setTotal(resp.data.total);
+          if (resp.code === 200) {
+            return Promise.resolve({
+              data: resp.data.data,
+              total: resp.data.total,
+            });
+          }
           return Promise.resolve({
-            data: resp.data.data || [],
-            success: true,
-            total: resp.data.total,
+            data: [],
+            total: 0,
           });
         }}
       />

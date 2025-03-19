@@ -14,42 +14,49 @@ export default function Page() {
       title: '用户头像',
       dataIndex: 'avatarUrl',
       search: false,
+      width: 100,
       render: (_, { avatarUrl }) => (
         <Avatar src={avatarUrl} size={50} shape={'square'} />
       ),
     },
-    { title: '用户昵称', dataIndex: 'nickname' },
-    { title: '联系电话', dataIndex: 'phone', copyable: true },
+    { title: '用户昵称', dataIndex: 'nickname', width: 100 },
+    { title: '联系电话', dataIndex: 'phone', copyable: true, width: 150 },
     {
       title: '反馈时间',
       dataIndex: 'createTime',
       search: false,
+      width: 250,
     },
-    { title: '反馈内容', dataIndex: 'content', search: false },
+    { title: '反馈内容', dataIndex: 'content', search: false, ellipsis: true },
   ];
 
   // -- rnders
   return (
     <PageContainer>
       <ProTable<API.FeedbackProps>
+        headerTitle={' '}
         columns={columns}
         rowKey="id"
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto' }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
+          showSizeChanger: true,
         }}
         request={async (params) => {
           params.page = params.current;
           delete params.current;
           const resp = await apiUser.feedbacks(params);
+          if (resp.code === 200) {
+            return Promise.resolve({
+              data: resp.data.data,
+              total: resp.data.total,
+            });
+          }
           return Promise.resolve({
-            data: resp.data.data || [],
-            success: true,
-            total: resp.data.total,
+            data: [],
+            total: 0,
           });
         }}
       />

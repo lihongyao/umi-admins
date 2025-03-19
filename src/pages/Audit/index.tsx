@@ -97,10 +97,8 @@ export default function Page() {
     },
     {
       title: '操作',
-      key: 'action',
-      search: false,
+      valueType: 'option',
       width: 150,
-      fixed: 'right',
       render: (_, { state, id }) => (
         <Space>
           <Button
@@ -130,9 +128,9 @@ export default function Page() {
   return (
     <PageContainer>
       <ProTable<API.AuditProps>
+        headerTitle={' '}
         actionRef={vTable}
         formRef={vSearchForm}
-        headerTitle={' '}
         columns={columns}
         rowKey={'id'}
         scroll={{ x: 1100 }}
@@ -152,8 +150,7 @@ export default function Page() {
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
-          hideOnSinglePage: true,
-          style: { paddingBottom: 16 },
+          showSizeChanger: true,
         }}
         postData={(data: API.AuditProps[]) => {
           tips && message.success(tips);
