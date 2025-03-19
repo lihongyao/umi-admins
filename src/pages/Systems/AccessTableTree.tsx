@@ -34,7 +34,7 @@ export default function Page() {
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
 
   // -- columns
-  const columns: ProColumns<any>[] = [
+  const columns: ProColumns<API.SysAccessProps>[] = [
     { title: '权限名称', dataIndex: 'name' },
     { title: 'CODE', dataIndex: 'code' },
     {
@@ -128,7 +128,10 @@ export default function Page() {
   };
 
   // 递归遍历 dataSource，为每个节点加上 depth 字段
-  const addDepthToData = (data: any[], currentDepth: number = 1): any[] => {
+  const addDepthToData = (
+    data: API.SysAccessProps[],
+    currentDepth: number = 1,
+  ): any[] => {
     return data.map((item) => {
       // 为当前项添加 depth 字段
       const newItem = { ...item, depth: currentDepth };
@@ -143,6 +146,8 @@ export default function Page() {
   // -- rnders
   return (
     <PageContainer
+      title={false}
+      breadcrumb={{}}
       extra={[
         <Button
           key={'create_access'}
@@ -157,21 +162,18 @@ export default function Page() {
       ]}
     >
       <ProTable<API.SysAccessProps>
-        headerTitle={'权限列表'}
+        headerTitle={'权限管理（表格树）'}
         actionRef={vTable}
         columns={columns}
         rowKey="id"
         search={false}
         options={false}
-        pagination={{
-          pageSize: 10,
-          hideOnSinglePage: true,
-          showTotal: (total) => `共 ${total} 条`,
-        }}
+        pagination={false}
         expandable={{
           expandedRowKeys,
           indentSize: 30,
           expandIcon: ({ expanded, onExpand, record }) => {
+            void expanded;
             if (record.children && record.children.length > 0) {
               return (
                 <Space
@@ -201,9 +203,7 @@ export default function Page() {
         request={async () => {
           const resp = await apiSys.access();
           return Promise.resolve({
-            data: resp.data,
-            success: true,
-            total: resp.data.length,
+            data: resp.data || [],
           });
         }}
       />

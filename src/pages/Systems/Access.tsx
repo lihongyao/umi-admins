@@ -9,6 +9,7 @@ import {
 import {
   ModalForm,
   PageContainer,
+  ProCard,
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -24,7 +25,7 @@ export default function Page() {
 
   // - state
   const [treeData, setTreeData] = useState<Array<API.SysAccessProps>>([]);
-  const [openModal, setOpenModal] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // - methods
   const getData = async (tips?: string) => {
@@ -47,17 +48,19 @@ export default function Page() {
       name: nodeData.name,
       code: nodeData.code,
     });
-    setOpenModal(true);
+    setOpen(true);
   };
   // -- renders
   return (
     <PageContainer
+      title={false}
+      breadcrumb={{}}
       extra={[
         <Button
           key={'ADD_ACCESS'}
           onClick={() => {
             vForm.current?.resetFields();
-            setOpenModal(true);
+            setOpen(true);
           }}
         >
           <PlusOutlined />
@@ -66,63 +69,65 @@ export default function Page() {
       ]}
     >
       {/* 树形结构 */}
-      <Tree
-        style={{ padding: 16 }}
-        showLine={{ showLeafIcon: false }}
-        fieldNames={{ key: 'id' }}
-        selectable={false}
-        // @ts-ignore
-        treeData={treeData}
-        // @ts-ignore
-        titleRender={(nodeData: API.SysAccessProps) => (
-          <div className="flex space-x-3">
-            <div>
-              {nodeData.name} - {nodeData.code}{' '}
+      <ProCard title={'权限管理'}>
+        <Tree
+          style={{ padding: 16 }}
+          showLine={{ showLeafIcon: false }}
+          fieldNames={{ key: 'id' }}
+          selectable={false}
+          // @ts-ignore
+          treeData={treeData}
+          // @ts-ignore
+          titleRender={(nodeData: API.SysAccessProps) => (
+            <div className="flex space-x-3">
+              <div>
+                {nodeData.name} - {nodeData.code}{' '}
+              </div>
+              <FormOutlined
+                className={'text-blue-500 opacity-50 hover:opacity-100'}
+                onClick={() => onEdit(nodeData)}
+              />
+              <PlusCircleOutlined
+                className={'text-blue-500 opacity-50 hover:opacity-100'}
+                onClick={() => {
+                  vForm.current?.setFieldsValue({
+                    parentId: nodeData.id,
+                  });
+                  setOpen(true);
+                }}
+              />
+              <CopyOutlined
+                className={'text-blue-500 opacity-50 hover:opacity-100'}
+                onClick={() => {
+                  Tools.clipboard(nodeData.code);
+                  message.success('已复制');
+                }}
+              />
+              <Popconfirm
+                title={'您确定要删除该项及其下所有子类么？'}
+                onConfirm={async () => {
+                  message.loading('处理中...', 0);
+                  const resp = await apiSys.accessDelete(nodeData.id as number);
+                  if (resp.code === 200) {
+                    getData('删除成功');
+                  }
+                }}
+              >
+                <DeleteOutlined className="text-red-500 opacity-50 hover:opacity-100" />
+              </Popconfirm>
             </div>
-            <FormOutlined
-              className={'text-blue-500 opacity-50 hover:opacity-100'}
-              onClick={() => onEdit(nodeData)}
-            />
-            <PlusCircleOutlined
-              className={'text-blue-500 opacity-50 hover:opacity-100'}
-              onClick={() => {
-                vForm.current?.setFieldsValue({
-                  parentId: nodeData.id,
-                });
-                setOpenModal(true);
-              }}
-            />
-            <CopyOutlined
-              className={'text-blue-500 opacity-50 hover:opacity-100'}
-              onClick={() => {
-                Tools.clipboard(nodeData.code);
-                message.success('已复制');
-              }}
-            />
-            <Popconfirm
-              title={'您确定要删除该项及其下所有子类么？'}
-              onConfirm={async () => {
-                message.loading('处理中...', 0);
-                const resp = await apiSys.accessDelete(nodeData.id as number);
-                if (resp.code === 200) {
-                  getData('删除成功');
-                }
-              }}
-            >
-              <DeleteOutlined className="text-red-500 opacity-50 hover:opacity-100" />
-            </Popconfirm>
-          </div>
-        )}
-      />
+          )}
+        />
+      </ProCard>
       <ModalForm
         formRef={vForm}
         title={!!vForm.current?.getFieldValue('id') ? '编辑权限' : '新建权限'}
-        open={openModal}
+        open={open}
         width={400}
         modalProps={{
           maskClosable: false,
           forceRender: true,
-          onCancel: () => setOpenModal(false),
+          onCancel: () => setOpen(false),
         }}
         onFinish={async (values) => {
           message.loading('处理中...', 0);
@@ -132,7 +137,7 @@ export default function Page() {
 
           if (resp.code === 200) {
             getData(isEdit ? '编辑成功' : '添加成功');
-            setOpenModal(false);
+            setOpen(false);
           }
         }}
       >

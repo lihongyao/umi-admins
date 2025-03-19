@@ -52,7 +52,7 @@ export async function accessEdit(data: any) {
     data,
   });
 }
-export async function accessDelete(id: number) {
+export async function accessDelete(id: number | string) {
   return request({
     url: `/api/sys/access/${id}`,
     method: 'DELETE',
