@@ -6,9 +6,9 @@
 
 **框架环境**：
 
-node：<mark>v22.11.0</mark>
+node：<mark>v22.16.0</mark>
 
-pnpm：<mark>v9.12.3</mark>
+pnpm：<mark>10.11.1</mark>
 
 **仓库地址**：https://gitee.com/lihongyao/umi-admins
 
