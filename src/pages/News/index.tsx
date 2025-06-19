@@ -1,7 +1,7 @@
 import { apiNews } from '@/api/apiServer';
 import PhoneModel from '@/components/@lgs/PhoneModel';
 import Utils from '@/utils';
-import { MobileOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
   PageContainer,
@@ -83,7 +83,6 @@ export default function Page() {
             }}
           >
             详情
-            <MobileOutlined />
           </Button>
           <Button onClick={() => navigate(`/news/edit/${record.id}`)}>
             编辑

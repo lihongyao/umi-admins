@@ -4,14 +4,14 @@ import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { Link, RunTimeLayoutConfig, history } from '@umijs/max';
 import { App, ConfigProvider } from 'antd';
+import zhCN from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/AvatarDropdown';
 const loginPath = '/login';
-
 export const rootContainer = (root: JSX.Element) => {
   return (
-    <ConfigProvider>
+    <ConfigProvider locale={zhCN}>
       <App>
         <AntWrapApp />
         {root}

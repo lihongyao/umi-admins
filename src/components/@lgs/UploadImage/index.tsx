@@ -9,7 +9,7 @@ import Tools from '@likg/tools';
 import Validator from '@likg/validator';
 import OSS from 'ali-oss';
 import { message } from 'antd';
-import React, {
+import {
   ChangeEvent,
   CSSProperties,
   memo,
@@ -33,13 +33,24 @@ type ItemProps = {
   url: string;
   status: UploadStatus;
 };
-interface UploadImageProps {
+
+export default memo(function UploadImage({
+  value,
+  maxSize = 20,
+  width = 100,
+  height = 100,
+  max = 1,
+  accept = 'image/*',
+  extra = '',
+  dir = '/images',
+  uploadMode = UploadMode.BackendUpload,
+  onChange,
+  customRequest,
+}: {
   /** 图片宽度 */
   width?: number;
   /** 图片高度 */
   height?: number;
-  /** 形状 */
-  shape?: 'square' | 'circle';
   /** 文件类型，默认 “image/*” */
   accept?: string;
   /** 最大尺寸,单位MB */
@@ -54,8 +65,6 @@ interface UploadImageProps {
   dir?: string;
   /** 图片地址 */
   value?: string | string[];
-  /** 上传失败提示信息 */
-  errorMsg?: string;
   /** 值变化 */
   onChange?: (value?: string | string[]) => void;
   /** 自定义上传 */
@@ -63,25 +72,7 @@ interface UploadImageProps {
     file: File,
     next: (data: { success: boolean; url?: string }) => void,
   ) => void;
-}
-const UploadImage: React.FC<UploadImageProps> = (props) => {
-  // -- 解构
-  const {
-    value,
-    maxSize = 20,
-    width = 100,
-    height = 100,
-    shape = 'square',
-    max = 1,
-    accept = 'image/*',
-    extra = '',
-    dir = '/images',
-    errorMsg = '上传失败，请重新上传',
-    uploadMode = UploadMode.BackendUpload,
-    onChange,
-    customRequest,
-  } = props;
-
+}) {
   // -- constants
   const gridStyle: CSSProperties = {
     gridTemplateColumns: `repeat(auto-fill, ${width}px)`,
@@ -173,18 +164,8 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
       switch (uploadMode) {
         case UploadMode.BackendUpload:
           setTimeout(() => {
-            if (index % 2 === 0) {
-              uploadSuccess(path);
-            } else {
-              updateStatus(index, 'fail');
-            }
+            index % 2 === 0 ? uploadSuccess(path) : updateStatus(index, 'fail');
           }, 1000);
-          // const resp = await apiCommon.uploadFile(file);
-          // if (resp.code === 200) {
-          //   uploadSuccess(resp.data.path);
-          // } else {
-          //   updateStatus(index, 'fail');
-          // }
           break;
         case UploadMode.CustomUpload:
           customRequest?.(file, ({ success, url }) => {
@@ -226,11 +207,9 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
             if (expire < Date.now()) await initStsConfig();
             const key = Tools.getFilePath(file, `${ossStsData.dir}${dir}`);
             const data = await client?.put(key.slice(1), file);
-            if (data?.res.status === 200) {
-              uploadSuccess(data.url);
-            } else {
-              updateStatus(index, 'fail');
-            }
+            data?.res.status === 200
+              ? uploadSuccess(data.url)
+              : updateStatus(index, 'fail');
           } else {
             updateStatus(index, 'fail');
           }
@@ -321,7 +300,11 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
       <div className="grid gap-5" style={gridStyle}>
         {data.map((item, index) => (
           <div
-            className={`p-2 border border-dashed relative bg-[#FAFAFA] ${shape === 'circle' ? 'rounded-full' : 'rounded-md'} ${item.status === 'fail' ? 'border-red-500' : 'border-gray-300 hover:border-blue-500'}`}
+            className={`p-2 border border-dashed relative bg-[#FAFAFA]  rounded-sm ${
+              item.status === 'fail'
+                ? 'border-red-500'
+                : 'border-gray-300 hover:border-blue-500'
+            }`}
             style={{ height }}
             key={index}
           >
@@ -336,9 +319,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
               />
             )}
 
-            <div
-              className={`w-full h-full relative  overflow-hidden group  ${shape === 'circle' ? 'rounded-full' : 'rounded-md'}`}
-            >
+            <div className="w-full h-full relative rounded-sm overflow-hidden group">
               {/* 默认样式 */}
               {item.status === 'default' && (
                 <div className="h-full flex flex-col justify-center items-center">
@@ -358,10 +339,9 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
               {/* 上传成功 */}
               {item.status === 'success' && (
                 <>
-                  <div className="w-full h-full absolute top-0 left-0 bg-black/50  flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all">
+                  <div className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all">
                     <DeleteOutlined
-                      className="text-xl cursor-pointer"
-                      style={{ color: 'white' }}
+                      className="text-xl cursor-pointer text-white "
                       onClick={() => onDelete(index)}
                     />
                   </div>
@@ -375,7 +355,7 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
               {item.status === 'fail' && (
                 <div className="w-full h-full text-red-500 flex flex-col justify-center items-center ">
                   <PictureOutlined className="text-xl" />
-                  <div className="mt-2">{errorMsg}</div>
+                  <div className="mt-2">上传失败，请重新上传</div>
                 </div>
               )}
             </div>
@@ -386,6 +366,4 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
       {extra && <div className="mt-2 text-gray-400">{extra}</div>}
     </div>
   );
-};
-
-export default memo(UploadImage);
+});

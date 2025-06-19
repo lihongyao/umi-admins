@@ -9,11 +9,11 @@
 import type { Container } from '@tsparticles/engine';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
-import React, { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import './index.less';
 import { particlesOptions } from './particlesOptions';
 
-const InitParticles: React.FC = React.memo(() => {
+export default memo(function InitParticles() {
   const [init, setInit] = useState(false);
   const particlesLoaded = async (container?: Container) => {
     console.log(container);
@@ -35,5 +35,3 @@ const InitParticles: React.FC = React.memo(() => {
     />
   ) : null;
 });
-
-export default InitParticles;

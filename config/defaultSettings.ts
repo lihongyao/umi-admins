@@ -1,14 +1,10 @@
 import { ProLayoutProps } from '@ant-design/pro-components';
 
-/**
- * @name
- */
 const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
 } = {
   navTheme: 'light',
-  // 拂晓蓝
   colorPrimary: '#2F54EB',
   layout: 'mix',
   contentWidth: 'Fluid',

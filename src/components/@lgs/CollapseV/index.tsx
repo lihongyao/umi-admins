@@ -1,14 +1,16 @@
 import { DownSquareOutlined, UpSquareOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import clsx from 'clsx';
-import React, { ReactNode, useState } from 'react';
+import { memo, ReactNode, useState } from 'react';
 import './index.less';
 
-interface IProps {
+export default memo(function VCollapse({
+  headerRender,
+  children,
+}: {
   headerRender?: () => ReactNode;
   children?: ReactNode;
-}
-const VCollapse: React.FC<IProps> = React.memo(({ headerRender, children }) => {
+}) {
   const [isExpanded, setIsExpanded] = useState(true);
   const toggleExpansion = () => {
     setIsExpanded((prev) => !prev);
@@ -35,5 +37,3 @@ const VCollapse: React.FC<IProps> = React.memo(({ headerRender, children }) => {
     </div>
   );
 });
-
-export default VCollapse;

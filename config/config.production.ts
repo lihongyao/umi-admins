@@ -1,7 +1,9 @@
 import { defineConfig } from '@umijs/max';
 
 export default defineConfig({
-  // 1. 部署至二级目录 → { base: '/二级目录名/', publicPath: '/二级目录名/'  }
+  // 1. 部署至二级目录
+  // base: '/二级目录名/',
+  // publicPath: '/二级目录名/',
 
   // 2. 输出目录
   outputPath: 'dist',

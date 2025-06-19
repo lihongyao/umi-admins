@@ -1,16 +1,7 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import ImagePreview from '../ImagePreview';
 import './index.less';
-interface IProps {
-  width?: string | number;
-  height?: string | number;
-  spacing?: number /** 相框间距 */;
-  src: string;
-  caption?: string;
-  desc?: string;
-  name?: string;
-}
-const ImageBox: React.FC<IProps> = ({
+export default memo(function ImageBox({
   width = 100,
   height = 100,
   src,
@@ -18,7 +9,15 @@ const ImageBox: React.FC<IProps> = ({
   caption = '',
   desc = '',
   name,
-}) => {
+}: {
+  width?: string | number;
+  height?: string | number;
+  spacing?: number /** 相框间距 */;
+  src: string;
+  caption?: string;
+  desc?: string;
+  name?: string;
+}) {
   const [url, setUrl] = useState('');
   return (
     <div className="lg-image-box" style={{ width }}>
@@ -46,6 +45,4 @@ const ImageBox: React.FC<IProps> = ({
       )}
     </div>
   );
-};
-
-export default memo(ImageBox);
+});

@@ -215,7 +215,7 @@ export default function Page() {
         modalProps={{
           maskClosable: false,
           forceRender: true,
-          destroyOnClose: true,
+          destroyOnHidden: true,
           onCancel: () => setOpenForm(false),
         }}
         onFinish={async (values) => {

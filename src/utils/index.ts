@@ -29,7 +29,7 @@ export default class Utils {
    */
   public static encrypt = (word: string) => {
     try {
-      return CryptoJS.AES.encrypt(word, process.env.SECRET_KEY).toString();
+      return CryptoJS.AES.encrypt(word, process.env.SECRET_KEY!).toString();
     } catch {
       return null;
     }
@@ -42,7 +42,7 @@ export default class Utils {
    */
   public static decrypt = (word: string) => {
     try {
-      return CryptoJS.AES.decrypt(word, process.env.SECRET_KEY).toString(
+      return CryptoJS.AES.decrypt(word, process.env.SECRET_KEY!).toString(
         CryptoJS.enc.Utf8,
       );
     } catch (error) {

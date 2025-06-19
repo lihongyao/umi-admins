@@ -57,7 +57,7 @@ umi-admins
 1. 克隆项目 OR 下载到本地
 2. 在编辑器中打开项目（推荐私用 `VSCode`）
 3. 安装依赖：`pnpm install`
-4. 在 **`configs/config.development.ts`** 文件中修改 **后台A** 的IP 地址为本机地址
+4. 在 **`configs/config.development.ts`** 文件中修改 **后台 A** 的 IP 地址为本机地址
 5. 启动项目：`pnpm dev`
 
 # 前后端交互约定
@@ -127,7 +127,7 @@ PUT /api/goods/switch-status/:id
 
 ## 1. git commit 规范
 
-在macOS系统中，当你执行 git commit 时并不会去校验提交规范，控制台抛出如下提示：
+在 macOS 系统中，当你执行 git commit 时并不会去校验提交规范，控制台抛出如下提示：
 
 ```shell
 hint: The '.husky/pre-commit' hook was ignored because it's not set as executable.
@@ -142,4 +142,4 @@ hint: You can disable this warning with `git config advice.ignoredHook false`.
 $ chmod 777 .husky/*
 ```
 
-再次提交时，将会触发git提交规范校验。
+再次提交时，将会触发 git 提交规范校验。

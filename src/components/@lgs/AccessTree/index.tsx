@@ -1,5 +1,5 @@
 import { Tree } from 'antd';
-import React from 'react';
+import { memo } from 'react';
 
 type TreeDataProps = {
   title: string;
@@ -7,13 +7,11 @@ type TreeDataProps = {
   children?: Array<TreeDataProps>;
 };
 
-interface IProps {
+export default memo(function AccessTree(props: {
   treeData: TreeDataProps[];
   value?: Array<string | number>;
   onChange?: (value: Array<string | number>) => void;
-}
-
-const AccessTree: React.FC<IProps> = React.memo((props) => {
+}) {
   // -- 获取父节点
   const getParentKeys = (
     tree: TreeDataProps[],
@@ -84,5 +82,3 @@ const AccessTree: React.FC<IProps> = React.memo((props) => {
     />
   );
 });
-
-export default AccessTree;

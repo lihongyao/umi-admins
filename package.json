@@ -1,33 +1,34 @@
 {
   "private": true,
-  "author": "Li-HONGYAO <lihy_online@163.com>",
+  "author": "李鸿耀 <lihy_online@163.com>",
   "scripts": {
     "build:prod": "cross-env UMI_ENV=production NODE_ENV=production max build",
     "build:qa": "cross-env UMI_ENV=qa NODE_ENV=qa max build",
     "dev": "cross-env UMI_ENV=development NODE_ENV=development max dev",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",
-    "prepare": "husky install",
+    "prepare": "husky",
     "setup": "max setup",
     "start": "npm run dev"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.6.1",
-    "@ant-design/pro-components": "^2.8.6",
+    "@ant-design/icons": "^5.0.1",
+    "@ant-design/pro-components": "^2.4.4",
     "@ant-design/use-emotion-css": "^1.0.4",
     "@likg/match-line": "^1.0.13",
-    "@likg/tools": "^2.0.6",
+    "@likg/tools": "^2.0.8",
     "@likg/validator": "^1.0.9",
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
     "@types/ali-oss": "^6.16.11",
-    "@umijs/max": "^4.4.6",
+    "@umijs/max": "^4.4.11",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
-    "ali-oss": "^6.22.0",
-    "antd": "^5.24.4",
-    "axios": "^1.8.3",
+    "ahooks": "^3.8.5",
+    "ali-oss": "^6.23.0",
+    "antd": "^5.4.0",
+    "axios": "^1.10.0",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
@@ -36,22 +37,18 @@
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/mockjs": "^1.0.10",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.5.0",
+    "husky": "^9",
+    "lint-staged": "^13.2.0",
     "mockjs": "^1.1.0",
-    "prettier": "^3.5.3",
-    "prettier-plugin-organize-imports": "^4.1.0",
-    "prettier-plugin-packagejson": "^2.5.10",
-    "tailwindcss": "^3.4.15",
-    "typescript": "^5.8.2",
-    "umi-presets-pro": "^2.0.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "core-js-pure"
-    ]
+    "postcss": "^8.5.6",
+    "prettier": "^2.8.7",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "tailwindcss": "^3",
+    "typescript": "^5.0.3"
   }
 }

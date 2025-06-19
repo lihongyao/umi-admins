@@ -149,7 +149,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
         width={400}
         modalProps={{
           maskClosable: false,
-          destroyOnClose: true,
+          destroyOnHidden: true,
           onCancel: () => setOpenForm(false),
         }}
         onFinish={async (value) => {

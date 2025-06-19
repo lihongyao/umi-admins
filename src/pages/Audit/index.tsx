@@ -199,7 +199,7 @@ export default function Page() {
           maskClosable: false,
           forceRender: true,
           cancelText: '点错了',
-          destroyOnClose: true,
+          destroyOnHidden: true,
           onCancel: () => setShowRejectModal(false),
         }}
         onFinish={async ({ rejectReason, id }) => {

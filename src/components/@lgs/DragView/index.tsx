@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 
 type Point = { x: number; y: number };
 type Position = {
@@ -8,18 +8,17 @@ type Position = {
   left?: number;
 };
 
-interface IProps {
-  /** 拖拽元素 */
-  children: JSX.Element | JSX.Element[];
+export default memo(function DragView({
+  children,
+  position = { right: 15, bottom: 80 },
+  onPress,
+}: {
+  /** 拖拽元素 */ children: JSX.Element | JSX.Element[];
   /** 拖拽元素初始位置 */
   position?: Position;
   /** 点击事件 */
   onPress: () => void;
-}
-
-const DragView: React.FC<IProps> = React.memo((props) => {
-  const { children, position = { right: 15, bottom: 80 }, onPress } = props;
-
+}) {
   const container = useRef<HTMLDivElement | null>(null);
   const isTrigger = useRef(false);
   const timer = useRef<NodeJS.Timeout>();
@@ -170,5 +169,3 @@ const DragView: React.FC<IProps> = React.memo((props) => {
     </div>
   );
 });
-
-export default DragView;

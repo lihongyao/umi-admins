@@ -195,7 +195,7 @@ export default function Page() {
         layout="horizontal"
         modalProps={{
           maskClosable: false,
-          destroyOnClose: true,
+          destroyOnHidden: true,
           forceRender: true,
           onCancel: () => setOpenForm(false),
         }}

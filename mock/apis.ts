@@ -12,7 +12,7 @@ export default {
   // -- 登录相关
   'POST /api/sys/login': mock({
     code: 200,
-    message: 'success',
+    msg: 'success',
     data: {
       token: '@guid',
       access: [],
@@ -20,27 +20,27 @@ export default {
       avatarUrl,
     },
   }),
-  'POST /api/sys/sendCaptcha': { code: 200, message: 'success' },
-  'POST /api/sys/logout': { code: 200, message: 'success' },
-  'PUT /api/sys/change-psw': { code: 200, message: 'success' },
+  'POST /api/sys/sendCaptcha': { code: 200, msg: 'success' },
+  'POST /api/sys/logout': { code: 200, msg: 'success' },
+  'PUT /api/sys/change-psw': { code: 200, msg: 'success' },
 
   // -- 权限管理
-  'GET /api/sys/access': { code: 200, message: 'success', data: ListAccess },
-  'POST /api/sys/access': { code: 200, message: 'success' },
-  'PUT /api/sys/access': { code: 200, message: 'success' },
-  'DELETE /api/sys/access/:id': { code: 200, message: 'success' },
+  'GET /api/sys/access': { code: 200, msg: 'success', data: ListAccess },
+  'POST /api/sys/access': { code: 200, msg: 'success' },
+  'PUT /api/sys/access': { code: 200, msg: 'success' },
+  'DELETE /api/sys/access/:id': { code: 200, msg: 'success' },
 
   // -- 角色管理
-  'GET /api/sys/roles': { code: 200, message: 'success', data: ListRoles },
-  'POST /api/sys/roles': { code: 200, message: 'success' },
-  'PUT /api/sys/roles': { code: 200, message: 'success' },
-  'PUT /api/sys/roles/switch-status': { code: 200, message: 'success' },
-  'DELETE /api/sys/roles/:id': { code: 200, message: 'success' },
+  'GET /api/sys/roles': { code: 200, msg: 'success', data: ListRoles },
+  'POST /api/sys/roles': { code: 200, msg: 'success' },
+  'PUT /api/sys/roles': { code: 200, msg: 'success' },
+  'PUT /api/sys/roles/switch-status': { code: 200, msg: 'success' },
+  'DELETE /api/sys/roles/:id': { code: 200, msg: 'success' },
 
   // -- 系统用户
   'GET /api/sys/user': mock({
     code: 200,
-    message: 'success',
+    msg: 'success',
     data: {
       'data|10': [
         {
@@ -58,15 +58,15 @@ export default {
       total: 20,
     },
   }),
-  'POST /api/sys/user': { code: 200, message: 'success' },
-  'PUT /api/sys/user': { code: 200, message: 'success' },
-  'PUT /api/sys/user/reset-psw/:id': { code: 200, message: 'success' },
-  'PUT /api/sys/user/switch-status': { code: 200, message: 'success' },
-  'DELETE /api/sys/user/:id': { code: 200, message: 'success' },
+  'POST /api/sys/user': { code: 200, msg: 'success' },
+  'PUT /api/sys/user': { code: 200, msg: 'success' },
+  'PUT /api/sys/user/reset-psw/:id': { code: 200, msg: 'success' },
+  'PUT /api/sys/user/switch-status': { code: 200, msg: 'success' },
+  'DELETE /api/sys/user/:id': { code: 200, msg: 'success' },
 
   'GET /api/sys/logs': mock({
     code: 200,
-    message: 'success',
+    msg: 'success',
     data: {
       'data|10': [
         {
@@ -85,7 +85,7 @@ export default {
   // ~~~~~~~~~~~~~~~~~~
   'GET /api/banners': mock({
     code: 200,
-    message: 'success',
+    msg: 'success',
     data: {
       ['data|10']: [
         {
@@ -102,10 +102,10 @@ export default {
       total: 20,
     },
   }),
-  'POST /api/banners': { code: 200, message: 'success' },
-  'PUT /api/banners': { code: 200, message: 'success' },
-  'DELETE /api/banners': { code: 200, message: 'success' },
-  'PUT /api/banners/switchStatus': { code: 200, message: 'success' },
+  'POST /api/banners': { code: 200, msg: 'success' },
+  'PUT /api/banners': { code: 200, msg: 'success' },
+  'DELETE /api/banners': { code: 200, msg: 'success' },
+  'PUT /api/banners/switchStatus': { code: 200, msg: 'success' },
   'GET /api/banners/locations': {
     code: 200,
     data: [
@@ -138,7 +138,7 @@ export default {
       total: 50,
     },
   }),
-  'PUT /api/audit': { code: 200, message: 'success' },
+  'PUT /api/audit': { code: 200, msg: 'success' },
   // ~~~~~~~~~~~~~~~~~~
   // 新闻列表
   // ~~~~~~~~~~~~~~~~~~
@@ -177,17 +177,17 @@ export default {
       cover_url: "@Image('400x300','@color')",
     },
   }),
-  'POST /api/news/': { code: 200, message: 'success' },
-  'PUT /api/news/': { code: 200, message: 'success' },
-  'DELETE /api/news/:id': { code: 200, message: 'success' },
-  'PUT /api/news/switch_status/': { code: 200, message: 'success' },
+  'POST /api/news/': { code: 200, msg: 'success' },
+  'PUT /api/news/': { code: 200, msg: 'success' },
+  'DELETE /api/news/:id': { code: 200, msg: 'success' },
+  'PUT /api/news/switch_status/': { code: 200, msg: 'success' },
 
   // ~~~~~~~~~~~~~~~~~~
   // 用户相关
   // ~~~~~~~~~~~~~~~~~~
   'GET /api/user': mock({
     code: 200,
-    message: 'success',
+    msg: 'success',
     data: {
       'data|10': [
         {
@@ -203,10 +203,10 @@ export default {
       total: 20,
     },
   }),
-  'DELETE /api/user/:id': { code: 200, message: 'success' },
+  'DELETE /api/user/:id': { code: 200, msg: 'success' },
   'GET /api/user/feedbacks': mock({
     code: 200,
-    message: 'success',
+    msg: 'success',
     data: {
       'data|10': [
         {
@@ -226,7 +226,7 @@ export default {
   // OSS-Configs
   // ~~~~~~~~~~~~~~~~~~
 
-  'GET /api/upload/stsConfigs': { code: 200, message: 'success' },
+  'GET /api/upload/stsConfigs': { code: 200, msg: 'success' },
   // ~~~~~~~~~~~~~~~~~~
   // 分类管理
   // ~~~~~~~~~~~~~~~~~~
