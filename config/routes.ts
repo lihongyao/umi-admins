@@ -124,4 +124,11 @@ export default [
     name: '测试专用',
     hideInMenu: true,
   },
+  {
+    name: '文档管理',
+    path: '/document',
+    component: '@/pages/LoadDocs',
+    hideInMenu: true,
+    menuRender: false,
+  },
 ] as RouterConfig[];
