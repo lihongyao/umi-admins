@@ -71,6 +71,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
+    headerTitleRender(logo, title) {
+      return (
+        <Link to="/dashboard" onClick={(e) => e.stopPropagation()}>
+          {logo}
+          {title}
+        </Link>
+      );
+    },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
