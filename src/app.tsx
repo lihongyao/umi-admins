@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import defaultSettings from '../config/defaultSettings';
 import { AvatarDropdown, AvatarName } from './components/AvatarDropdown';
 const loginPath = '/login';
+
 export const rootContainer = (root: JSX.Element) => {
   return (
     <ConfigProvider locale={zhCN}>

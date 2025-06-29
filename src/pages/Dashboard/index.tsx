@@ -1,7 +1,6 @@
 import { PageContainer, ProCard } from '@ant-design/pro-components';
-import React from 'react';
 
-const Dashboard: React.FC = () => {
+export default function Page() {
   return (
     <PageContainer title={false}>
       <ProCard>
@@ -11,6 +10,4 @@ const Dashboard: React.FC = () => {
       </ProCard>
     </PageContainer>
   );
-};
-
-export default Dashboard;
+}
