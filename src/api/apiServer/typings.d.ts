@@ -144,7 +144,7 @@ declare namespace API {
     /** 启用状态 */
     status: number;
   };
-  type SysUserProps = {
+  type SysAccountProps = {
     id: number;
     username: string /** 用户名 */;
     nickname: string /** 用户昵称 */;

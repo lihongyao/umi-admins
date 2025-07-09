@@ -99,44 +99,44 @@ export async function roleSwichStatus(id: number, status: number) {
 // ~~~~~~~~~~~~~~~~~~
 // 系统用户
 // ~~~~~~~~~~~~~~~~~~
-export async function users(params: API.ListParams) {
-  return request<API.List<API.SysUserProps>>({
-    url: '/api/sys/user',
+export async function accounts(params: API.ListParams) {
+  return request<API.List<API.SysAccountProps>>({
+    url: '/api/sys/accounts',
     params,
   });
 }
 
-export async function userAdd(data: any) {
+export async function accountAdd(data: any) {
   return request({
-    url: '/api/sys/user',
+    url: '/api/sys/accounts',
     method: 'POST',
     data,
   });
 }
-export async function userEdit(data: any) {
+export async function accountEdit(data: any) {
   return request({
-    url: '/api/sys/user',
+    url: '/api/sys/accounts',
     method: 'PUT',
     data,
   });
 }
-export async function userSwichStatus(id: number, status: number) {
+export async function accountSwichStatus(id: number, status: number) {
   return request({
-    url: '/api/sys/user/switch-status',
+    url: '/api/sys/accounts/switch-status',
     method: 'PUT',
     data: { id, status },
   });
 }
-export async function userResetPsw(id: number) {
+export async function accountResetPsw(id: number) {
   return request({
-    url: `/api/sys/user/reset-psw/${id}`,
+    url: `/api/sys/accounts/reset-psw/${id}`,
     method: 'PUT',
   });
 }
 
-export async function userDelete(id: number) {
+export async function accountDelete(id: number) {
   return request({
-    url: `/api/sys/user/${id}`,
+    url: `/api/sys/accounts/${id}`,
     method: 'DELETE',
   });
 }

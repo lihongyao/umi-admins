@@ -18,7 +18,7 @@ import {
 import { App, Avatar, Button, Popconfirm, Space } from 'antd';
 import { useRef, useState } from 'react';
 
-export default function Users() {
+export default function Page() {
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -33,7 +33,7 @@ export default function Users() {
   // -- methods
   const switchStatus = async (id: number, status: number, tips: string) => {
     message.loading('处理中...', 0);
-    const resp = await apiSys.userSwichStatus(id, status);
+    const resp = await apiSys.accountSwichStatus(id, status);
 
     if (resp.code === 200) {
       setTips(tips);
@@ -42,7 +42,7 @@ export default function Users() {
   };
 
   // -- columns
-  const columns: ProColumns<API.SysUserProps>[] = [
+  const columns: ProColumns<API.SysAccountProps>[] = [
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '头像',
@@ -120,7 +120,7 @@ export default function Users() {
             title={'确定重置密码？'}
             onConfirm={async () => {
               message.loading('处理中...', 0);
-              const resp = await apiSys.userResetPsw(record.id);
+              const resp = await apiSys.accountResetPsw(record.id);
               if (resp.code === 200) {
                 message.success('密码已重置为【123456】');
               }
@@ -148,7 +148,7 @@ export default function Users() {
             title={'确定删除？'}
             onConfirm={async () => {
               message.loading('处理中，请稍后...', 0);
-              const resp = await apiSys.userDelete(record.id);
+              const resp = await apiSys.accountDelete(record.id);
               if (resp.code === 200) {
                 setTips('删除成功');
                 vTable.current?.setPageInfo!({
@@ -181,7 +181,7 @@ export default function Users() {
         </Button>,
       ]}
     >
-      <ProTable<API.SysUserProps>
+      <ProTable<API.SysAccountProps>
         headerTitle={' '}
         actionRef={vTable}
         formRef={vSearchForm}
@@ -195,13 +195,13 @@ export default function Users() {
           defaultPageSize: 10,
           showSizeChanger: true,
         }}
-        postData={(data: API.SysUserProps[]) => {
+        postData={(data: API.SysAccountProps[]) => {
           tips && message.success(tips);
           setTips('');
           return data;
         }}
         request={async (params) => {
-          const resp = await apiSys.users(params);
+          const resp = await apiSys.accounts(params);
           if (resp.code === 200) {
             return Promise.resolve({
               data: resp.data.data,
@@ -229,7 +229,7 @@ export default function Users() {
         }}
         onFinish={async (values) => {
           const isEdit = !!values.id;
-          const fetchFn = isEdit ? apiSys.userEdit : apiSys.userAdd;
+          const fetchFn = isEdit ? apiSys.accountEdit : apiSys.accountAdd;
           message.loading('处理中...', 0);
           const resp = await fetchFn({
             ...values,

@@ -38,7 +38,7 @@ export default {
   'DELETE /api/sys/roles/:id': { code: 200, msg: 'success' },
 
   // -- 系统用户
-  'GET /api/sys/user': mock({
+  'GET /api/sys/accounts': mock({
     code: 200,
     msg: 'success',
     data: {
@@ -58,11 +58,11 @@ export default {
       total: 20,
     },
   }),
-  'POST /api/sys/user': { code: 200, msg: 'success' },
-  'PUT /api/sys/user': { code: 200, msg: 'success' },
-  'PUT /api/sys/user/reset-psw/:id': { code: 200, msg: 'success' },
-  'PUT /api/sys/user/switch-status': { code: 200, msg: 'success' },
-  'DELETE /api/sys/user/:id': { code: 200, msg: 'success' },
+  'POST /api/sys/accounts': { code: 200, msg: 'success' },
+  'PUT /api/sys/accounts': { code: 200, msg: 'success' },
+  'PUT /api/sys/accounts/reset-psw/:id': { code: 200, msg: 'success' },
+  'PUT /api/sys/accounts/switch-status': { code: 200, msg: 'success' },
+  'DELETE /api/sys/accounts/:id': { code: 200, msg: 'success' },
 
   'GET /api/sys/logs': mock({
     code: 200,

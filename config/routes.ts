@@ -107,9 +107,9 @@ export default [
         component: '@/pages/Systems/Roles',
       },
       {
-        path: '/systems/users',
-        name: '用户管理',
-        component: '@/pages/Systems/Users',
+        path: '/systems/accounts',
+        name: '账号管理',
+        component: '@/pages/Systems/Accounts',
       },
       {
         path: '/systems/logs',
