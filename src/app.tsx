@@ -7,6 +7,7 @@ import { App, ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
 import defaultSettings from '../config/defaultSettings';
+import AppNotices from './components/AppNotices';
 import { AvatarDropdown, AvatarName } from './components/AvatarDropdown';
 const loginPath = '/login';
 
@@ -59,6 +60,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     siderWidth: 220,
     actionsRender: () => [
+      <AppNotices key={'notices'} />,
       <div key={'dateString'} style={{ color: '#fff', fontSize: 14 }}>
         {dayjs().locale('zh-cn').format('YYYY年MM月DD日 dddd')}
       </div>,
