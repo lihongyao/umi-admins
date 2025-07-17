@@ -2,7 +2,7 @@ import { mock } from 'mockjs';
 export default mock([
   {
     roleName: '管理员',
-    authIds: [
+    permissionIds: [
       '63fdbce295339b3d36e72a10',
       '63fdbcaf95339b3d36e72a07',
       '63fdbcc595339b3d36e72a0a',
@@ -33,7 +33,7 @@ export default mock([
   },
   {
     roleName: '客服部门',
-    authIds: [
+    permissionIds: [
       '63fdbc8d95339b3d36e72a01',
       '63fdbb6095339b3d36e729d6',
       '63fdbc7e95339b3d36e729fe',

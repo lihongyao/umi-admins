@@ -68,11 +68,21 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   // 登录相关
   // ~~~~~~~~~~~~~~~~~~
-  type LoginWithAccount = {
-    /** 用户名 */
-    username: string;
-    /** 用户密码 */
-    password: string;
+  type LoginParams = {
+    /** 密码登录 */
+    password?: {
+      /** 用户名 */
+      username: string;
+      /** 用户密码 */
+      password: string;
+    };
+    /** 手机号登录 */
+    phone?: {
+      /** 手机号 */
+      phone: string;
+      /** 验证码 */
+      captcha: string;
+    };
   };
   type LoginResponse = {
     /** token */
@@ -140,7 +150,7 @@ declare namespace API {
     /** 更新时间 */
     updateTime: string;
     /** 权限列表 */
-    authIds: string[];
+    permissionIds: string[];
     /** 启用状态 */
     status: number;
   };

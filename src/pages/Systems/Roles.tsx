@@ -97,7 +97,7 @@ export default function Page() {
               vForm.current?.setFieldsValue({
                 id: record.id,
                 roleName: record.roleName,
-                authIds: record.authIds,
+                permissionIds: record.permissionIds,
               });
               setOpenForm(true);
             }}
@@ -160,6 +160,7 @@ export default function Page() {
         rowKey="id"
         options={false}
         search={false}
+        scroll={{ x: 'max-content' }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
@@ -225,7 +226,7 @@ export default function Page() {
               <Button
                 size={'small'}
                 onClick={() =>
-                  vForm.current?.setFieldValue('authIds', traverse(auths))
+                  vForm.current?.setFieldValue('permissionIds', traverse(auths))
                 }
               >
                 全选
@@ -234,7 +235,7 @@ export default function Page() {
                 size={'small'}
                 danger
                 onClick={() => {
-                  vForm.current?.setFieldValue('authIds', undefined);
+                  vForm.current?.setFieldValue('permissionIds', undefined);
                 }}
               >
                 重置
@@ -242,7 +243,7 @@ export default function Page() {
             </Space>
           </Form.Item>
           <ProFormText
-            name="authIds"
+            name="permissionIds"
             rules={[{ required: true, message: '请分配角色权限' }]}
           >
             <AccessTree treeData={recursive(auths)} />

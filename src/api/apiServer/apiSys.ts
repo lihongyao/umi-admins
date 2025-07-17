@@ -3,7 +3,7 @@ import request from '@/api/apiConfig';
 // ~~~~~~~~~~~~~~~~~~
 // 登录相关
 // ~~~~~~~~~~~~~~~~~~
-export async function login(data: API.LoginWithAccount) {
+export async function login(data: API.LoginParams) {
   return request<API.LoginResponse>({
     url: '/api/sys/login',
     method: 'POST',

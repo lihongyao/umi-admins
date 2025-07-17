@@ -1,7 +1,6 @@
 import { apiSys } from '@/api/apiServer';
 import InitParticles from '@/components/@lgs/InitParticles';
 import Footer from '@/components/Footer';
-import Utils from '@/utils';
 
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import {
@@ -23,14 +22,14 @@ const LoginMessage: React.FC<{
   return <Alert className="mb-6" message={content} type="error" showIcon />;
 };
 
-type LoginType = 'mobile' | 'account';
+type LoginType = 'phone' | 'password';
 
 export default function Login() {
   const { message } = App.useApp();
 
   const vForm = useRef<ProFormInstance>();
 
-  const [type, setType] = useState<LoginType>('account');
+  const [type, setType] = useState<LoginType>('password');
   const [errorMsg, setErrorMsg] = useState('');
 
   const { setInitialState } = useModel('@@initialState');
@@ -47,14 +46,25 @@ export default function Login() {
     };
   });
 
-  const onSubmit = async (
-    values: API.LoginWithAccount & { memorize: boolean },
-  ) => {
+  const onSubmit = async (values: Record<string, any>) => {
     try {
-      const resp = await apiSys.login({
-        username: values.username,
-        password: Utils.md5(values.password),
-      });
+      let data: API.LoginParams = {};
+      if (type === 'password') {
+        data = {
+          password: {
+            username: values.username,
+            password: values.password,
+          },
+        };
+      } else if (type === 'phone') {
+        data = {
+          phone: {
+            phone: values.mobile,
+            captcha: values.captcha,
+          },
+        };
+      }
+      const resp = await apiSys.login(data);
       if (resp.code === 200) {
         // 1. 存储账号信息
         if (values.memorize) {
@@ -83,7 +93,7 @@ export default function Login() {
   useEffect(() => {
     const info = localStorage.getItem('MEMORIZED_ACCOUNTS');
     if (info) {
-      const _ = JSON.parse(info) as API.LoginWithAccount & {
+      const _ = JSON.parse(info) as API.LoginParams & {
         memorize: boolean;
       };
       vForm.current?.setFieldsValue(_);
@@ -111,9 +121,7 @@ export default function Login() {
           }
           title="Umi Admins"
           subTitle={'基于Umijs + TypeScript + axios + ProCompoents 实现'}
-          onFinish={async (
-            values: API.LoginWithAccount & { memorize: boolean },
-          ) => {
+          onFinish={async (values: API.LoginParams & { memorize: boolean }) => {
             setErrorMsg('');
             await onSubmit(values);
           }}
@@ -123,15 +131,15 @@ export default function Login() {
             onChange={(k: string) => setType(k as LoginType)}
             centered
             items={[
-              { key: 'account', label: '账户密码登录' },
-              { key: 'mobile', label: '手机号登录' },
+              { key: 'password', label: '账户密码登录' },
+              { key: 'phone', label: '手机号登录' },
             ]}
           />
 
-          {errorMsg && type === 'account' && (
+          {errorMsg && type === 'password' && (
             <LoginMessage content={errorMsg} />
           )}
-          {type === 'account' && (
+          {type === 'password' && (
             <>
               <ProFormText
                 name="username"
@@ -154,8 +162,8 @@ export default function Login() {
             </>
           )}
 
-          {errorMsg && type === 'mobile' && <LoginMessage content={errorMsg} />}
-          {type === 'mobile' && (
+          {errorMsg && type === 'phone' && <LoginMessage content={errorMsg} />}
+          {type === 'phone' && (
             <>
               <ProFormText
                 fieldProps={{
@@ -163,7 +171,7 @@ export default function Login() {
                   maxLength: 11,
                   prefix: <MobileOutlined />,
                 }}
-                name={'mobile'}
+                name={'captcha'}
                 placeholder={'手机号'}
                 rules={[
                   { required: true, message: '请输入手机号！' },
@@ -181,7 +189,7 @@ export default function Login() {
                   return '获取验证码';
                 }}
                 name={'captcha'}
-                phoneName={'mobile'}
+                phoneName={'phone'}
                 rules={[{ required: true, message: '请输入验证码！' }]}
                 onGetCaptcha={async (phone) => {
                   const resp = await apiSys.sendCaptcha(phone);

@@ -133,7 +133,7 @@ export default function Page() {
         formRef={vSearchForm}
         columns={columns}
         rowKey={'id'}
-        scroll={{ x: 1100 }}
+        scroll={{ x: 'max-content' }}
         options={false}
         search={{ labelWidth: 'auto' }}
         rowSelection={{
