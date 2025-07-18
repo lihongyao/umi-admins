@@ -58,6 +58,17 @@ declare namespace API {
     expiration: string;
   };
 
+  type CosSignProps = Array<{
+    /** 业务场景 */
+    business: number;
+    /** 文件名 */
+    fileName: string;
+    /** 上传地址 */
+    uploadUrl: string;
+    /** 访问地址 */
+    url: string;
+  }>;
+
   type ConfigProps = {
     id: number;
     title: string;

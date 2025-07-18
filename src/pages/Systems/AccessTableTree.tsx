@@ -146,8 +146,6 @@ export default function Page() {
   // -- rnders
   return (
     <PageContainer
-      title={false}
-      breadcrumb={{}}
       extra={[
         <Button
           key={'create_access'}
@@ -162,10 +160,11 @@ export default function Page() {
       ]}
     >
       <ProTable<API.SysAccessProps>
-        headerTitle={'权限管理（表格树）'}
+        headerTitle={' '}
         actionRef={vTable}
         columns={columns}
         rowKey="id"
+        scroll={{ x: 'max-content' }}
         search={false}
         options={false}
         pagination={false}

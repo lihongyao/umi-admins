@@ -135,7 +135,7 @@ export default function Page() {
         rowKey={'id'}
         scroll={{ x: 'max-content' }}
         options={false}
-        search={{ labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
           getCheckboxProps({ state }) {

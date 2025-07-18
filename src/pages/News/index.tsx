@@ -139,10 +139,10 @@ export default function Page() {
         formRef={vSearchForm}
         headerTitle={' '}
         options={false}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 'max-content' }}
         columns={columns}
         rowKey="id"
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

@@ -94,7 +94,8 @@ export default function Page() {
         columns={columns}
         rowKey="id"
         options={false}
-        search={{ labelWidth: 'auto' }}
+        scroll={{ x: 'max-content' }}
+        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

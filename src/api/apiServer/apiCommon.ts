@@ -11,6 +11,16 @@ export async function getOssStsConfigs() {
   });
 }
 
+export async function getCosSign(
+  data: { fileName: string; business: number }[],
+) {
+  return request<API.CosSignProps>({
+    url: '/v2/media/sign/update',
+    method: 'POST',
+    data,
+  });
+}
+
 export async function uploadFile(file: File) {
   const formData = new FormData();
   formData.append('file', file);

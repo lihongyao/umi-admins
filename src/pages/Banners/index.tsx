@@ -104,6 +104,9 @@ export default function Page() {
       key: 'showTime',
       valueType: 'dateRange',
       hideInTable: true,
+      fieldProps: {
+        placeholder: ['开始时间', '结束时间'],
+      },
     },
     {
       title: '展示开始时间',
@@ -179,9 +182,9 @@ export default function Page() {
         formRef={vSearchForm}
         columns={columns}
         rowKey={'id'}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 'max-content' }}
         options={false}
-        search={{ labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

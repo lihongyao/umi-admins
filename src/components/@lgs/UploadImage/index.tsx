@@ -4,11 +4,12 @@ import {
   LoadingOutlined,
   PictureOutlined,
   PlusOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons';
 import Tools from '@likg/tools';
 import Validator from '@likg/validator';
 import OSS from 'ali-oss';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import {
   ChangeEvent,
   CSSProperties,
@@ -23,10 +24,12 @@ export enum UploadMode {
   BackendUpload = 'BackendUpload',
   /** 自定义上传 */
   CustomUpload = 'CustomUpload',
-  /** 使用 STS token 的 OSS 直传 */
+  /** 阿里云 OSS 直传（STS token） */
   OssDirectWithSts = 'OssDirectWithSts',
-  /** 后端签名的 OSS 直传 */
+  /** 阿里云 OSS 直传 */
   OssDirectWithSignature = 'OssDirectWithSignature',
+  /** 腾讯云 COS 直传 */
+  TencentCos = 'TencentCos',
 }
 type UploadStatus = 'default' | 'loading' | 'success' | 'fail';
 type ItemProps = {
@@ -39,10 +42,12 @@ export default memo(function UploadImage({
   maxSize = 20,
   width = 100,
   height = 100,
+  type = 'image',
   max = 1,
   accept = 'image/*',
   extra = '',
   dir = '/images',
+  business,
   uploadMode = UploadMode.BackendUpload,
   onChange,
   customRequest,
@@ -51,6 +56,8 @@ export default memo(function UploadImage({
   width?: number;
   /** 图片高度 */
   height?: number;
+  /** 上传类型 */
+  type?: 'image' | 'video';
   /** 文件类型，默认 “image/*” */
   accept?: string;
   /** 最大尺寸,单位MB */
@@ -65,6 +72,8 @@ export default memo(function UploadImage({
   dir?: string;
   /** 图片地址 */
   value?: string | string[];
+  /** 业务场景 */
+  business?: number;
   /** 值变化 */
   onChange?: (value?: string | string[]) => void;
   /** 自定义上传 */
@@ -80,6 +89,7 @@ export default memo(function UploadImage({
 
   // -- refs
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // -- state
   const [data, setData] = useState<ItemProps[]>([
@@ -90,6 +100,7 @@ export default memo(function UploadImage({
   const [ossStsData, setOssStsData] = useState<API.OssStsConfigProps | null>(
     null,
   );
+  const [videoSrc, setVideoSrc] = useState('');
 
   /**
    * 重置输入框，避免选择文件之后无法再次选择
@@ -163,55 +174,95 @@ export default memo(function UploadImage({
     try {
       switch (uploadMode) {
         case UploadMode.BackendUpload:
-          setTimeout(() => {
-            index % 2 === 0 ? uploadSuccess(path) : updateStatus(index, 'fail');
-          }, 1000);
+          {
+            setTimeout(() => {
+              index % 2 === 0
+                ? uploadSuccess(path)
+                : updateStatus(index, 'fail');
+            }, 1000);
+          }
           break;
         case UploadMode.CustomUpload:
-          customRequest?.(file, ({ success, url }) => {
-            if (success && url) {
-              uploadSuccess(url);
+          {
+            customRequest?.(file, ({ success, url }) => {
+              if (success && url) {
+                uploadSuccess(url);
+              } else {
+                updateStatus(index, 'fail');
+              }
+            });
+          }
+          break;
+        case UploadMode.OssDirectWithSignature:
+          {
+            if (ossData) {
+              const expire = new Date(ossData.expiration).getTime();
+              if (expire < Date.now()) {
+                await initOssConfig();
+              }
+              const key = Tools.getFilePath(file, `${ossData.dir}${dir}`);
+              const formData = new FormData();
+              formData.append('key', key);
+              formData.append('OSSAccessKeyId', ossData.accessKeyId);
+              formData.append('policy', ossData.policy);
+              formData.append('Signature', ossData.signature);
+              formData.append('file', file);
+              fetch(ossData.host, { method: 'POST', body: formData }).then(
+                (uploadResp) => {
+                  if ([200, 204].indexOf(uploadResp.status) !== -1) {
+                    const url = uploadResp.url + key;
+                    uploadSuccess(url);
+                  } else {
+                    updateStatus(index, 'fail');
+                  }
+                },
+              );
+            }
+          }
+          break;
+        case UploadMode.OssDirectWithSts:
+          {
+            if (ossStsData) {
+              const expire = new Date(ossStsData.expiration).getTime();
+              if (expire < Date.now()) await initStsConfig();
+              const key = Tools.getFilePath(file, `${ossStsData.dir}${dir}`);
+              const data = await client?.put(key.slice(1), file);
+              data?.res.status === 200
+                ? uploadSuccess(data.url)
+                : updateStatus(index, 'fail');
             } else {
               updateStatus(index, 'fail');
             }
-          });
+          }
           break;
-        case UploadMode.OssDirectWithSignature:
-          if (ossData) {
-            const expire = new Date(ossData.expiration).getTime();
-            if (expire < Date.now()) {
-              await initOssConfig();
-            }
-            const key = Tools.getFilePath(file, `${ossData.dir}${dir}`);
-            const formData = new FormData();
-            formData.append('key', key);
-            formData.append('OSSAccessKeyId', ossData.accessKeyId);
-            formData.append('policy', ossData.policy);
-            formData.append('Signature', ossData.signature);
-            formData.append('file', file);
-            fetch(ossData.host, { method: 'POST', body: formData }).then(
-              (uploadResp) => {
-                if ([200, 204].indexOf(uploadResp.status) !== -1) {
-                  const url = uploadResp.url + key;
+        case UploadMode.TencentCos:
+          {
+            // @See https://cloud.tencent.com/document/product/436/35217
+            const resp = await apiCommon.getCosSign([
+              {
+                business: business ?? 0,
+                fileName: file.name,
+              },
+            ]);
+            if (resp.code === 200) {
+              const { url, uploadUrl } = resp.data[0];
+              try {
+                const data = await fetch(uploadUrl, {
+                  method: 'PUT',
+                  body: file,
+                });
+                if (data.status === 200) {
                   uploadSuccess(url);
                 } else {
                   updateStatus(index, 'fail');
                 }
-              },
-            );
-          }
-          break;
-        case UploadMode.OssDirectWithSts:
-          if (ossStsData) {
-            const expire = new Date(ossStsData.expiration).getTime();
-            if (expire < Date.now()) await initStsConfig();
-            const key = Tools.getFilePath(file, `${ossStsData.dir}${dir}`);
-            const data = await client?.put(key.slice(1), file);
-            data?.res.status === 200
-              ? uploadSuccess(data.url)
-              : updateStatus(index, 'fail');
-          } else {
-            updateStatus(index, 'fail');
+              } catch (error) {
+                console.log(error);
+                updateStatus(index, 'fail');
+              }
+            } else {
+              updateStatus(index, 'fail');
+            }
           }
           break;
       }
@@ -339,16 +390,26 @@ export default memo(function UploadImage({
               {/* 上传成功 */}
               {item.status === 'success' && (
                 <>
-                  <div className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all">
+                  <div className="w-full h-full absolute top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center gap-4 opacity-0 group-hover:opacity-100 transition-all z-50">
                     <DeleteOutlined
                       className="text-xl cursor-pointer text-white "
                       onClick={() => onDelete(index)}
                     />
+                    {type === 'video' && (
+                      <VideoCameraOutlined
+                        className="text-xl cursor-pointer text-white "
+                        onClick={() => setVideoSrc(item.url)}
+                      />
+                    )}
                   </div>
-                  <div
-                    className={'w-full h-full bg-cover bg-center '}
-                    style={{ backgroundImage: `url('${item.url}')` }}
-                  />
+                  {type === 'image' ? (
+                    <div
+                      className={'w-full h-full bg-cover bg-center'}
+                      style={{ backgroundImage: `url('${item.url}')` }}
+                    />
+                  ) : (
+                    <video className="w-full h-full" src={item.url} />
+                  )}
                 </>
               )}
               {/* 上传失败 */}
@@ -364,6 +425,27 @@ export default memo(function UploadImage({
       </div>
       {/* 提示信息 */}
       {extra && <div className="mt-2 text-gray-400">{extra}</div>}
+      <Modal
+        width={600}
+        title={'视频播放'}
+        open={!!videoSrc}
+        onCancel={() => {
+          setVideoSrc('');
+          videoRef.current?.pause();
+        }}
+        footer={null}
+      >
+        {videoSrc && (
+          <video
+            ref={videoRef}
+            className="w-full aspect-video bg-black"
+            src={videoSrc}
+            controls
+            preload="metadata"
+            autoPlay
+          />
+        )}
+      </Modal>
     </div>
   );
 });

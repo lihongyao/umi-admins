@@ -187,9 +187,9 @@ export default function Page() {
         formRef={vSearchForm}
         columns={columns}
         rowKey="id"
-        scroll={{ x: 1200 }}
+        scroll={{ x: 'max-content' }}
         options={false}
-        search={{ span: 6, labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

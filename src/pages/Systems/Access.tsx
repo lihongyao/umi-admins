@@ -53,8 +53,6 @@ export default function Page() {
   // -- renders
   return (
     <PageContainer
-      title={false}
-      breadcrumb={{}}
       extra={[
         <Button
           key={'ADD_ACCESS'}
@@ -69,7 +67,7 @@ export default function Page() {
       ]}
     >
       {/* 树形结构 */}
-      <ProCard title={'权限管理'}>
+      <ProCard>
         <Tree
           style={{ padding: 16 }}
           showLine={{ showLeafIcon: false }}
