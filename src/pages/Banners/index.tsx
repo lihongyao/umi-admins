@@ -50,6 +50,7 @@ export default function Page() {
       dataIndex: 'locationCode',
       valueType: 'select',
       fieldProps: {
+        placeholder: '请选择展示位置',
         fieldNames: {
           label: 'locationName',
           value: 'locationCode',
@@ -73,6 +74,7 @@ export default function Page() {
         1: { text: '已上架' },
       },
       fieldProps: {
+        placeholder: '请选择状态',
         onChange: () => vSearchForm.current?.submit(),
       },
       render: (_, { status, id }) => (
@@ -202,16 +204,17 @@ export default function Page() {
             delete params.showTime;
           }
           const resp = await apiBanners.list(params);
-
           if (resp.code === 200) {
             return Promise.resolve({
               data: resp.data.data,
               total: resp.data.total,
+              success: true,
             });
           }
           return Promise.resolve({
             data: [],
             total: 0,
+            success: true,
           });
         }}
       />
@@ -266,6 +269,7 @@ export default function Page() {
           <ProFormSelect
             name="locationCode"
             label="展示位置"
+            placeholder={'请选择展示位置'}
             fieldProps={{
               fieldNames: {
                 label: 'locationName',
@@ -288,6 +292,7 @@ export default function Page() {
           name="showTime"
           rules={[{ required: true }]}
           fieldProps={{
+            placeholder: ['开始时间', '结束时间'],
             format: 'YYYY-MM-DD HH:mm',
           }}
         />

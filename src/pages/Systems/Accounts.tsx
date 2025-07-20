@@ -2,7 +2,7 @@ import { apiSys } from '@/api/apiServer';
 import UploadImage from '@/components/@lgs/UploadImage';
 import Utils from '@/utils';
 
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   ActionType,
   ModalForm,
@@ -57,7 +57,11 @@ export default function Page() {
       ),
     },
     { title: '登录账号', dataIndex: 'username', search: false, copyable: true },
-    { title: '姓名', dataIndex: 'nickname' },
+    {
+      title: '姓名',
+      dataIndex: 'nickname',
+      fieldProps: { placeholder: '请输入姓名', suffix: <SearchOutlined /> },
+    },
     {
       title: '状态',
       tooltip: '该用户是否被拉入黑名单',
@@ -187,8 +191,8 @@ export default function Page() {
         formRef={vSearchForm}
         columns={columns}
         rowKey="id"
-        scroll={{ x: 'max-content' }}
         options={false}
+        scroll={{ x: 'max-content' }}
         search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,

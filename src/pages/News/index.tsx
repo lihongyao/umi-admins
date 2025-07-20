@@ -42,7 +42,11 @@ export default function Page() {
       valueType: 'indexBorder',
       width: 60,
     },
-    { title: '新闻标题', dataIndex: 'title' },
+    {
+      title: '新闻标题',
+      dataIndex: 'title',
+      fieldProps: { placeholder: '请输入新闻标题' },
+    },
     {
       title: '新闻类型',
       dataIndex: 'type',
@@ -51,11 +55,21 @@ export default function Page() {
         2: { text: '动态新闻' },
       },
       fieldProps: {
+        placeholder: '请选择新闻类型',
         onChange: () => vSearchForm.current?.submit(),
       },
     },
-    { title: '发布人员', dataIndex: 'published_by' },
-    { title: '发布时间', dataIndex: 'publish_time' },
+    {
+      title: '发布人员',
+      dataIndex: 'published_by',
+      fieldProps: { placeholder: '请输入发布人员' },
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'publish_time',
+      valueType: 'dateRange',
+      fieldProps: { placeholder: ['开始时间', '结束时间'] },
+    },
     {
       title: '新闻状态',
       dataIndex: 'status',
@@ -64,6 +78,7 @@ export default function Page() {
         1: { text: '已发布', status: 'Processing' },
       },
       fieldProps: {
+        placeholder: '请选择新闻状态',
         onChange: () => vSearchForm.current?.submit(),
       },
     },
@@ -138,10 +153,10 @@ export default function Page() {
         actionRef={vTable}
         formRef={vSearchForm}
         headerTitle={' '}
-        options={false}
-        scroll={{ x: 'max-content' }}
         columns={columns}
         rowKey="id"
+        options={false}
+        scroll={{ x: 'max-content' }}
         search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,

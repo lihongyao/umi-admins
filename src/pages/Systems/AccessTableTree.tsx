@@ -145,29 +145,28 @@ export default function Page() {
 
   // -- rnders
   return (
-    <PageContainer
-      extra={[
-        <Button
-          key={'create_access'}
-          onClick={() => {
-            vForm.current?.resetFields();
-            setOpenForm(true);
-          }}
-        >
-          <PlusOutlined />
-          新建一级权限
-        </Button>,
-      ]}
-    >
+    <PageContainer title={false}>
       <ProTable<API.SysAccessProps>
-        headerTitle={' '}
+        headerTitle={'权限列表（表格树）'}
         actionRef={vTable}
         columns={columns}
         rowKey="id"
+        options={false}
         scroll={{ x: 'max-content' }}
         search={false}
-        options={false}
         pagination={false}
+        tableExtraRender={() => (
+          <Button
+            key={'create_access'}
+            onClick={() => {
+              vForm.current?.resetFields();
+              setOpenForm(true);
+            }}
+          >
+            <PlusOutlined />
+            新建一级权限
+          </Button>
+        )}
         expandable={{
           expandedRowKeys,
           indentSize: 30,

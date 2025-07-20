@@ -22,6 +22,7 @@ export default function Page() {
   // - refs
   const vTable = useRef<ActionType>();
   const vForm = useRef<ProFormInstance>();
+  const vSearchForm = useRef<ProFormInstance>();
 
   // -- state
   const [openForm, setOpenForm] = useState(false);
@@ -74,11 +75,14 @@ export default function Page() {
     {
       title: '状态',
       dataIndex: 'status',
-      search: false,
       valueType: 'select',
       valueEnum: {
         0: { text: '已禁用', status: 'Error' },
         1: { text: '已启用', status: 'Processing' },
+      },
+      fieldProps: {
+        placeholder: '请选择状态',
+        onChange: () => vSearchForm.current?.submit(),
       },
     },
     { title: '创建人', dataIndex: 'createBy', search: false },
@@ -104,20 +108,22 @@ export default function Page() {
           >
             编辑
           </Button>
-          <Popconfirm
-            title={'确定启用？'}
-            onConfirm={() => switchStatus(record.id, 0, '已启用')}
-          >
-            <Button disabled={record.status === 1}>启用</Button>
-          </Popconfirm>
-          <Popconfirm
-            title={'确定禁用？'}
-            onConfirm={() => switchStatus(record.id, 0, '已禁用')}
-          >
-            <Button danger disabled={record.status === 0}>
-              禁用
-            </Button>
-          </Popconfirm>
+
+          {record.status === 1 ? (
+            <Popconfirm
+              title={'确定禁用？'}
+              onConfirm={() => switchStatus(record.id, 0, '已禁用')}
+            >
+              <Button danger>禁用</Button>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title={'确定启用？'}
+              onConfirm={() => switchStatus(record.id, 0, '已启用')}
+            >
+              <Button disabled={record.status === 1}>启用</Button>
+            </Popconfirm>
+          )}
           <Popconfirm
             title={'确定删除？'}
             onConfirm={async () => {
@@ -156,11 +162,12 @@ export default function Page() {
       <ProTable<API.SysRoleProps>
         headerTitle={' '}
         actionRef={vTable}
+        formRef={vSearchForm}
         columns={columns}
         rowKey="id"
         options={false}
-        search={false}
         scroll={{ x: 'max-content' }}
+        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

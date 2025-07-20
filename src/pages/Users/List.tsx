@@ -39,11 +39,21 @@ export default function Page() {
         1: { text: '已禁用', status: 'Error' },
       },
       fieldProps: {
+        placeholder: '请选择状态',
         onChange: () => vSearchForm.current?.submit(),
       },
     },
-    { title: '用户昵称', dataIndex: 'nickname' },
-    { title: '联系电话', dataIndex: 'phone', copyable: true },
+    {
+      title: '用户昵称',
+      dataIndex: 'nickname',
+      fieldProps: { placeholder: '请输入用户昵称' },
+    },
+    {
+      title: '联系电话',
+      dataIndex: 'phone',
+      copyable: true,
+      fieldProps: { placeholder: '请输入联系电话' },
+    },
     { title: '注册时间', dataIndex: 'createTime', search: false },
     { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
     {

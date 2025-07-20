@@ -52,22 +52,23 @@ export default function Page() {
   };
   // -- renders
   return (
-    <PageContainer
-      extra={[
-        <Button
-          key={'ADD_ACCESS'}
-          onClick={() => {
-            vForm.current?.resetFields();
-            setOpen(true);
-          }}
-        >
-          <PlusOutlined />
-          <span>新增权限</span>
-        </Button>,
-      ]}
-    >
+    <PageContainer title={false}>
       {/* 树形结构 */}
-      <ProCard>
+      <ProCard
+        title={'权限列表（树形结构）'}
+        extra={
+          <Button
+            key={'ADD_ACCESS'}
+            onClick={() => {
+              vForm.current?.resetFields();
+              setOpen(true);
+            }}
+          >
+            <PlusOutlined />
+            <span>新增权限</span>
+          </Button>
+        }
+      >
         <Tree
           style={{ padding: 16 }}
           showLine={{ showLeafIcon: false }}

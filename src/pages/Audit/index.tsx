@@ -85,6 +85,7 @@ export default function Page() {
       dataIndex: 'mobile',
       copyable: true,
       fieldProps: {
+        placeholder: '请输入联系电话',
         maxLength: 11,
       },
     },
@@ -180,7 +181,9 @@ export default function Page() {
             </div>
           }
         >
-          <Button onClick={() => setShowRejectModal(true)}>批量驳回</Button>
+          <Button danger onClick={() => setShowRejectModal(true)}>
+            批量驳回
+          </Button>
           <Button
             type="primary"
             onClick={() => audit({ status: 0, ids: selectedRowKeys })}
@@ -209,6 +212,9 @@ export default function Page() {
           audit({ status: 0, ids, rejectReason });
         }}
       >
+        <p className="my-4 text-gray-500">
+          已选 {selectedRowKeys.length || 1} 条申请
+        </p>
         <ProFormText name="id" noStyle hidden />
         <ProFormTextArea
           name="rejectReason"

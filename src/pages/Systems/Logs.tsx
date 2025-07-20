@@ -19,6 +19,7 @@ export default function Logs() {
         columns={columns}
         rowKey="id"
         options={false}
+        scroll={{ x: 'max-content' }}
         search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
         pagination={{
           defaultCurrent: 1,

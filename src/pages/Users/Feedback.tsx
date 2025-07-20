@@ -19,8 +19,19 @@ export default function Page() {
         <Avatar src={avatarUrl} size={50} shape={'square'} />
       ),
     },
-    { title: '用户昵称', dataIndex: 'nickname', width: 100 },
-    { title: '联系电话', dataIndex: 'phone', copyable: true, width: 150 },
+    {
+      title: '用户昵称',
+      dataIndex: 'nickname',
+      width: 100,
+      fieldProps: { placeholder: '请输入用户昵称' },
+    },
+    {
+      title: '联系电话',
+      dataIndex: 'phone',
+      copyable: true,
+      width: 150,
+      fieldProps: { placeholder: '请输入联系电话' },
+    },
     {
       title: '反馈时间',
       dataIndex: 'createTime',
