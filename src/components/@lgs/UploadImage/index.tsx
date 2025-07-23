@@ -408,7 +408,10 @@ export default memo(function UploadImage({
                       style={{ backgroundImage: `url('${item.url}')` }}
                     />
                   ) : (
-                    <video className="w-full h-full" src={item.url} />
+                    <video
+                      className="w-full h-full bg-black object-cover"
+                      src={item.url}
+                    />
                   )}
                 </>
               )}
@@ -438,7 +441,7 @@ export default memo(function UploadImage({
         {videoSrc && (
           <video
             ref={videoRef}
-            className="w-full aspect-video bg-black"
+            className="w-full aspect-video bg-black "
             src={videoSrc}
             controls
             preload="metadata"
