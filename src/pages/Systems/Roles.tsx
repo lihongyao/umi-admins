@@ -1,7 +1,7 @@
 import { apiSys } from '@/api/apiServer';
 import AccessTree from '@/components/@lgs/AccessTree';
 import Utils from '@/utils';
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 
 import {
   ActionType,
@@ -13,10 +13,12 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { App, Button, Form, Popconfirm, Space } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -70,12 +72,10 @@ export default function Page() {
 
   // -- columns
   const columns: ProColumns<API.SysRoleProps>[] = [
-    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 48 },
-    { title: '角色名称', dataIndex: 'roleName', search: false },
     {
-      title: '状态',
       dataIndex: 'status',
       valueType: 'select',
+      hideInTable: true,
       valueEnum: {
         0: { text: '已禁用', status: 'Error' },
         1: { text: '已启用', status: 'Processing' },
@@ -83,6 +83,17 @@ export default function Page() {
       fieldProps: {
         placeholder: '请选择状态',
         onChange: () => vSearchForm.current?.submit(),
+      },
+    },
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 48 },
+    { title: '角色名称', dataIndex: 'roleName', search: false },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      search: false,
+      valueEnum: {
+        0: { text: '已禁用', status: 'Error' },
+        1: { text: '已启用', status: 'Processing' },
       },
     },
     { title: '创建人', dataIndex: 'createBy', search: false },
@@ -146,6 +157,22 @@ export default function Page() {
   ];
   return (
     <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/systems/roles')}>系统管理</a> },
+          { title: '角色管理' },
+        ],
+      }}
       extra={[
         <Button
           key={'create'}
@@ -167,7 +194,12 @@ export default function Page() {
         rowKey="id"
         options={false}
         scroll={{ x: 'max-content' }}
-        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
+        search={{
+          span: 6,
+          labelWidth: 'auto',
+          collapsed: false,
+          collapseRender: false,
+        }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

@@ -108,7 +108,7 @@ export default [
       },
       {
         path: '/systems/accounts',
-        name: '账号管理',
+        name: '帐户管理',
         component: '@/pages/Systems/Accounts',
       },
       {

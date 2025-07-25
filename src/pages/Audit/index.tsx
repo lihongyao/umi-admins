@@ -1,5 +1,6 @@
 import { apiAudit } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
+import { HomeOutlined, SearchOutlined } from '@ant-design/icons';
 
 import {
   ActionType,
@@ -12,10 +13,12 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { App, Button, Popconfirm, Space, Table } from 'antd';
 import { useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -45,22 +48,43 @@ export default function Page() {
   // - columns
   const columns: Array<ProColumns<API.AuditProps>> = [
     {
+      dataIndex: 'state',
+      fieldProps: {
+        placeholder: '请选择审核状态',
+        allowClear: true,
+        onChange: () => vSearchForm.current?.submit(),
+      },
+      hideInTable: true,
+      valueType: 'select',
+      valueEnum: {
+        0: { text: '待审核', status: 'Processing' },
+        1: { text: '已通过', status: 'Success' },
+        2: { text: '已驳回', status: 'Error' },
+      },
+    },
+    {
+      dataIndex: 'mobile',
+      hideInTable: true,
+      fieldProps: {
+        suffix: <SearchOutlined />,
+        placeholder: '请输入联系电话',
+        maxLength: 11,
+      },
+    },
+    {
       title: '提交作品',
       dataIndex: 'works',
+      fixed: 'left',
       search: false,
       render: (_, { works }) => (
         <ImageBox src={works} width={100} height={60} />
       ),
     },
+    { title: '业主姓名', dataIndex: 'name', search: false, width: 100 },
     {
       title: '审核状态',
       dataIndex: 'state',
-      fieldProps: {
-        placeholder: '全部',
-        allowClear: true,
-        onChange: () => vSearchForm.current?.submit(),
-      },
-      valueType: 'select',
+      search: false,
       valueEnum: {
         0: { text: '待审核', status: 'Processing' },
         1: { text: '已通过', status: 'Success' },
@@ -79,16 +103,7 @@ export default function Page() {
       search: false,
       ellipsis: true,
     },
-    { title: '业主姓名', dataIndex: 'name', search: false, width: 100 },
-    {
-      title: '联系方式',
-      dataIndex: 'mobile',
-      copyable: true,
-      fieldProps: {
-        placeholder: '请输入联系电话',
-        maxLength: 11,
-      },
-    },
+    { title: '联系方式', dataIndex: 'mobile', copyable: true, search: false },
     {
       title: '单元信息',
       dataIndex: 'roomName',
@@ -100,6 +115,7 @@ export default function Page() {
       title: '操作',
       valueType: 'option',
       width: 150,
+      fixed: 'right',
       render: (_, { state, id }) => (
         <Space>
           <Button
@@ -127,7 +143,23 @@ export default function Page() {
 
   // -- renders
   return (
-    <PageContainer>
+    <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: '数据看板' },
+        ],
+      }}
+    >
       <ProTable<API.AuditProps>
         headerTitle={' '}
         actionRef={vTable}
@@ -136,7 +168,12 @@ export default function Page() {
         rowKey={'id'}
         scroll={{ x: 'max-content' }}
         options={false}
-        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
+        search={{
+          span: 6,
+          labelWidth: 'auto',
+          collapsed: false,
+          collapseRender: false,
+        }}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
           getCheckboxProps({ state }) {

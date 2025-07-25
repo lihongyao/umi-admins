@@ -4,6 +4,7 @@ import {
   EditOutlined,
   FileOutlined,
   FolderFilled,
+  HomeOutlined,
   PlusOutlined,
   PlusSquareOutlined,
 } from '@ant-design/icons';
@@ -16,10 +17,12 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { App, Button, Popconfirm, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // -- constants
@@ -143,9 +146,38 @@ export default function Page() {
     });
   };
 
-  // -- rnders
+  // -- renders
   return (
-    <PageContainer title={false}>
+    <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/systems/roles')}>系统管理</a> },
+          { title: '权限列表（表格树）' },
+        ],
+      }}
+      extra={
+        <Button
+          key={'create_access'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpenForm(true);
+          }}
+        >
+          <PlusOutlined />
+          新建一级权限
+        </Button>
+      }
+    >
       <ProTable<API.SysAccessProps>
         headerTitle={'权限列表（表格树）'}
         actionRef={vTable}
@@ -155,18 +187,6 @@ export default function Page() {
         scroll={{ x: 'max-content' }}
         search={false}
         pagination={false}
-        tableExtraRender={() => (
-          <Button
-            key={'create_access'}
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpenForm(true);
-            }}
-          >
-            <PlusOutlined />
-            新建一级权限
-          </Button>
-        )}
         expandable={{
           expandedRowKeys,
           indentSize: 30,

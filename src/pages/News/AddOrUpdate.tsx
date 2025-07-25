@@ -2,6 +2,7 @@ import { apiNews } from '@/api/apiServer';
 import EditorWang from '@/components/@lgs/EditorWang';
 import UploadImage from '@/components/@lgs/UploadImage';
 import Utils from '@/utils';
+import { HomeOutlined } from '@ant-design/icons';
 import {
   PageContainer,
   ProCard,
@@ -12,7 +13,7 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-components';
 import { useNavigate, useParams } from '@umijs/max';
-import { App } from 'antd';
+import { App, Space } from 'antd';
 import React, { useEffect, useRef } from 'react';
 const AddOrUpdate: React.FC = () => {
   const params = useParams<{ id: string }>();
@@ -34,7 +35,24 @@ const AddOrUpdate: React.FC = () => {
   }, []);
 
   return (
-    <PageContainer>
+    <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/news')}>新闻管理</a> },
+          { title: params.id ? '编辑新闻' : '创建新闻' },
+        ],
+      }}
+    >
       <ProCard>
         <ProForm
           formRef={vForm}

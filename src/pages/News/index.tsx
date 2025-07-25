@@ -1,7 +1,7 @@
 import { apiNews } from '@/api/apiServer';
 import PhoneModel from '@/components/@lgs/PhoneModel';
 import Utils from '@/utils';
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   ActionType,
   PageContainer,
@@ -37,19 +37,14 @@ export default function Page() {
   // -- columns
   const columns: Array<ProColumns<API.NewsProps>> = [
     {
-      title: '序号',
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 60,
+      dataIndex: 'publish_time',
+      hideInTable: true,
+      valueType: 'dateRange',
+      fieldProps: { placeholder: ['开始时间', '结束时间'] },
     },
     {
-      title: '新闻标题',
-      dataIndex: 'title',
-      fieldProps: { placeholder: '请输入新闻标题' },
-    },
-    {
-      title: '新闻类型',
       dataIndex: 'type',
+      hideInTable: true,
       valueEnum: {
         1: { text: '案例新闻' },
         2: { text: '动态新闻' },
@@ -60,19 +55,8 @@ export default function Page() {
       },
     },
     {
-      title: '发布人员',
-      dataIndex: 'published_by',
-      fieldProps: { placeholder: '请输入发布人员' },
-    },
-    {
-      title: '发布时间',
-      dataIndex: 'publish_time',
-      valueType: 'dateRange',
-      fieldProps: { placeholder: ['开始时间', '结束时间'] },
-    },
-    {
-      title: '新闻状态',
       dataIndex: 'status',
+      hideInTable: true,
       valueEnum: {
         0: { text: '未发布', status: 'Default' },
         1: { text: '已发布', status: 'Processing' },
@@ -80,6 +64,38 @@ export default function Page() {
       fieldProps: {
         placeholder: '请选择新闻状态',
         onChange: () => vSearchForm.current?.submit(),
+      },
+    },
+    {
+      dataIndex: 'title',
+      hideInTable: true,
+      fieldProps: { placeholder: '请输入新闻标题', suffix: <SearchOutlined /> },
+    },
+    {
+      dataIndex: 'published_by',
+      hideInTable: true,
+      fieldProps: { placeholder: '请输入发布人员', suffix: <SearchOutlined /> },
+    },
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 60 },
+    { title: '新闻标题', dataIndex: 'title', search: false },
+    {
+      title: '新闻类型',
+      dataIndex: 'type',
+      search: false,
+      valueEnum: {
+        1: { text: '案例新闻' },
+        2: { text: '动态新闻' },
+      },
+    },
+    { title: '发布人员', dataIndex: 'published_by', search: false },
+    { title: '发布时间', dataIndex: 'publish_time', search: false },
+    {
+      title: '新闻状态',
+      dataIndex: 'status',
+      search: false,
+      valueEnum: {
+        0: { text: '未发布', status: 'Default' },
+        1: { text: '已发布', status: 'Processing' },
       },
     },
     {
@@ -142,6 +158,21 @@ export default function Page() {
   // -- renders
   return (
     <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: '新闻管理' },
+        ],
+      }}
       extra={[
         <Button key={'create'} onClick={() => navigate('/news/create')}>
           <PlusOutlined />
@@ -157,7 +188,12 @@ export default function Page() {
         rowKey="id"
         options={false}
         scroll={{ x: 'max-content' }}
-        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
+        search={{
+          span: 6,
+          labelWidth: 'auto',
+          collapsed: false,
+          collapseRender: false,
+        }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

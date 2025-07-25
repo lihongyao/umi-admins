@@ -1,9 +1,11 @@
 import { apiNews } from '@/api/apiServer';
+import { HomeOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
-import { useParams } from '@umijs/max';
+import { useNavigate, useParams } from '@umijs/max';
 import { Space } from 'antd';
 import { useEffect, useState } from 'react';
 export default function Details() {
+  const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const [details, setDetails] = useState<API.NewsProps | null>(null);
   const getDetails = async () => {
@@ -19,7 +21,25 @@ export default function Details() {
   }, []);
 
   return (
-    <PageContainer loading={!details}>
+    <PageContainer
+      loading={!details}
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/news')}>新闻管理</a> },
+          { title: '新闻详情' },
+        ],
+      }}
+    >
       <Space direction={'vertical'} className=" w-full">
         <ProCard>
           <h1 className="text-2xl">{details?.title}</h1>

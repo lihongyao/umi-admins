@@ -96,7 +96,7 @@ export default {
           jumpUrl: "@pick(['/details', '/orders', '/mine'])",
           startTime: '@datetime(yyyy-MM-dd HH:mm)',
           endTime: '@datetime(yyyy-MM-dd HH:mm)',
-          locationCode: "@pick( ['10000', '20000', '30000'])",
+          locationName: "@pick( ['首页', '我的', '商品'])",
         },
       ],
       total: 20,

@@ -2,7 +2,7 @@ import { apiSys } from '@/api/apiServer';
 import UploadImage from '@/components/@lgs/UploadImage';
 import Utils from '@/utils';
 
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   ActionType,
   ModalForm,
@@ -15,10 +15,12 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { App, Avatar, Button, Popconfirm, Space } from 'antd';
 import { useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -43,6 +45,46 @@ export default function Page() {
 
   // -- columns
   const columns: ProColumns<API.SysAccountProps>[] = [
+    {
+      dataIndex: 'status',
+      valueType: 'select',
+      hideInTable: true,
+      fieldProps: {
+        placeholder: '请选择状态',
+        allowClear: true,
+        onChange: () => vSearchForm.current?.submit(),
+      },
+      valueEnum: {
+        0: { text: '已禁用', status: 'Error' },
+        1: { text: '已启用', status: 'Processing' },
+      },
+    },
+    {
+      dataIndex: 'roleId',
+      hideInTable: true,
+      valueType: 'select',
+      fieldProps: {
+        placeholder: '请选择角色',
+        fieldNames: {
+          label: 'roleName',
+          value: 'id',
+        },
+        allowClear: true,
+        onChange: () => vSearchForm.current?.submit(),
+      },
+      request: async () => {
+        const resp = await apiSys.roles();
+        if (resp.code === 200) {
+          return resp.data;
+        }
+        return [];
+      },
+    },
+    {
+      dataIndex: 'nickname',
+      hideInTable: true,
+      fieldProps: { placeholder: '请输入姓名', suffix: <SearchOutlined /> },
+    },
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '头像',
@@ -57,21 +99,12 @@ export default function Page() {
       ),
     },
     { title: '登录账号', dataIndex: 'username', search: false, copyable: true },
-    {
-      title: '姓名',
-      dataIndex: 'nickname',
-      fieldProps: { placeholder: '请输入姓名', suffix: <SearchOutlined /> },
-    },
+    { title: '姓名', dataIndex: 'nickname', search: false },
     {
       title: '状态',
       tooltip: '该用户是否被拉入黑名单',
       dataIndex: 'status',
-      valueType: 'select',
-      fieldProps: {
-        placeholder: '全部',
-        allowClear: true,
-        onChange: () => vSearchForm.current?.submit(),
-      },
+      search: false,
       valueEnum: {
         0: { text: '已禁用', status: 'Error' },
         1: { text: '已启用', status: 'Processing' },
@@ -107,6 +140,7 @@ export default function Page() {
       key: 'action',
       search: false,
       width: 200,
+      fixed: 'right',
       render: (_, record) => (
         <Space>
           <Button
@@ -169,9 +203,25 @@ export default function Page() {
     },
   ];
 
-  // -- rnders
+  // -- renders
   return (
     <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/systems/roles')}>系统管理</a> },
+          { title: '帐户管理' },
+        ],
+      }}
       extra={[
         <Button
           key={'create'}
@@ -193,7 +243,12 @@ export default function Page() {
         rowKey="id"
         options={false}
         scroll={{ x: 'max-content' }}
-        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
+        search={{
+          span: 6,
+          labelWidth: 'auto',
+          collapsed: false,
+          collapseRender: false,
+        }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

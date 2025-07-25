@@ -2,7 +2,7 @@ import { apiBanners } from '@/api/apiServer';
 import ImageBox from '@/components/@lgs/ImageBox';
 import UploadImage from '@/components/@lgs/UploadImage';
 import Utils from '@/utils';
-import { PlusOutlined } from '@ant-design/icons';
+import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 
 import {
   ActionType,
@@ -18,10 +18,12 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { App, Button, Popconfirm, Space, Switch } from 'antd';
 import { useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // -- refs
@@ -35,20 +37,18 @@ export default function Page() {
 
   // -- columns
   const columns: Array<ProColumns<API.BannerProps>> = [
-    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
-      title: '图片预览',
-      dataIndex: 'bannerPic',
-      search: false,
-      width: 120,
-      render: (_, { bannerPic }) => (
-        <ImageBox src={bannerPic} width={100} height={60} />
-      ),
+      key: 'showTime',
+      valueType: 'dateRange',
+      hideInTable: true,
+      fieldProps: {
+        placeholder: ['开始时间', '结束时间'],
+      },
     },
     {
-      title: '展示位置',
       dataIndex: 'locationCode',
       valueType: 'select',
+      hideInTable: true,
       fieldProps: {
         placeholder: '请选择展示位置',
         fieldNames: {
@@ -66,17 +66,34 @@ export default function Page() {
       },
     },
     {
-      title: '状态',
       dataIndex: 'status',
       valueType: 'select',
       valueEnum: {
         0: { text: '已下架' },
         1: { text: '已上架' },
       },
+      hideInTable: true,
       fieldProps: {
         placeholder: '请选择状态',
         onChange: () => vSearchForm.current?.submit(),
       },
+    },
+    { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
+    {
+      title: '图片预览',
+      dataIndex: 'bannerPic',
+      search: false,
+      width: 120,
+      render: (_, { bannerPic }) => (
+        <ImageBox src={bannerPic} width={100} height={60} />
+      ),
+    },
+
+    { title: '展示位置', dataIndex: 'locationName', search: false },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      search: false,
       render: (_, { status, id }) => (
         <Switch
           checkedChildren={'已上架'}
@@ -100,15 +117,6 @@ export default function Page() {
       ellipsis: true,
       search: false,
       copyable: true,
-    },
-    {
-      title: '展示时间',
-      key: 'showTime',
-      valueType: 'dateRange',
-      hideInTable: true,
-      fieldProps: {
-        placeholder: ['开始时间', '结束时间'],
-      },
     },
     {
       title: '展示开始时间',
@@ -164,6 +172,21 @@ export default function Page() {
   // -- renders
   return (
     <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: '轮播广告' },
+        ],
+      }}
       extra={[
         <Button
           key={'create'}
@@ -186,7 +209,12 @@ export default function Page() {
         rowKey={'id'}
         scroll={{ x: 'max-content' }}
         options={false}
-        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
+        search={{
+          span: 6,
+          labelWidth: 'auto',
+          collapsed: false,
+          collapseRender: false,
+        }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,

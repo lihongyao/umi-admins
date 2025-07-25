@@ -3,6 +3,7 @@ import {
   CopyOutlined,
   DeleteOutlined,
   FormOutlined,
+  HomeOutlined,
   PlusCircleOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
@@ -14,10 +15,12 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import Tools from '@likg/tools';
-import { App, Button, Popconfirm, Tree } from 'antd';
+import { useNavigate } from '@umijs/max';
+import { App, Button, Popconfirm, Space, Tree } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -52,23 +55,38 @@ export default function Page() {
   };
   // -- renders
   return (
-    <PageContainer title={false}>
+    <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/systems/roles')}>系统管理</a> },
+          { title: '权限列表' },
+        ],
+      }}
+      extra={
+        <Button
+          key={'ADD_ACCESS'}
+          onClick={() => {
+            vForm.current?.resetFields();
+            setOpen(true);
+          }}
+        >
+          <PlusOutlined />
+          <span>新增权限</span>
+        </Button>
+      }
+    >
       {/* 树形结构 */}
-      <ProCard
-        title={'权限列表（树形结构）'}
-        extra={
-          <Button
-            key={'ADD_ACCESS'}
-            onClick={() => {
-              vForm.current?.resetFields();
-              setOpen(true);
-            }}
-          >
-            <PlusOutlined />
-            <span>新增权限</span>
-          </Button>
-        }
-      >
+      <ProCard>
         <Tree
           style={{ padding: 16 }}
           showLine={{ showLeafIcon: false }}

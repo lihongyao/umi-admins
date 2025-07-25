@@ -1,5 +1,6 @@
 import { apiUser } from '@/api/apiServer';
 import Utils from '@/utils';
+import { HomeOutlined, SearchOutlined } from '@ant-design/icons';
 import {
   ActionType,
   PageContainer,
@@ -7,10 +8,12 @@ import {
   ProFormInstance,
   ProTable,
 } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { App, Avatar, Button, Popconfirm, Space } from 'antd';
 import { useRef, useState } from 'react';
 
 export default function Page() {
+  const navigate = useNavigate();
   // -- APPs
   const { message } = App.useApp();
   // - refs
@@ -21,6 +24,29 @@ export default function Page() {
 
   // -- columns
   const columns: ProColumns<API.UserProps>[] = [
+    {
+      dataIndex: 'status',
+      valueType: 'select',
+      hideInTable: true,
+      valueEnum: {
+        0: { text: '已启用', status: 'Processing' },
+        1: { text: '已禁用', status: 'Error' },
+      },
+      fieldProps: {
+        placeholder: '请选择状态',
+        onChange: () => vSearchForm.current?.submit(),
+      },
+    },
+    {
+      dataIndex: 'nickname',
+      fieldProps: { placeholder: '请输入用户昵称', suffix: <SearchOutlined /> },
+    },
+    {
+      dataIndex: 'phone',
+      copyable: true,
+      hideInTable: true,
+      fieldProps: { placeholder: '请输入联系电话', suffix: <SearchOutlined /> },
+    },
     { title: '序号', dataIndex: 'index', valueType: 'indexBorder', width: 50 },
     {
       title: '用户头像',
@@ -33,27 +59,14 @@ export default function Page() {
     {
       title: '状态',
       dataIndex: 'status',
-      valueType: 'select',
+      search: false,
       valueEnum: {
         0: { text: '已启用', status: 'Processing' },
         1: { text: '已禁用', status: 'Error' },
       },
-      fieldProps: {
-        placeholder: '请选择状态',
-        onChange: () => vSearchForm.current?.submit(),
-      },
     },
-    {
-      title: '用户昵称',
-      dataIndex: 'nickname',
-      fieldProps: { placeholder: '请输入用户昵称' },
-    },
-    {
-      title: '联系电话',
-      dataIndex: 'phone',
-      copyable: true,
-      fieldProps: { placeholder: '请输入联系电话' },
-    },
+    { title: '用户昵称', dataIndex: 'nickname', search: false },
+    { title: '联系电话', dataIndex: 'phone', copyable: true, search: false },
     { title: '注册时间', dataIndex: 'createTime', search: false },
     { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
     {
@@ -96,7 +109,24 @@ export default function Page() {
 
   // -- renders
   return (
-    <PageContainer>
+    <PageContainer
+      breadcrumb={{
+        items: [
+          {
+            title: (
+              <a onClick={() => navigate('/dashboard')}>
+                <Space>
+                  <HomeOutlined />
+                  <span>首页</span>
+                </Space>
+              </a>
+            ),
+          },
+          { title: <a onClick={() => navigate('/users/list')}>用户管理</a> },
+          { title: '用户列表' },
+        ],
+      }}
+    >
       <ProTable<API.UserProps>
         headerTitle={' '}
         actionRef={vTable}
@@ -105,7 +135,12 @@ export default function Page() {
         rowKey="id"
         options={false}
         scroll={{ x: 'max-content' }}
-        search={{ labelWidth: 'auto', collapsed: false, collapseRender: false }}
+        search={{
+          span: 6,
+          labelWidth: 'auto',
+          collapsed: false,
+          collapseRender: false,
+        }}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
