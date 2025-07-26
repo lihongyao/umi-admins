@@ -100,9 +100,8 @@ export default function Page() {
     },
     {
       title: '操作',
-      key: 'action',
-      search: false,
-      width: 120,
+      valueType: 'option',
+      fixed: 'right',
       render: (_, record) => (
         <Space>
           <Button onClick={() => navigate(`/news/details/${record.id}`)}>

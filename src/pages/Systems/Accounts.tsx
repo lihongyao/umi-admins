@@ -137,9 +137,7 @@ export default function Page() {
     { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
     {
       title: '操作',
-      key: 'action',
-      search: false,
-      width: 200,
+      valueType: 'option',
       fixed: 'right',
       render: (_, record) => (
         <Space>

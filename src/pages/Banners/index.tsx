@@ -19,6 +19,7 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
+import { useMount } from 'ahooks';
 import { App, Button, Popconfirm, Space, Switch } from 'antd';
 import { useRef, useState } from 'react';
 
@@ -34,6 +35,20 @@ export default function Page() {
   // -- status
   const [tips, setTips] = useState('');
   const [openForm, setOpenForm] = useState(false);
+  const [locations, setLocations] = useState<API.BannerLocationProps[]>([]);
+
+  // -- methods
+  const getLocations = async () => {
+    const resp = await apiBanners.getLocations();
+    if (resp.code === 200) {
+      setLocations(resp.data);
+    }
+  };
+
+  // -- life circle
+  useMount(() => {
+    getLocations();
+  });
 
   // -- columns
   const columns: Array<ProColumns<API.BannerProps>> = [
@@ -51,18 +66,12 @@ export default function Page() {
       hideInTable: true,
       fieldProps: {
         placeholder: '请选择展示位置',
+        options: locations,
         fieldNames: {
           label: 'locationName',
           value: 'locationCode',
         },
         onChange: () => vSearchForm.current?.submit(),
-      },
-      request: async () => {
-        const resp = await apiBanners.getLocations();
-        if (resp.code === 200) {
-          return resp.data;
-        }
-        return [];
       },
     },
     {
@@ -135,6 +144,7 @@ export default function Page() {
       title: '操作',
       valueType: 'option',
       width: 160,
+      fixed: 'right',
       render: (_, record) => (
         <Space>
           <Button
@@ -291,26 +301,20 @@ export default function Page() {
             name="weight"
             placeholder={'请输入权重'}
             fieldProps={{
-              style: { width: 110 },
+              style: { width: 160 },
             }}
           />
           <ProFormSelect
             name="locationCode"
             label="展示位置"
             placeholder={'请选择展示位置'}
+            options={locations}
             fieldProps={{
               fieldNames: {
                 label: 'locationName',
                 value: 'locationCode',
               },
-              style: { width: 150 },
-            }}
-            request={async () => {
-              const resp = await apiBanners.getLocations();
-              if (resp.code === 200) {
-                return resp.data;
-              }
-              return [];
+              style: { width: 160 },
             }}
             rules={[{ required: true }]}
           />

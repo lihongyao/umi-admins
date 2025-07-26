@@ -39,6 +39,7 @@ export default function Page() {
     },
     {
       dataIndex: 'nickname',
+      hideInTable: true,
       fieldProps: { placeholder: '请输入用户昵称', suffix: <SearchOutlined /> },
     },
     {
@@ -71,9 +72,8 @@ export default function Page() {
     { title: '最后登录时间', dataIndex: 'lastLoginTime', search: false },
     {
       title: '操作',
-      dataIndex: 'action',
-      search: false,
-      width: 100,
+      valueType: 'option',
+      fixed: 'right',
       render: (_, record) => (
         <Space>
           {record.status === 0 && (

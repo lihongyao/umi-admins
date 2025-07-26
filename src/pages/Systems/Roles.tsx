@@ -102,9 +102,8 @@ export default function Page() {
     { title: '更新时间', dataIndex: 'createTime', search: false },
     {
       title: '操作',
-      key: 'action',
-      search: false,
-      width: 200,
+      valueType: 'option',
+      fixed: 'right',
       render: (_, record) => (
         <Space>
           <Button
