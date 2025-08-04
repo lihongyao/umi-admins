@@ -1,7 +1,10 @@
+import Utils from '@/utils';
 import { BellOutlined } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
+import Bus from '@likg/bus';
+import { useMount, useUnmount } from 'ahooks';
 import { Avatar, Badge, Modal } from 'antd';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import ic_change_price_src from './images/ic_change_price.png';
 import ic_notice_src from './images/ic_notice.png';
 import ic_refund_src from './images/ic_refund.png';
@@ -11,7 +14,7 @@ const defaultData = [
     title: '代理商申请',
     code: '202510210001',
     description: '销售【张三 19938060716】申请一级代理',
-    date: '今天 12:30:18',
+    date: Date.now(),
     icon: ic_notice_src,
   },
   {
@@ -19,7 +22,7 @@ const defaultData = [
     title: '改价申请',
     code: '202510210001',
     description: '代理商【四川君越科技有限公司】申请改价',
-    date: '今天 12:30:18',
+    date: Date.now(),
     icon: ic_change_price_src,
   },
   {
@@ -27,7 +30,7 @@ const defaultData = [
     title: '续签申请',
     code: '202510210001',
     description: '代理商【四川君越科技有限公司】申请续签',
-    date: '今天 12:30:18',
+    date: Date.now(),
     icon: ic_notice_src,
   },
   {
@@ -35,7 +38,7 @@ const defaultData = [
     title: '退款申请',
     code: '202510210001',
     description: '代理商【四川君越科技有限公司】申请退款',
-    date: '今天 12:30:18',
+    date: Date.now(),
     icon: ic_refund_src,
   },
   {
@@ -43,7 +46,7 @@ const defaultData = [
     title: '签约提醒',
     code: '202510210001',
     description: '客户【张三 19938060716】已签约',
-    date: '今天 12:30:18',
+    date: Date.now(),
     icon: ic_refund_src,
   },
   {
@@ -51,18 +54,43 @@ const defaultData = [
     title: '签约提醒',
     code: '202510210001',
     description: '代理商【四川君越科技有限公司】已签约',
-    date: '今天 12:30:18',
+    date: Date.now() + 24 * 60 * 60 * 1000,
     icon: ic_refund_src,
   },
 ];
 
 type DataItem = (typeof defaultData)[number];
 export default function AppNotices() {
-  const [dataSource, setDataSource] = useState<DataItem[]>(defaultData);
+  const timer = useRef<NodeJS.Timeout>();
+  const [dataSource, setDataSource] = useState<DataItem[]>([]);
   const [open, setOpen] = useState(false);
+
+  const getNotices = async () => {
+    setDataSource(defaultData);
+  };
+
+  useMount(async () => {
+    // 1. 获取通知
+    getNotices();
+    // 2. 启用定时器，每分钟获取一次通知
+    timer.current = setInterval(getNotices, 50 * 1000);
+    // 3. 监听刷新通知
+    Bus.$on('refreshNotices', getNotices);
+  });
+
+  useUnmount(() => {
+    // 清除定时器
+    if (timer.current) clearInterval(timer.current);
+  });
+
   return (
     <>
-      <Badge key={'badge'} count={3} size="small" offset={[0, 5]}>
+      <Badge
+        key={'badge'}
+        count={dataSource.length}
+        size="small"
+        offset={[0, 5]}
+      >
         <Avatar
           style={{ backgroundColor: '#1890ff' }}
           size={'small'}
@@ -83,12 +111,6 @@ export default function AppNotices() {
           ghost
           dataSource={dataSource}
           showActions="hover"
-          editable={{
-            onSave: async (key, record, originRow) => {
-              console.log(key, record, originRow);
-              return true;
-            },
-          }}
           onDataSourceChange={setDataSource}
           onRow={(record) => ({
             onClick: () => {
@@ -108,7 +130,7 @@ export default function AppNotices() {
                 return (
                   <div>
                     <div>{entity.description}</div>
-                    <div>{entity.date}</div>
+                    <div>{Utils.formatTimestamp(entity.date)}</div>
                   </div>
                 );
               },

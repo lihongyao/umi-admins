@@ -77,7 +77,6 @@ const Types: React.FC = () => {
   return (
     <>
       <DragSortTable
-        style={{ width: 500 }}
         ghost={true}
         dragSortKey="sort"
         dragSortHandlerRender={(rowData) => {

@@ -2,8 +2,9 @@ import { apiCommon } from '@/api/apiServer';
 import Tools from '@likg/tools';
 import OSS from 'ali-oss';
 import { message } from 'antd';
+import COS from 'cos-js-sdk-v5';
 import CryptoJS from 'crypto-js';
-
+import dayjs from 'dayjs';
 export default class Utils {
   /**
    * 检查权限 -- 功能权限
@@ -69,11 +70,12 @@ export default class Utils {
    */
   public static async upload(options: {
     file: File;
-    mode?: 'server' | 'oss' | 'oss_sts';
+    mode?: 'server' | 'oss' | 'oss_sts' | 'tencent';
     dir?: string;
   }): Promise<string> {
     const { file, mode, dir = '/images' } = options;
     if (mode === 'oss_sts') {
+      // 🔥 OSS STS 临时授权上传 -- 上传文件
       // -- 获取配置项
       const resp = await apiCommon.getOssStsConfigs();
       // -- 异常处理
@@ -93,6 +95,10 @@ export default class Utils {
 
       if (data.res.status !== 200) return '';
       return data.url;
+    } else if (mode === 'tencent') {
+      // 🔥 腾讯云 COS 上传
+      const cos = new COS({});
+      return '';
     }
     return '';
   }
@@ -103,11 +109,11 @@ export default class Utils {
    * @param pageInfo
    * @returns
    */
-  public static getNewPage = (pageInfo?: {
+  public static getNewPage(pageInfo?: {
     pageSize: number;
     total: number;
     current: number;
-  }) => {
+  }) {
     // -- 获取当前页码和分页信息
     const current = pageInfo?.current || 1;
     const pageSize = pageInfo?.pageSize || 10;
@@ -121,5 +127,22 @@ export default class Utils {
     );
     // -- 返回新数据
     return newPage;
-  };
+  }
+
+  /**
+   * 格式化时间戳
+   * @param {number} timestamp 毫秒级时间戳
+   * @returns {string} 格式化后的时间字符串
+   */
+  public static formatTimestamp(timestamp: number) {
+    const today = dayjs().startOf('day'); // 今天零点
+    const targetDate = dayjs(timestamp);
+
+    // 判断是否为今天
+    if (targetDate.isSame(today, 'day')) {
+      return `今天 ${targetDate.format('HH:mm:ss')}`;
+    } else {
+      return targetDate.format('YYYY-MM-DD HH:mm:ss');
+    }
+  }
 }
