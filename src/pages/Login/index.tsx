@@ -2,7 +2,12 @@ import { apiSys } from '@/api/apiServer';
 import InitParticles from '@/components/@lgs/InitParticles';
 import Footer from '@/components/Footer';
 
-import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  MobileOutlined,
+  SafetyOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import {
   LoginForm,
   ProFormCaptcha,
@@ -179,7 +184,7 @@ export default function Login() {
                 ]}
               />
               <ProFormCaptcha
-                fieldProps={{ size: 'large', prefix: <LockOutlined /> }}
+                fieldProps={{ size: 'large', prefix: <SafetyOutlined /> }}
                 captchaProps={{ size: 'large' }}
                 placeholder={'请输入验证码'}
                 captchaTextRender={(timing, count) => {

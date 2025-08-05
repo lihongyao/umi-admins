@@ -84,7 +84,7 @@ const AddOrUpdate: React.FC = () => {
             placeholder="请输入新闻标题"
             name="title"
             rules={[{ required: true }]}
-            fieldProps={{ maxLength: 50, showCount: true }}
+            fieldProps={{ maxLength: 50, showCount: true, size: 'large' }}
           />
           <ProForm.Group>
             <ProFormSelect
@@ -92,6 +92,7 @@ const AddOrUpdate: React.FC = () => {
               name="type"
               label="新闻类型"
               rules={[{ required: true }]}
+              fieldProps={{ size: 'large' }}
               options={[
                 { label: '行业动态', value: 1 },
                 { label: '公司动态', value: 2 },
@@ -102,6 +103,7 @@ const AddOrUpdate: React.FC = () => {
               name="source"
               label="来源"
               placeholder={'请输入来源'}
+              fieldProps={{ size: 'large' }}
             />
           </ProForm.Group>
           <ProForm.Item label={'新闻封面'} name={'cover_url'} required>

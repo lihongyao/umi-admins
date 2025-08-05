@@ -81,7 +81,7 @@ export default function Page() {
           }}
         >
           <PlusOutlined />
-          <span>新增权限</span>
+          <span>新增一级权限</span>
         </Button>
       }
     >

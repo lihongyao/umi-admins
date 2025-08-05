@@ -13,6 +13,7 @@ import {
   ProFormDateTimeRangePicker,
   ProFormDigit,
   ProFormInstance,
+  ProFormRadio,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
@@ -301,6 +302,7 @@ export default function Page() {
             name="weight"
             placeholder={'请输入权重'}
             fieldProps={{
+              size: 'large',
               style: { width: 160 },
             }}
           />
@@ -310,6 +312,7 @@ export default function Page() {
             placeholder={'请选择展示位置'}
             options={locations}
             fieldProps={{
+              size: 'large',
               fieldNames: {
                 label: 'locationName',
                 value: 'locationCode',
@@ -324,9 +327,21 @@ export default function Page() {
           name="showTime"
           rules={[{ required: true }]}
           fieldProps={{
+            size: 'large',
             placeholder: ['开始时间', '结束时间'],
             format: 'YYYY-MM-DD HH:mm',
           }}
+        />
+        <ProFormRadio.Group
+          label={'状态'}
+          name={'status'}
+          required
+          rules={[{ required: true, message: '请选择状态' }]}
+          fieldProps={{ size: 'large' }}
+          options={[
+            { label: '启用', value: 1 },
+            { label: '禁用', value: 0 },
+          ]}
         />
         <ProFormTextArea
           allowClear
@@ -334,6 +349,7 @@ export default function Page() {
           name="jumpUrl"
           placeholder={'请输入跳转链接'}
           rules={[{ required: true }]}
+          fieldProps={{ size: 'large' }}
           extra={
             <div>
               <p>1. 未填写链接则无跳转。</p>

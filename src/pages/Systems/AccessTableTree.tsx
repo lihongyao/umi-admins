@@ -1,12 +1,9 @@
 import { apiSys } from '@/api/apiServer';
 import {
-  DeleteOutlined,
-  EditOutlined,
   FileOutlined,
   FolderFilled,
   HomeOutlined,
   PlusOutlined,
-  PlusSquareOutlined,
 } from '@ant-design/icons';
 import {
   ActionType,
@@ -43,11 +40,10 @@ export default function Page() {
     {
       title: '操作',
       key: 'actions',
-      width: 310,
+      width: 240,
       render: (_, record) => (
         <Space>
           <Button
-            icon={<EditOutlined />}
             onClick={() => {
               vForm.current?.setFieldsValue({
                 id: record.id,
@@ -60,7 +56,6 @@ export default function Page() {
             编辑
           </Button>
           <Button
-            icon={<PlusSquareOutlined />}
             disabled={record.depth === MAX_DEPTH}
             onClick={() => {
               vForm.current?.setFieldsValue({
@@ -86,9 +81,7 @@ export default function Page() {
               }
             }}
           >
-            <Button icon={<DeleteOutlined />} danger>
-              删除
-            </Button>
+            <Button danger>删除</Button>
           </Popconfirm>
         </Space>
       ),

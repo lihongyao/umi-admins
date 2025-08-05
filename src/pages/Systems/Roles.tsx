@@ -10,6 +10,7 @@ import {
   ProColumns,
   ProForm,
   ProFormInstance,
+  ProFormRadio,
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
@@ -231,6 +232,7 @@ export default function Page() {
         }
         open={openForm}
         width={500}
+        labelCol={{ span: 5 }}
         layout="horizontal"
         modalProps={{
           maskClosable: false,
@@ -257,12 +259,22 @@ export default function Page() {
           name="roleName"
           placeholder={'请输入角色名称'}
           rules={[{ required: true }]}
+          fieldProps={{ size: 'large' }}
+        />
+        <ProFormRadio.Group
+          label={'状态'}
+          name={'status'}
+          fieldProps={{ size: 'large' }}
+          options={[
+            { label: '启用', value: 1 },
+            { label: '禁用', value: 0 },
+          ]}
         />
         <ProForm.Item label="角色权限" required>
           <Form.Item className={'mb-4'}>
             <Space>
               <Button
-                size={'small'}
+                size={'large'}
                 onClick={() =>
                   vForm.current?.setFieldValue('permissionIds', traverse(auths))
                 }
@@ -270,7 +282,7 @@ export default function Page() {
                 全选
               </Button>
               <Button
-                size={'small'}
+                size={'large'}
                 danger
                 onClick={() => {
                   vForm.current?.setFieldValue('permissionIds', undefined);

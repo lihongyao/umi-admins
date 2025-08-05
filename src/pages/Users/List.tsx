@@ -74,6 +74,7 @@ export default function Page() {
       title: '操作',
       valueType: 'option',
       fixed: 'right',
+      width: 120,
       render: (_, record) => (
         <Space>
           {record.status === 0 && (
