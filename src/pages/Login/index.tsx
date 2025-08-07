@@ -148,7 +148,11 @@ export default function Login() {
             <>
               <ProFormText
                 name="username"
-                fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
+                fieldProps={{
+                  size: 'large',
+                  maxLength: 11,
+                  prefix: <UserOutlined />,
+                }}
                 placeholder={'admin'}
                 allowClear
                 rules={[{ required: true, message: '请输入用户名!' }]}
