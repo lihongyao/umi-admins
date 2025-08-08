@@ -31,7 +31,11 @@ export default {
   'DELETE /api/sys/access/:id': { code: 200, msg: 'success' },
 
   // -- 角色管理
-  'GET /api/sys/roles': { code: 200, msg: 'success', data: ListRoles },
+  'GET /api/sys/roles': {
+    code: 200,
+    msg: 'success',
+    data: { items: ListRoles },
+  },
   'POST /api/sys/roles': { code: 200, msg: 'success' },
   'PUT /api/sys/roles': { code: 200, msg: 'success' },
   'PUT /api/sys/roles/switch-status': { code: 200, msg: 'success' },
@@ -42,7 +46,7 @@ export default {
     code: 200,
     msg: 'success',
     data: {
-      'data|10': [
+      'items|10': [
         {
           'id|+1': 1,
           'status|0-1': 0,
@@ -68,7 +72,7 @@ export default {
     code: 200,
     msg: 'success',
     data: {
-      'data|10': [
+      'items|10': [
         {
           'id|+1': 1,
           nickname: '@cname',
@@ -87,7 +91,7 @@ export default {
     code: 200,
     msg: 'success',
     data: {
-      ['data|10']: [
+      ['items|10']: [
         {
           'id|+1': 1,
           status: '@pick([0, 1])',
@@ -122,7 +126,7 @@ export default {
   'GET /api/audit': mock({
     code: 200,
     data: {
-      [`data|${20}`]: [
+      ['items|20']: [
         {
           'id|+1': 1,
           works: "@Image('400x300','@color')",
@@ -145,7 +149,7 @@ export default {
   'GET /api/news': mock({
     code: 200,
     data: {
-      'data|10': [
+      'items|10': [
         {
           'id|+1': 1,
           title: '@ctitle',
@@ -189,7 +193,7 @@ export default {
     code: 200,
     msg: 'success',
     data: {
-      'data|10': [
+      'items|10': [
         {
           'id|+1': 1,
           nickname: '@cname()',
@@ -208,7 +212,7 @@ export default {
     code: 200,
     msg: 'success',
     data: {
-      'data|10': [
+      'items|10': [
         {
           'id|+1': 1,
           createTime: '@datetime',

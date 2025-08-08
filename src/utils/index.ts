@@ -12,13 +12,13 @@ export default class Utils {
    * @returns
    */
   public static checkAccessForFunc = (code: string) => {
-    const loc = localStorage.getItem('USERINFOs') ?? '{}';
+    const loc = localStorage.getItem('USERINFOS') ?? '{}';
     const access = (JSON.parse(loc).access ?? []) as Array<string>;
     return new Promise((resolve) => {
       if (access.includes(code)) {
         resolve(null);
       } else {
-        message.info('您当前没有权限哟~');
+        message.info('抱歉，你无权操作该项');
       }
     });
   };

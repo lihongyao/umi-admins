@@ -152,17 +152,15 @@ export default function Page() {
           setTips('');
           return data;
         }}
-        request={async (params) => {
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
           const resp = await apiUser.list(params);
-          if (resp.code === 200) {
-            return Promise.resolve({
-              data: resp.data.data,
-              total: resp.data.total,
-            });
-          }
           return Promise.resolve({
-            data: [],
-            total: 0,
+            success: true,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />

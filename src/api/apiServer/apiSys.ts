@@ -62,9 +62,10 @@ export async function accessDelete(id: number | string) {
 // ~~~~~~~~~~~~~~~~~~
 // 角色管理
 // ~~~~~~~~~~~~~~~~~~
-export async function roles() {
-  return request<API.SysRoleProps[]>({
+export async function roles(params: any) {
+  return request<API.List<API.SysRoleProps>>({
     url: '/api/sys/roles',
+    params,
   });
 }
 export async function roleAdd(data: any) {
@@ -99,7 +100,7 @@ export async function roleSwichStatus(id: number, status: number) {
 // ~~~~~~~~~~~~~~~~~~
 // 系统用户
 // ~~~~~~~~~~~~~~~~~~
-export async function accounts(params: API.ListParams) {
+export async function accounts(params: any) {
   return request<API.List<API.SysAccountProps>>({
     url: '/api/sys/accounts',
     params,
@@ -144,7 +145,7 @@ export async function accountDelete(id: number) {
 // ~~~~~~~~~~~~~~~~~~
 // 操作日志
 // ~~~~~~~~~~~~~~~~~~
-export async function logs(params: API.ListParams) {
+export async function logs(params: any) {
   return request<API.List<API.LogsProps>>({
     url: '/api/sys/logs',
     params,

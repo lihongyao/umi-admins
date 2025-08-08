@@ -34,6 +34,7 @@
     "cos-js-sdk-v5": "^1.10.1",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
+    "echarts": "^6.0.0",
     "mammoth": "^1.10.0",
     "snabbdom": "^3.6.2"
   },

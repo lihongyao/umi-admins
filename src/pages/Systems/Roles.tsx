@@ -98,7 +98,7 @@ export default function Page() {
       },
     },
     { title: '创建人', dataIndex: 'createBy', search: false },
-    { title: '创建时间', dataIndex: 'createTime', search: false },
+    { title: '创建时间', dataIndex: 'createTime', search: false, sorter: true },
     { title: '更新人', dataIndex: 'createBy', search: false },
     { title: '更新时间', dataIndex: 'createTime', search: false },
     {
@@ -210,17 +210,15 @@ export default function Page() {
           setTips('');
           return data;
         }}
-        request={async () => {
-          const resp = await apiSys.roles();
-          if (resp.code === 200) {
-            return Promise.resolve({
-              data: resp.data,
-              total: resp.data.length,
-            });
-          }
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
+          const resp = await apiSys.roles(params);
           return Promise.resolve({
-            data: [],
-            total: 0,
+            success: true,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />

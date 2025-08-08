@@ -119,7 +119,7 @@ export default function Page() {
         />
       ),
     },
-    { title: '权重', dataIndex: 'weight', search: false },
+    { title: '权重', dataIndex: 'weight', search: false, sorter: true },
     {
       title: '跳转链接',
       tooltip: '请填写 Scheme 地址',
@@ -236,24 +236,21 @@ export default function Page() {
           setTips('');
           return data;
         }}
-        request={async (params) => {
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
+
           if (params.showTime) {
             params.start = `${params.showTime[0]} 00:00:00`;
             params.end = `${params.showTime[1]} 23:59:59`;
             delete params.showTime;
           }
           const resp = await apiBanners.list(params);
-          if (resp.code === 200) {
-            return Promise.resolve({
-              data: resp.data.data,
-              total: resp.data.total,
-              success: true,
-            });
-          }
           return Promise.resolve({
-            data: [],
-            total: 0,
             success: true,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />

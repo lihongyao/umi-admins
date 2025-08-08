@@ -1,5 +1,5 @@
 import request from '@/api/apiConfig';
-export async function list(params: API.ListParams) {
+export async function list(params: any) {
   return request<API.List<API.NewsProps>>({
     url: '/api/news',
     params,

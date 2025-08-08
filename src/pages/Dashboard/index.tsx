@@ -1,8 +1,10 @@
 import { HomeOutlined } from '@ant-design/icons';
-import { PageContainer, ProCard } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
 import { Space } from 'antd';
-
+import GroupBarChat from './components/GroupBarChat';
+import HorizontalBarChart from './components/HorizontalBarChart';
+import HorizontalBarXChart from './components/HorizontalBarXChart';
 export default function Page() {
   const navigate = useNavigate();
   return (
@@ -24,11 +26,19 @@ export default function Page() {
         ],
       }}
     >
-      <ProCard>
-        <h1 className="text-[#eee] text-center m-0 text-4xl -tracking-wider py-20">
-          — Umi Admins —
-        </h1>
-      </ProCard>
+      <div className="bg-white p-6 rounded-xl flex flex-col gap-6">
+        <div className="w-1/2 h-[300px] mx-auto">
+          <GroupBarChat />
+        </div>
+        <div className="flex justify-center">
+          <div className="w-[300px] ">
+            <HorizontalBarChart />
+          </div>
+          <div className="w-[300px] ">
+            <HorizontalBarXChart />
+          </div>
+        </div>
+      </div>
     </PageContainer>
   );
 }

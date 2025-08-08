@@ -88,7 +88,12 @@ export default function Page() {
       },
     },
     { title: '发布人员', dataIndex: 'published_by', search: false },
-    { title: '发布时间', dataIndex: 'publish_time', search: false },
+    {
+      title: '发布时间',
+      dataIndex: 'publish_time',
+      search: false,
+      sorter: true,
+    },
     {
       title: '新闻状态',
       dataIndex: 'status',
@@ -203,17 +208,15 @@ export default function Page() {
           setTips('');
           return data;
         }}
-        request={async (params) => {
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
           const resp = await apiNews.list(params);
-          if (resp.code === 200) {
-            return Promise.resolve({
-              data: resp.data.data,
-              total: resp.data.total,
-            });
-          }
           return Promise.resolve({
-            data: [],
-            total: 0,
+            success: true,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />

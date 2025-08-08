@@ -85,19 +85,15 @@ export default function Page() {
           defaultPageSize: 10,
           showSizeChanger: true,
         }}
-        request={async (params) => {
-          params.page = params.current;
-          delete params.current;
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
           const resp = await apiUser.feedbacks(params);
-          if (resp.code === 200) {
-            return Promise.resolve({
-              data: resp.data.data,
-              total: resp.data.total,
-            });
-          }
           return Promise.resolve({
-            data: [],
-            total: 0,
+            success: true,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />

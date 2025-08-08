@@ -73,9 +73,9 @@ export default function Page() {
         onChange: () => vSearchForm.current?.submit(),
       },
       request: async () => {
-        const resp = await apiSys.roles();
+        const resp = await apiSys.accounts({ current: 1, pageSize: 100 });
         if (resp.code === 200) {
-          return resp.data;
+          return resp.data.items;
         }
         return [];
       },
@@ -122,9 +122,9 @@ export default function Page() {
         },
       },
       request: async () => {
-        const resp = await apiSys.roles();
+        const resp = await apiSys.roles({ current: 1, pageSize: 100 });
         if (resp.code === 200) {
-          return resp.data;
+          return resp.data.items;
         }
         return [];
       },
@@ -257,17 +257,15 @@ export default function Page() {
           setTips('');
           return data;
         }}
-        request={async (params) => {
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
           const resp = await apiSys.accounts(params);
-          if (resp.code === 200) {
-            return Promise.resolve({
-              data: resp.data.data,
-              total: resp.data.total,
-            });
-          }
           return Promise.resolve({
-            data: [],
-            total: 0,
+            success: true,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />
@@ -350,9 +348,9 @@ export default function Page() {
             },
           }}
           request={async () => {
-            const resp = await apiSys.roles();
+            const resp = await apiSys.roles({ current: 1, pageSize: 100 });
             if (resp.code === 200) {
-              return resp.data;
+              return resp.data.items;
             }
             return [];
           }}

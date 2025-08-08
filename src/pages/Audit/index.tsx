@@ -96,6 +96,7 @@ export default function Page() {
       dataIndex: 'createTime',
       search: false,
       ellipsis: true,
+      sorter: true,
     },
     {
       title: '家园告白',
@@ -195,12 +196,15 @@ export default function Page() {
           setTips('');
           return data;
         }}
-        request={async (params: any) => {
+        request={async (params, sorter) => {
+          params.sorter = Object.keys(sorter).length
+            ? JSON.stringify(sorter)
+            : undefined;
           const resp = await apiAudit.list(params);
           return Promise.resolve({
-            data: resp.data.data || [],
             success: true,
-            total: resp.data.total,
+            data: resp?.data?.items || [],
+            total: resp?.data?.total || 0,
           });
         }}
       />

@@ -4,7 +4,7 @@ declare namespace API {
   // ~~~~~~~~~~~~~~~~~~
   interface List<T> {
     /** 列表数据 */
-    data: T[];
+    items: T[];
     /** 当前页 */
     current: number;
     /** 每页条数 */

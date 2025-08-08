@@ -1,6 +1,6 @@
 import request from '@/api/apiConfig';
 
-export async function list(params: API.ListParams) {
+export async function list(params: any) {
   return request<API.List<API.UserProps>>({
     url: '/api/user',
     params,
@@ -13,7 +13,7 @@ export async function del(id: number) {
   });
 }
 
-export async function feedbacks(params: API.ListParams) {
+export async function feedbacks(params: any) {
   return request<API.List<API.FeedbackProps>>({
     url: '/api/user/feedbacks',
     params,

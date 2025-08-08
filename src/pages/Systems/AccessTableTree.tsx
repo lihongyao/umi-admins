@@ -214,7 +214,8 @@ export default function Page() {
         request={async () => {
           const resp = await apiSys.access();
           return Promise.resolve({
-            data: resp.data || [],
+            success: true,
+            data: resp?.data || [],
           });
         }}
       />
