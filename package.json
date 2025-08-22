@@ -19,6 +19,7 @@
     "@likg/match-line": "^2.0.0",
     "@likg/tools": "^2.0.9",
     "@likg/validator": "^1.0.10",
+    "@react-spring/web": "^10.0.1",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",

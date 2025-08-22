@@ -145,4 +145,23 @@ export default class Utils {
       return targetDate.format('YYYY-MM-DD HH:mm:ss');
     }
   }
+
+  /**
+   * 格式化时间戳为时分秒
+   * @param totalSeconds
+   * @returns
+   */
+  public static formatSecondsToHMS(totalSeconds: number) {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    // 按需拼接时间单位
+    const parts = [];
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0 || hours > 0) parts.push(`${minutes}m`); // 若有小时，则显示分钟（即使为0）
+    parts.push(`${seconds}s`); // 始终显示秒
+
+    return parts.join('，');
+  }
 }
