@@ -118,12 +118,7 @@ export default function Login() {
         <LoginForm
           formRef={vForm}
           contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
-          logo={
-            <img
-              alt="logo"
-              src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-            />
-          }
+          logo={<img alt="logo" src={`${process.env.PUBLIC_PATH}logo.png`} />}
           title="Umi Admins"
           subTitle={'基于Umijs + TypeScript + axios + ProCompoents 实现'}
           onFinish={async (values: API.LoginParams & { memorize: boolean }) => {
