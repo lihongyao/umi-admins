@@ -13,7 +13,7 @@ const Settings: ProLayoutProps & {
   colorWeak: false,
   title: 'Ant Design Pro',
   pwa: true,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: `${process.env.PUBLIC_PATH}logo.png`,
   iconfontUrl: '//at.alicdn.com/t/c/font_4809698_z83i6q5qa6s.js',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式
