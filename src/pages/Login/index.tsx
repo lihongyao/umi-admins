@@ -1,6 +1,7 @@
 import { apiSys } from '@/api/apiServer';
 import InitParticles from '@/components/@lgs/InitParticles';
 import Footer from '@/components/Footer';
+import Utils from '@/utils';
 
 import {
   LockOutlined,
@@ -58,7 +59,7 @@ export default function Login() {
         data = {
           password: {
             username: values.username,
-            password: values.password,
+            password: Utils.md5(values.password),
           },
         };
       } else if (type === 'phone') {

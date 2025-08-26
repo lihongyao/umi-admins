@@ -1,5 +1,6 @@
 import { apiSys } from '@/api/apiServer';
 import { useFullScreen } from '@/hooks';
+import Utils from '@/utils';
 import {
   FullscreenExitOutlined,
   FullscreenOutlined,
@@ -159,8 +160,8 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
           }
           message.loading('处理中...');
           const resp = await apiSys.changePsw({
-            oldPassword,
-            newPassword,
+            oldPassword: Utils.md5(oldPassword),
+            newPassword: Utils.md5(newPassword),
           });
           if (resp.code === 200) {
             setOpenForm(false);
