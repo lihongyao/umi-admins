@@ -2,6 +2,7 @@
   "private": true,
   "author": "李鸿耀 <lihy_online@163.com>",
   "scripts": {
+    "build:private": "cross-env UMI_ENV=private NODE_ENV=private max build",
     "build:prod": "cross-env UMI_ENV=production NODE_ENV=production max build",
     "build:qa": "cross-env UMI_ENV=qa NODE_ENV=qa max build",
     "dev": "cross-env UMI_ENV=development NODE_ENV=development max dev",
