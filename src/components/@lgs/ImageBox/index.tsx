@@ -1,5 +1,5 @@
-import { memo, useState } from 'react';
-import ImagePreview from '../ImagePreview';
+import { Image } from 'antd';
+import { memo } from 'react';
 import './index.less';
 export default memo(function ImageBox({
   width = 100,
@@ -8,7 +8,6 @@ export default memo(function ImageBox({
   spacing = 4,
   caption = '',
   desc = '',
-  name,
 }: {
   width?: string | number;
   height?: string | number;
@@ -18,31 +17,18 @@ export default memo(function ImageBox({
   desc?: string;
   name?: string;
 }) {
-  const [url, setUrl] = useState('');
   return (
     <div className="lg-image-box" style={{ width }}>
-      <div
-        className="lg-image-box__content"
-        style={{ width, height, padding: spacing }}
-        onClick={() => setUrl(src)}
-      >
-        <div
-          className="lg-image-box__spacing-img"
-          style={{
-            background: `url(${src}) no-repeat center center / cover`,
-          }}
+      <div className="__content" style={{ width, height, padding: spacing }}>
+        <Image
+          width={'100%'}
+          height={'100%'}
+          src={src}
+          style={{ objectFit: 'cover' }}
         />
       </div>
-      {caption ? <div className="lg-image-box__caption">{caption}</div> : null}
-      {desc ? <div className="lg-image-box__desc">{desc}</div> : null}
-      {src && (
-        <ImagePreview
-          url={url}
-          width={555}
-          onCancel={() => setUrl('')}
-          name={name}
-        />
-      )}
+      {caption ? <div className="__caption">{caption}</div> : null}
+      {desc ? <div className="__desc">{desc}</div> : null}
     </div>
   );
 });

@@ -1,5 +1,6 @@
 module.exports = {
   rules: {
+    'selector-class-pattern': null,
     'at-rule-no-unknown': [
       true,
       {
