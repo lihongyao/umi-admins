@@ -64,19 +64,20 @@ ol {
   }
 }
 
-body::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .scroll-wrapper::-webkit-scrollbar {
   width: 4px !important;
   background-color: transparent;
 }
 
-body::-webkit-scrollbar-track,
 .scroll-wrapper::-webkit-scrollbar-track {
   border-radius: 4px;
   background-color: transparent;
 }
 
-body::-webkit-scrollbar-thumb,
 .scroll-wrapper::-webkit-scrollbar-thumb {
   background: #374e6d80;
   opacity: 0.75;
